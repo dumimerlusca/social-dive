@@ -1,0 +1,14 @@
+{
+	"name": "social-media-app",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"scripts": {
+		"client": "npm run start --prefix client",
+		"server": "yarn start:dev --prefix server",
+		"dev": "concurrently \"npm run server\" \"npm run client\""
+	},
+	"devDependencies": {
+		"concurrently": "^7.0.0"
+	}
+}

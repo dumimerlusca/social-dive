@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap");
+
+body {
+	@apply bg-dark text-white;
+}
+
+body {
+	font-family: "Roboto", sans-serif;
+}
+
+/* width */
+::-webkit-scrollbar {
+	width: 5px;
+	height: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: rgb(39, 33, 33);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: rgb(94, 75, 75);
+	border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #555;
+}

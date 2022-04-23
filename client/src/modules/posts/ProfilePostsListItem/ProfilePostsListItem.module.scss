@@ -1,0 +1,24 @@
+.post {
+	position: relative;
+	max-height: 400px;
+	&:hover {
+		.overlay {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			gap: 2rem;
+			text-align: center;
+		}
+	}
+	.overlay {
+		position: absolute;
+		display: none;
+		transition: opacity 0.5s ease;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.6);
+	}
+}
