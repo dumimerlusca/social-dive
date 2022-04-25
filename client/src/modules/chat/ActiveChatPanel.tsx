@@ -28,7 +28,11 @@ const ActiveChatPanel = ({ chat }: { chat: ChatType }) => {
 				</div>
 				<div>
 					<h3 className='text-2xl font-bold'>{user?.fullName}</h3>
-					<p className='truncate font-light text-yellow-300'>Active</p>
+					{user?.isActive ? (
+						<p className='truncate font-light text-yellow-300'>Active</p>
+					) : (
+						<p className='truncate font-light text-gray-400'>Inactive</p>
+					)}
 				</div>
 				<p className='font-bold ml-auto'>
 					{formatDate(new Date(chat.updatedAt))}

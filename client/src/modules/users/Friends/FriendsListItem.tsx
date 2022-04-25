@@ -1,3 +1,4 @@
+import { formatDate } from "helpers/helpers";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { userImageUrl } from "services/api";
@@ -8,8 +9,6 @@ interface PropTypes {
 }
 
 const FriendsListItem: React.FC<PropTypes> = ({ user }) => {
-	const [isOnline, setIsOnline] = useState(false);
-
 	return (
 		<li className='mb-5'>
 			<Link to={`/profile/${user._id}`}>
@@ -24,10 +23,12 @@ const FriendsListItem: React.FC<PropTypes> = ({ user }) => {
 					<div>
 						<h6 className='font-bold leading-4 mb-1'>{user.fullName}</h6>
 					</div>
-					{isOnline ? (
+					{user.isActive ? (
 						<div className='ml-auto bg-yellow-300 rounded-full w-4 h-4 self-center'></div>
 					) : (
-						<div className='ml-auto self-center'>5m</div>
+						<div className='ml-auto self-center'>
+							{formatDate(new Date(user.lastActive))}
+						</div>
 					)}
 				</div>
 			</Link>

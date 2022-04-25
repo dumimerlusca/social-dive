@@ -38,7 +38,11 @@ const ChatListItem = ({ chat }: { chat: ChatType }) => {
 					<h3 className='text-2xl font-bold'>{user?.fullName}</h3>
 					<p className='truncate font-light'>{chat.lastMessage}</p>
 				</div>
-				<div className='rounded-full w-5 h-5 bg-yellow-200'></div>
+				{user?.isActive ? (
+					<div className='rounded-full w-5 h-5 bg-yellow-200'></div>
+				) : (
+					<p>{formatDate(new Date(user?.lastActive!))} </p>
+				)}
 			</div>
 			<p className='font-bold ml-auto'>
 				{formatDate(new Date(chat.updatedAt))}

@@ -13,5 +13,7 @@ export declare class User {
     friends: UserType[];
     friendRequestsSent: UserType[];
     friendRequestsReceived: UserType[];
+    isActive: boolean;
+    lastActive: Date;
 }
 export declare const UserSchema: mongoose.Schema<mongoose.Document<User, any, any>, mongoose.Model<mongoose.Document<User, any, any>, any, any, any>, any, any>;

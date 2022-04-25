@@ -12,6 +12,8 @@ const users: IUser[] = [
 		friends: [],
 		friendRequestsSent: [],
 		friendRequestsReceived: [],
+		isActive: false,
+		lastActive: new Date(Date.now()).toISOString(),
 	},
 	{
 		_id: "9992",
@@ -20,6 +22,8 @@ const users: IUser[] = [
 		friends: [],
 		friendRequestsSent: [],
 		friendRequestsReceived: [],
+		isActive: true,
+		lastActive: new Date(Date.now()).toISOString(),
 	},
 	{
 		_id: "99934",
@@ -28,6 +32,8 @@ const users: IUser[] = [
 		friends: [],
 		friendRequestsSent: [],
 		friendRequestsReceived: [],
+		isActive: false,
+		lastActive: new Date(Date.now()).toISOString(),
 	},
 	{
 		_id: "9993242",
@@ -36,6 +42,8 @@ const users: IUser[] = [
 		friends: [],
 		friendRequestsSent: [],
 		friendRequestsReceived: [],
+		isActive: true,
+		lastActive: new Date(Date.now()).toISOString(),
 	},
 ];
 

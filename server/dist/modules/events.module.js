@@ -8,10 +8,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@nestjs/common");
 const events_gateway_1 = require("../controllers/events.gateway");
+const users_module_1 = require("./users.module");
 let EventsModule = class EventsModule {
 };
 EventsModule = __decorate([
     (0, common_1.Module)({
+        imports: [users_module_1.UsersModule],
         providers: [events_gateway_1.EventsGateway],
     })
 ], EventsModule);

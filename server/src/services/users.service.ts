@@ -44,4 +44,17 @@ export default class UsersService {
 	async validate(body: any) {
 		return this.userModel.validate(body);
 	}
+
+	async makeUserActive(userId: string) {
+		await this.userModel.findByIdAndUpdate(userId, {
+			isActive: true,
+			lastActive: new Date(Date.now()),
+		});
+	}
+	async makeUserInactive(userId: string) {
+		await this.userModel.findByIdAndUpdate(userId, {
+			isActive: false,
+			lastActive: new Date(Date.now()),
+		});
+	}
 }

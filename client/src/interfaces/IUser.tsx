@@ -5,6 +5,8 @@ interface IUser {
 	friends: IUser[];
 	friendRequestsSent: IUser[];
 	friendRequestsReceived: IUser[];
+	isActive: boolean;
+	lastActive: string;
 }
 
 export default IUser;

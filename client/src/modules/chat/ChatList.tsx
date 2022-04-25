@@ -11,7 +11,9 @@ const ChatList: React.FC = () => {
 	const currentChat = useSelector(getCurrentChat);
 	useEffect(() => {
 		// Update the current chat wenever the chat list changes
-		dispatch(setCurrentChat(chats.find(chat => chat._id === currentChat?._id)));
+		const updatedChat = chats.find(chat => chat._id === currentChat?._id);
+		if (!updatedChat) return;
+		dispatch(setCurrentChat(updatedChat));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [chats]);
 

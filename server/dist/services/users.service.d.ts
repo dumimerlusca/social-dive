@@ -24,4 +24,6 @@ export default class UsersService {
         _id: any;
     }>;
     validate(body: any): Promise<void>;
+    makeUserActive(userId: string): Promise<void>;
+    makeUserInactive(userId: string): Promise<void>;
 }

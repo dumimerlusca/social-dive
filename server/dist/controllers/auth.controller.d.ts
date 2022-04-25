@@ -21,6 +21,8 @@ export default class AuthController {
             friends: import("mongoose").LeanDocument<UserType>[];
             friendRequestsSent: import("mongoose").LeanDocument<UserType>[];
             friendRequestsReceived: import("mongoose").LeanDocument<UserType>[];
+            isActive: boolean;
+            lastActive: Date;
         };
     }>;
     register(body: any): Promise<import("../schemas/user.schema").User & import("mongoose").Document<any, any, any> & {

@@ -66,6 +66,14 @@ __decorate([
     }),
     __metadata("design:type", Array)
 ], User.prototype, "friendRequestsReceived", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: false }),
+    __metadata("design:type", Boolean)
+], User.prototype, "isActive", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: 0 }),
+    __metadata("design:type", Date)
+], User.prototype, "lastActive", void 0);
 User = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true, validateBeforeSave: true })
 ], User);

@@ -24,12 +24,12 @@ export default class ChatController {
 		const receiverId = body.userId;
 		if (!receiverId)
 			throw new HttpException(
-				"Bad request, no userID found un the body",
+				"Bad request, no userID found in the body",
 				HttpStatus.BAD_REQUEST
 			);
 		if (senderId === receiverId)
 			throw new HttpException(
-				"You cant send message to yourself",
+				"You can't send messages to yourself",
 				HttpStatus.BAD_REQUEST
 			);
 

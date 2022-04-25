@@ -20,6 +20,7 @@ const core_1 = require("@nestjs/core");
 const auth_guard_1 = require("./guards/auth.guard");
 const chat_module_1 = require("./modules/chat.module");
 const events_module_1 = require("./modules/events.module");
+const friends_module_1 = require("./modules/friends.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -33,6 +34,7 @@ AppModule = __decorate([
             comments_module_1.default,
             chat_module_1.default,
             events_module_1.default,
+            friends_module_1.default,
         ],
         controllers: [app_controller_1.AppController],
         providers: [

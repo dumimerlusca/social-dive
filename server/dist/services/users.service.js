@@ -52,6 +52,18 @@ let UsersService = class UsersService {
     async validate(body) {
         return this.userModel.validate(body);
     }
+    async makeUserActive(userId) {
+        await this.userModel.findByIdAndUpdate(userId, {
+            isActive: true,
+            lastActive: new Date(Date.now()),
+        });
+    }
+    async makeUserInactive(userId) {
+        await this.userModel.findByIdAndUpdate(userId, {
+            isActive: false,
+            lastActive: new Date(Date.now()),
+        });
+    }
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),

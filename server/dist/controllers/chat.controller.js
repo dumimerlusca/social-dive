@@ -22,9 +22,9 @@ let ChatController = class ChatController {
         const senderId = req.user.id;
         const receiverId = body.userId;
         if (!receiverId)
-            throw new common_1.HttpException("Bad request, no userID found un the body", common_1.HttpStatus.BAD_REQUEST);
+            throw new common_1.HttpException("Bad request, no userID found in the body", common_1.HttpStatus.BAD_REQUEST);
         if (senderId === receiverId)
-            throw new common_1.HttpException("You cant send message to yourself", common_1.HttpStatus.BAD_REQUEST);
+            throw new common_1.HttpException("You can't send messages to yourself", common_1.HttpStatus.BAD_REQUEST);
         const existingConversation = await this.chatService.checkExistingConversation(senderId, receiverId);
         if (existingConversation)
             return existingConversation.populate(chat_service_1.populateOptions);

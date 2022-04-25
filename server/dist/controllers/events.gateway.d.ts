@@ -1,5 +1,12 @@
-import { Server } from "socket.io";
-export declare class EventsGateway {
+import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit } from "@nestjs/websockets";
+import { Server, Socket } from "socket.io";
+import UsersService from "../services/users.service";
+export declare class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
+    readonly usersService: UsersService;
+    constructor(usersService: UsersService);
     server: Server;
-    test(): void;
+    afterInit(server: Server): void;
+    handleConnection(client: Socket): void;
+    handleDisconnect(client: Socket): void;
+    test(data: any, client: Socket): void;
 }

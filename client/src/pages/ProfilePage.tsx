@@ -24,6 +24,7 @@ function ProfilePage() {
 
 	useEffect(() => {
 		if (isSuccess && chat) {
+			console.log(chat);
 			dispatch(setCurrentChat(chat));
 			navigate("/chat");
 		}

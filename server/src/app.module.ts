@@ -11,6 +11,7 @@ import { APP_GUARD } from "@nestjs/core";
 import { AuthGuard } from "./guards/auth.guard";
 import ChatModule from "./modules/chat.module";
 import EventsModule from "./modules/events.module";
+import FriendsModule from "./modules/friends.module";
 
 @Module({
 	imports: [
@@ -22,6 +23,7 @@ import EventsModule from "./modules/events.module";
 		CommentsModule,
 		ChatModule,
 		EventsModule,
+		FriendsModule,
 	],
 	controllers: [AppController],
 	providers: [
