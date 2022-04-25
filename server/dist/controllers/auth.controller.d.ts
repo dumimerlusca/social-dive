@@ -18,9 +18,6 @@ export default class AuthController {
             fullName: string;
             email: string;
             photo: import("../schemas/user.schema").PhotoType;
-            friends: import("mongoose").LeanDocument<UserType>[];
-            friendRequestsSent: import("mongoose").LeanDocument<UserType>[];
-            friendRequestsReceived: import("mongoose").LeanDocument<UserType>[];
             isActive: boolean;
             lastActive: Date;
         };

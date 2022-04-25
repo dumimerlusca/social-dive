@@ -13,6 +13,20 @@ export default class FriendsService {
 		@InjectModel("Friendship") readonly friendshipModel: Model<FriendshipType>,
 		readonly usersService: UsersService
 	) {}
+	async getUserFriends(userId: string) {
+		const friendships = await this.friendshipModel
+			.find({
+				users: { $all: [userId] },
+			})
+			.populate([{ path: "users", model: "User", select: "-password -photo" }]);
+
+		return friendships.map(friendship => {
+			return friendship.users.find(
+				(user: any) => String(user.id) !== String(userId)
+			);
+		});
+	}
+
 	isPartOfFriendRequest(userId: string, friendRequest: FriendRequestType) {
 		return (
 			String(friendRequest.from) === userId ||

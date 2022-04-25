@@ -35,28 +35,10 @@ export class User {
 	})
 	photo: PhotoType;
 
-	@Prop({
-		type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-		default: [],
-	})
-	friends: UserType[];
-
-	@Prop({
-		type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-		default: [],
-	})
-	friendRequestsSent: UserType[];
-
-	@Prop({
-		type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-		default: [],
-	})
-	friendRequestsReceived: UserType[];
-
 	@Prop({ default: false })
 	isActive: boolean;
 
-	@Prop({ default: 0 })
+	@Prop({ default: new Date(Date.now()) })
 	lastActive: Date;
 }
 

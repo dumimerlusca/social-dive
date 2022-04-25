@@ -10,9 +10,6 @@ export declare class User {
     email: string;
     password: string;
     photo: PhotoType;
-    friends: UserType[];
-    friendRequestsSent: UserType[];
-    friendRequestsReceived: UserType[];
     isActive: boolean;
     lastActive: Date;
 }

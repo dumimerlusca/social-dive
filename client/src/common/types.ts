@@ -4,16 +4,24 @@ export type MessageType = {
 	user: string;
 	chatId: string;
 	_id: string;
-	updatedAt: number;
-	createdAt: number;
+	updatedAt: string;
+	createdAt: string;
 	text: string;
 };
 
 export type ChatType = {
 	users: IUser[];
-	createdAt: number;
+	createdAt: string;
 	initiatedBy: string;
 	lastMessage: string | null;
-	updatedAt: number;
+	updatedAt: string;
 	_id: string;
+};
+
+export type FriendRequestType = {
+	from: string;
+	to: string;
+	_id: string;
+	createdAt?: string;
+	updatedAt?: string;
 };

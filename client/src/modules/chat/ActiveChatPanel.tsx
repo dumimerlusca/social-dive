@@ -1,18 +1,14 @@
 import { ChatType } from "common/types";
 import { formatDate } from "helpers/helpers";
-import React from "react";
 import { userImageUrl } from "services/api";
 import { getCurrentUserId } from "store/selectors/appSelectors";
 import { useAppSelector } from "store/store";
 import { getOtherUser } from "./ChatListItem";
-import { useGetChatMessages } from "./apiClient";
-import ChatMessage from "./ChatMessage";
+import MessagesList from "./MessagesList";
 import NewMessage from "./NewMessage";
 
 const ActiveChatPanel = ({ chat }: { chat: ChatType }) => {
 	const currentUserId = useAppSelector(getCurrentUserId);
-
-	const { data: messages = [], isLoading } = useGetChatMessages(chat._id);
 
 	const user = getOtherUser(chat, currentUserId);
 
@@ -39,17 +35,7 @@ const ActiveChatPanel = ({ chat }: { chat: ChatType }) => {
 				</p>
 			</div>
 			<div className='bg-primary rounded-3xl p-5 mt-5'>
-				<div className='h-screen max-h-[400px] overflow-auto py-5 px-3 flex flex-col gap-5'>
-					{isLoading && "Loading..."}
-					{messages.map(message => {
-						return (
-							<ChatMessage
-								message={message}
-								sentByCurrentUser={message.user === currentUserId}
-							/>
-						);
-					})}
-				</div>
+				<MessagesList />
 				<NewMessage />
 			</div>
 		</div>

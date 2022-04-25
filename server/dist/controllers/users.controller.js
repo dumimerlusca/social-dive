@@ -20,9 +20,11 @@ const fs = require("fs");
 const path = require("path");
 const auth_guard_1 = require("../guards/auth.guard");
 const decorators_1 = require("../decorators/decorators");
+const friends_service_1 = require("../services/friends.service");
 let UsersController = class UsersController {
-    constructor(usersService) {
+    constructor(usersService, friendsService) {
         this.usersService = usersService;
+        this.friendsService = friendsService;
     }
     async getAll(req) {
         return await this.usersService.userModel.find({}).select(users_service_1.userSelectOptions);
@@ -75,107 +77,14 @@ let UsersController = class UsersController {
             root: path.join(__dirname, "../../public"),
         });
     }
-    async sendFriendRequest(req, receiverId) {
-        const senderId = req.user.id;
-        const sender = await this.usersService.userModel.findById(senderId);
-        const receiver = await this.usersService.userModel.findById(receiverId);
-        if (!receiver || !sender)
-            throw new common_1.HttpException("User not found", common_1.HttpStatus.NOT_FOUND);
-        if (sender.friendRequestsSent.includes(receiverId) ||
-            sender.friendRequestsReceived.includes(senderId))
-            throw new common_1.HttpException("Request already sent", common_1.HttpStatus.BAD_REQUEST);
-        if (sender.friends.includes(receiverId))
-            throw new common_1.HttpException("This user is already in your friend list", common_1.HttpStatus.BAD_REQUEST);
-        await sender.updateOne({ $push: { friendRequestsSent: receiverId } }, { new: true });
-        await receiver.updateOne({ $push: { friendRequestsReceived: senderId } }, { new: true });
-        return await this.usersService.userModel
-            .findById(senderId)
-            .select(users_service_1.userSelectOptions)
-            .populate(users_service_1.populateOptions);
-    }
-    async respondToFriendRequest(action, senderId, req) {
-        if (action !== "accept" && action !== "decline")
-            return "Action not valid, must be 'accept' or 'decline'";
-        const receiverId = req.user.id;
-        const sender = await this.usersService.userModel.findById(senderId);
-        const receiver = await this.usersService.userModel.findById(receiverId);
-        if (!receiver || !sender)
-            throw new common_1.HttpException("User not found", common_1.HttpStatus.NOT_FOUND);
-        if (!sender.friendRequestsSent.includes(receiverId) ||
-            !receiver.friendRequestsReceived.includes(senderId))
-            throw new common_1.HttpException("No friend request found", common_1.HttpStatus.BAD_REQUEST);
-        if (action === "accept") {
-            await sender.updateOne({
-                $pull: { friendRequestsSent: receiverId },
-                $push: { friends: receiverId },
-            });
-            await receiver.updateOne({
-                $pull: { friendRequestsReceived: senderId },
-                $push: { friends: senderId },
-            });
-            return await this.usersService.userModel
-                .findById(receiverId)
-                .select(users_service_1.userSelectOptions)
-                .populate(users_service_1.populateOptions);
-        }
-        if (action === "decline") {
-            await sender.updateOne({
-                $pull: { friendRequestsSent: receiverId },
-            });
-            await receiver.updateOne({
-                $pull: { friendRequestsReceived: senderId },
-            });
-            return await this.usersService.userModel
-                .findById(receiverId)
-                .select(users_service_1.userSelectOptions)
-                .populate(users_service_1.populateOptions);
-        }
-    }
-    async cancelFriendRequest(req, receiverId) {
-        const senderId = req.user.id;
-        const sender = await this.usersService.userModel.findById(senderId);
-        const receiver = await this.usersService.userModel.findById(receiverId);
-        if (!receiver || !sender)
-            throw new common_1.HttpException("User not found", common_1.HttpStatus.NOT_FOUND);
-        if (!sender.friendRequestsSent.includes(receiverId) ||
-            !receiver.friendRequestsReceived.includes(senderId))
-            throw new common_1.HttpException("No friend request found", common_1.HttpStatus.BAD_REQUEST);
-        await sender.updateOne({
-            $pull: { friendRequestsSent: receiverId },
-        });
-        await receiver.updateOne({
-            $pull: { friendRequestsReceived: senderId },
-        });
-        return await this.usersService.userModel
-            .findById(senderId)
-            .select(users_service_1.userSelectOptions)
-            .populate(users_service_1.populateOptions);
-    }
-    async deleteFriend(friendId, req) {
-        const userId = req.user.id;
-        const user = await this.usersService.userModel.findById(userId);
-        const friend = await this.usersService.userModel.findById(friendId);
-        if (!user.friends.includes(friendId))
-            throw new common_1.HttpException("User is not in your friend list", common_1.HttpStatus.BAD_REQUEST);
-        await user.updateOne({ $pull: { friends: friendId } });
-        await friend.updateOne({ $pull: { friends: userId } });
-        return await this.usersService.userModel
-            .findById(userId)
-            .select(users_service_1.userSelectOptions)
-            .populate(users_service_1.populateOptions);
-    }
     async peopleYouMightKnow(req) {
-        const loggedInUser = req.user;
+        const loggedInUserId = req.user.id;
+        const userFriends = (await this.friendsService.getUserFriends(loggedInUserId));
+        const friendsIDsArray = userFriends.map(user => String(user._id));
         const users = await this.usersService.userModel
-            .find({
-            $and: [
-                { _id: { $ne: loggedInUser } },
-                { friends: { $nin: [loggedInUser.id] } },
-            ],
-        })
-            .populate(users_service_1.populateOptions)
+            .find({ _id: { $ne: loggedInUserId } })
             .select(users_service_1.userSelectOptions);
-        return users;
+        return users.filter(user => !friendsIDsArray.includes(String(user._id)));
     }
     async updateDocuments() {
         await this.usersService.userModel.updateMany({}, { friendRequestsSent: [], friendRequestsReceived: [], friends: [] });
@@ -233,39 +142,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getPhoto", null);
 __decorate([
-    (0, common_1.Patch)(":id/sendFriendRequest"),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Param)("id")),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
-    __metadata("design:returntype", Promise)
-], UsersController.prototype, "sendFriendRequest", null);
-__decorate([
-    (0, common_1.Patch)(":id/respondToFriendRequest"),
-    __param(0, (0, common_1.Query)("action")),
-    __param(1, (0, common_1.Param)("id")),
-    __param(2, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, Object]),
-    __metadata("design:returntype", Promise)
-], UsersController.prototype, "respondToFriendRequest", null);
-__decorate([
-    (0, common_1.Patch)(":id/cancelFriendRequest"),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Param)("id")),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
-    __metadata("design:returntype", Promise)
-], UsersController.prototype, "cancelFriendRequest", null);
-__decorate([
-    (0, common_1.Patch)(":id/deleteFriend"),
-    __param(0, (0, common_1.Param)("id")),
-    __param(1, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
-    __metadata("design:returntype", Promise)
-], UsersController.prototype, "deleteFriend", null);
-__decorate([
     (0, common_1.Get)("other/peopleYouMightKnow"),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
@@ -281,7 +157,8 @@ __decorate([
 UsersController = __decorate([
     (0, common_1.Controller)("api/users"),
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [users_service_1.default])
+    __metadata("design:paramtypes", [users_service_1.default,
+        friends_service_1.default])
 ], UsersController);
 exports.UsersController = UsersController;
 //# sourceMappingURL=users.controller.js.map

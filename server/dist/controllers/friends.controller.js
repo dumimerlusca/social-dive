@@ -25,10 +25,15 @@ let FriendsController = class FriendsController {
         this.friendsService = friendsService;
     }
     async getUserFriends(userId) {
-        const friendships = await this.friendshipModel.find({
-            users: { $all: [userId] },
+        const friends = await this.friendsService.getUserFriends(userId);
+        return friends;
+    }
+    async deleteFriendship(req, userId) {
+        const loggedInUserId = req.user.id;
+        await this.friendshipModel.deleteOne({
+            users: { $all: [userId, loggedInUserId] },
         });
-        return friendships.map(friendship => friendship.users.filter(id => id !== userId)[0]);
+        return "Friend deleted successfully";
     }
     async getUserSentFriendRequest(req) {
         const userId = req.user.id;
@@ -43,6 +48,8 @@ let FriendsController = class FriendsController {
         const toUserId = body.to;
         const sender = await this.usersService.userModel.findById(fromUserId);
         const receiver = await this.usersService.userModel.findById(toUserId);
+        if (fromUserId === toUserId)
+            throw new common_1.HttpException("The 2 ids are the same", common_1.HttpStatus.BAD_REQUEST);
         if (!receiver || !sender)
             throw new common_1.HttpException("User not found", common_1.HttpStatus.NOT_FOUND);
         const requestAlreadyExists = await this.friendRequestModel.findOne({
@@ -99,6 +106,14 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], FriendsController.prototype, "getUserFriends", null);
+__decorate([
+    (0, common_1.Delete)("/delete/:userId"),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Param)("userId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", Promise)
+], FriendsController.prototype, "deleteFriendship", null);
 __decorate([
     (0, common_1.Get)("/requests/me/sent"),
     __param(0, (0, common_1.Req)()),

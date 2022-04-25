@@ -17,13 +17,7 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 exports.userSelectOptions = "-password -photo";
-exports.populateOptions = [
-    {
-        path: "friends friendRequestsReceived friendRequestsSent",
-        model: "User",
-        select: exports.userSelectOptions,
-    },
-];
+exports.populateOptions = [];
 let UsersService = class UsersService {
     constructor(userModel) {
         this.userModel = userModel;

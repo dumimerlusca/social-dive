@@ -1,24 +1,33 @@
 import Button from "components/Button/Button";
 import React from "react";
-import { useRespondToFriendRequest } from "modules/users/apiClient";
+import {
+	useAcceptFriendRequest,
+	useDeleteFriendRequest,
+	useGetReceivedFriendRequest,
+} from "modules/users/apiClient";
 
 const RespondToFriendRequestButton = ({ userId }: { userId: string }) => {
-	const { mutate: declineFriendRequest } = useRespondToFriendRequest(
-		userId,
-		"decline"
-	);
+	const { data: receivedFriendRequests = [] } = useGetReceivedFriendRequest();
+	const { mutate: deleteFriendRequest } = useDeleteFriendRequest();
 
-	const { mutate: acceptFriendRequest } = useRespondToFriendRequest(
-		userId,
-		"accept"
+	const { mutate: acceptFriendRequest } = useAcceptFriendRequest();
+
+	const currentRequest = receivedFriendRequests.find(
+		request => request.from === userId
 	);
 
 	return (
 		<div className='flex gap-3'>
-			<Button color='secondary' onClick={() => acceptFriendRequest()}>
+			<Button
+				color='secondary'
+				onClick={() => acceptFriendRequest(currentRequest?._id)}
+			>
 				Accept
 			</Button>
-			<Button color='danger' onClick={() => declineFriendRequest()}>
+			<Button
+				color='danger'
+				onClick={() => deleteFriendRequest(currentRequest?._id)}
+			>
 				Decline
 			</Button>
 		</div>

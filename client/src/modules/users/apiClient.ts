@@ -1,10 +1,13 @@
 import { queryKeys } from "common/constansts";
+import useFetchData from "common/hooks/useFetchData";
+import { FriendRequestType } from "common/types";
 import IUser from "interfaces/IUser";
-import { useMutation, useQuery } from "react-query";
-import { get, patch } from "services/api";
+import { useCallback } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useSelector } from "react-redux";
+import { APIdelete, get, post } from "services/api";
 import usersService from "services/users.service";
-import { updateCurrentUser } from "store/auth/authSlice";
-import { useAppDispatch } from "store/store";
+import { getCurrentUserId } from "store/selectors/appSelectors";
 
 export const useGetPeopleYouMightKnow = () => {
 	return useQuery<IUser[]>(
@@ -25,69 +28,78 @@ export const useGetUser = (userId: string) => {
 	return { data, isLoading, error };
 };
 
-export const useSendFriendRequest = (userId: string) => {
-	const dispatch = useAppDispatch();
-	const sendFriendRequest = async () => {
-		const res = await patch(`/users/${userId}/sendFriendRequest`);
-		return res.data;
-	};
-	const { data, mutate } = useMutation(sendFriendRequest, {
-		onSuccess: data => {
-			dispatch(updateCurrentUser(data));
-		},
-	});
-
-	return { data, mutate };
+export const useGetUserFriends = (userId: string) => {
+	return useFetchData<IUser[]>(queryKeys.friends(userId), `/friends/${userId}`);
 };
 
-export const useRespondToFriendRequest = (
-	userId: string,
-	action: "accept" | "decline"
-) => {
-	const dispatch = useAppDispatch();
-	const respond = async () => {
-		const res = await patch(
-			`/users/${userId}/respondToFriendRequest?action=${action}`
-		);
-		return res.data;
-	};
-	const { data, mutate } = useMutation(respond, {
-		onSuccess: data => {
-			dispatch(updateCurrentUser(data));
-		},
-	});
-
-	return { data, mutate };
+export const useGetSentFriendRequests = () => {
+	return useFetchData<FriendRequestType[]>(
+		queryKeys.sentFriendRequest,
+		"/friends/requests/me/sent"
+	);
 };
 
-export const useCancelFriendRequest = (userId: string) => {
-	const dispatch = useAppDispatch();
-
-	const cancelFriendRequest = async () => {
-		const res = await patch(`/users/${userId}/cancelFriendRequest`);
+export const useGetReceivedFriendRequest = () => {
+	return useFetchData<FriendRequestType[]>(
+		queryKeys.receivedFriendRequest,
+		"/friends/requests/me/received"
+	);
+};
+export const useSendFriendRequestV2 = () => {
+	const queryClient = useQueryClient();
+	const sendFriendRequest = useCallback(async (to: string) => {
+		const res = await post("/friends/requests/send", { to });
 		return res.data;
-	};
-	const { data, mutate } = useMutation(cancelFriendRequest, {
-		onSuccess: data => {
-			dispatch(updateCurrentUser(data));
+	}, []);
+	return useMutation(sendFriendRequest, {
+		onSettled: () => {
+			queryClient.invalidateQueries(queryKeys.sentFriendRequest);
 		},
 	});
-
-	return { data, mutate };
 };
 
-export const useUnfriend = (userId: string) => {
-	const dispatch = useAppDispatch();
-
-	const unfriend = async () => {
-		const res = await patch(`/users/${userId}/deleteFriend`);
-		return res.data;
-	};
-	const { data, mutate } = useMutation(unfriend, {
-		onSuccess: data => {
-			dispatch(updateCurrentUser(data));
+export const useDeleteFriend = () => {
+	const queryClient = useQueryClient();
+	const currentUserId = useSelector(getCurrentUserId);
+	const deleteFriend = useCallback(
+		userId => APIdelete(`/friends/delete/${userId}`),
+		[]
+	);
+	return useMutation(deleteFriend, {
+		onSettled: () => {
+			queryClient.invalidateQueries(queryKeys.friends(currentUserId));
 		},
 	});
+};
 
-	return { data, mutate };
+export const useDeleteFriendRequest = () => {
+	const queryClient = useQueryClient();
+	const deleteFriendRequest = useCallback(
+		async friendRequestId => APIdelete(`/friends/requests/${friendRequestId}`),
+		[]
+	);
+	return useMutation(deleteFriendRequest, {
+		onSettled: () => {
+			queryClient.invalidateQueries(queryKeys.sentFriendRequest);
+			queryClient.invalidateQueries(queryKeys.receivedFriendRequest);
+		},
+	});
+};
+
+export const useAcceptFriendRequest = () => {
+	const currentUserId = useSelector(getCurrentUserId);
+	const queryClient = useQueryClient();
+	const acceptFriendRequest = useCallback(
+		async friendRequestId =>
+			APIdelete(`/friends/requests/${friendRequestId}/accept`),
+		[]
+	);
+	return useMutation(acceptFriendRequest, {
+		onSettled: () => {
+			queryClient.invalidateQueries(queryKeys.sentFriendRequest);
+			queryClient.invalidateQueries(queryKeys.receivedFriendRequest);
+			queryClient.invalidateQueries(queryKeys.friends(currentUserId));
+			queryClient.invalidateQueries(queryKeys.peopleYouMightKnow);
+		},
+	});
 };

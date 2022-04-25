@@ -5,7 +5,7 @@ const token = localStorage.getItem("token");
 
 type initialStateType = {
 	isLoggedIn: boolean;
-	currentUser: null | IUser;
+	currentUser: IUser;
 	isLoading: boolean;
 	token: string | null;
 	registerSuccess: boolean | null;
@@ -15,7 +15,7 @@ type initialStateType = {
 
 const initialState: initialStateType = {
 	isLoggedIn: false,
-	currentUser: null,
+	currentUser: null as unknown as IUser,
 	isLoading: false,
 	token: token,
 	registerSuccess: null,
@@ -67,7 +67,7 @@ const authSlice = createSlice({
 		authReset: state => {
 			state.isLoading = false;
 			state.isLoggedIn = false;
-			state.currentUser = null;
+			state.currentUser = null as unknown as IUser;
 			state.loadUserLoading = true;
 			state.error = null;
 			state.token = null;

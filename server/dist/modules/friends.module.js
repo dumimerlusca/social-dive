@@ -18,7 +18,7 @@ let FriendsModule = class FriendsModule {
 FriendsModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            users_module_1.UsersModule,
+            (0, common_1.forwardRef)(() => users_module_1.UsersModule),
             mongoose_1.MongooseModule.forFeature([
                 { name: "FriendRequest", schema: friendRequest_chema_1.default },
                 { name: "Friendship", schema: friendship_schema_1.default },
@@ -26,6 +26,7 @@ FriendsModule = __decorate([
         ],
         providers: [friends_service_1.default],
         controllers: [friends_controller_1.default],
+        exports: [friends_service_1.default],
     })
 ], FriendsModule);
 exports.default = FriendsModule;

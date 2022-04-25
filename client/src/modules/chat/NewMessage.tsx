@@ -1,29 +1,17 @@
 import InputWithIcon from "components/Input/InputWithIcon";
-import React, { FormEvent, useState } from "react";
 import { FiSend } from "react-icons/fi";
-import { useSelector } from "react-redux";
-import { getCurrentChat } from "store/selectors/appSelectors";
-import { useSendMessage } from "./apiClient";
+import useActiveChatContext from "./context/activeChatContext";
 
 const NewMessage = () => {
-	const currentChat = useSelector(getCurrentChat);
-	const [value, setValue] = useState("");
-
-	const { mutate: sendMessage } = useSendMessage(currentChat?._id!);
-
-	const onSubmit = (e: FormEvent) => {
-		e.preventDefault();
-		setValue("");
-		sendMessage(value);
-	};
+	const { onSubmit, inputValue, onChange } = useActiveChatContext();
 
 	return (
 		<form onSubmit={onSubmit}>
 			<InputWithIcon
 				inputProps={{
 					placeholder: "Type something",
-					onChange: e => setValue(e.target.value),
-					value: value,
+					onChange: onChange,
+					value: inputValue,
 				}}
 				wrapperClassName='!bg-gray-100 text-black'
 				endIcon={

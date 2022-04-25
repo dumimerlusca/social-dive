@@ -20,11 +20,13 @@ const formidable_1 = require("formidable");
 const fs = require("fs");
 const users_service_1 = require("../services/users.service");
 const decorators_1 = require("../decorators/decorators");
+const friends_service_1 = require("../services/friends.service");
 let PostsController = class PostsController {
-    constructor(postModel, usersService, postsService) {
+    constructor(postModel, usersService, postsService, friendsService) {
         this.postModel = postModel;
         this.usersService = usersService;
         this.postsService = postsService;
+        this.friendsService = friendsService;
     }
     async create(req, res) {
         const user = req.user;
@@ -58,9 +60,9 @@ let PostsController = class PostsController {
     }
     async getNewsfeedPosts(req) {
         const userId = req.user.id;
-        const user = await this.usersService.userModel.findById(userId);
+        const friends = await this.friendsService.getUserFriends(userId);
         return await this.postsService.postModel
-            .find({ $or: [{ user: { $in: user.friends } }, { user: userId }] })
+            .find({ $or: [{ user: { $in: friends } }, { user: userId }] })
             .sort({ createdAt: -1 })
             .populate(posts_service_1.populateOptions);
     }
@@ -218,7 +220,8 @@ PostsController = __decorate([
     __param(0, (0, mongoose_1.InjectModel)("Post")),
     __metadata("design:paramtypes", [mongoose_2.Model,
         users_service_1.default,
-        posts_service_1.PostsService])
+        posts_service_1.PostsService,
+        friends_service_1.default])
 ], PostsController);
 exports.default = PostsController;
 //# sourceMappingURL=posts.controller.js.map

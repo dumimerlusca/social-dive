@@ -26,11 +26,15 @@ import { UserType } from "../schemas/user.schema";
 import * as path from "path";
 import { AuthGuard } from "../guards/auth.guard";
 import { Public } from "../decorators/decorators";
+import FriendsService from "../services/friends.service";
 
 @Controller("api/users")
 @Injectable()
 export class UsersController {
-	constructor(private usersService: UsersService) {}
+	constructor(
+		private usersService: UsersService,
+		private friendsService: FriendsService
+	) {}
 
 	@Get()
 	@Public()
@@ -110,168 +114,18 @@ export class UsersController {
 		});
 	}
 
-	@Patch(":id/sendFriendRequest")
-	async sendFriendRequest(@Req() req: any, @Param("id") receiverId: any) {
-		const senderId = req.user.id;
-
-		const sender = await this.usersService.userModel.findById(senderId);
-		const receiver = await this.usersService.userModel.findById(receiverId);
-
-		if (!receiver || !sender)
-			throw new HttpException("User not found", HttpStatus.NOT_FOUND);
-
-		if (
-			sender.friendRequestsSent.includes(receiverId) ||
-			sender.friendRequestsReceived.includes(senderId)
-		)
-			throw new HttpException("Request already sent", HttpStatus.BAD_REQUEST);
-		if (sender.friends.includes(receiverId))
-			throw new HttpException(
-				"This user is already in your friend list",
-				HttpStatus.BAD_REQUEST
-			);
-
-		await sender.updateOne(
-			{ $push: { friendRequestsSent: receiverId } },
-			{ new: true }
-		);
-		await receiver.updateOne(
-			{ $push: { friendRequestsReceived: senderId } },
-			{ new: true }
-		);
-
-		return await this.usersService.userModel
-			.findById(senderId)
-			.select(userSelectOptions)
-			.populate(populateOptions);
-	}
-
-	// :id/respondToFriendRequest?action={'accept' | 'decline'}
-	@Patch(":id/respondToFriendRequest")
-	async respondToFriendRequest(
-		@Query("action") action: "accept" | "decline",
-		@Param("id") senderId: string,
-		@Req() req: any
-	) {
-		if (action !== "accept" && action !== "decline")
-			return "Action not valid, must be 'accept' or 'decline'";
-
-		const receiverId = req.user.id;
-
-		const sender = await this.usersService.userModel.findById(senderId);
-		const receiver = await this.usersService.userModel.findById(receiverId);
-
-		if (!receiver || !sender)
-			throw new HttpException("User not found", HttpStatus.NOT_FOUND);
-
-		if (
-			!sender.friendRequestsSent.includes(receiverId) ||
-			!receiver.friendRequestsReceived.includes(senderId as any)
-		)
-			throw new HttpException(
-				"No friend request found",
-				HttpStatus.BAD_REQUEST
-			);
-
-		if (action === "accept") {
-			await sender.updateOne({
-				$pull: { friendRequestsSent: receiverId },
-				$push: { friends: receiverId },
-			});
-
-			await receiver.updateOne({
-				$pull: { friendRequestsReceived: senderId },
-				$push: { friends: senderId },
-			});
-			return await this.usersService.userModel
-				.findById(receiverId)
-				.select(userSelectOptions)
-				.populate(populateOptions);
-		}
-
-		if (action === "decline") {
-			await sender.updateOne({
-				$pull: { friendRequestsSent: receiverId },
-			});
-
-			await receiver.updateOne({
-				$pull: { friendRequestsReceived: senderId },
-			});
-
-			return await this.usersService.userModel
-				.findById(receiverId)
-				.select(userSelectOptions)
-				.populate(populateOptions);
-		}
-	}
-
-	@Patch(":id/cancelFriendRequest")
-	async cancelFriendRequest(@Req() req: any, @Param("id") receiverId: string) {
-		const senderId = req.user.id;
-
-		const sender = await this.usersService.userModel.findById(senderId);
-		const receiver = await this.usersService.userModel.findById(receiverId);
-
-		if (!receiver || !sender)
-			throw new HttpException("User not found", HttpStatus.NOT_FOUND);
-
-		if (
-			!sender.friendRequestsSent.includes(receiverId as any) ||
-			!receiver.friendRequestsReceived.includes(senderId)
-		)
-			throw new HttpException(
-				"No friend request found",
-				HttpStatus.BAD_REQUEST
-			);
-
-		await sender.updateOne({
-			$pull: { friendRequestsSent: receiverId },
-		});
-
-		await receiver.updateOne({
-			$pull: { friendRequestsReceived: senderId },
-		});
-
-		return await this.usersService.userModel
-			.findById(senderId)
-			.select(userSelectOptions)
-			.populate(populateOptions);
-	}
-
-	@Patch(":id/deleteFriend")
-	async deleteFriend(@Param("id") friendId: any, @Req() req: any) {
-		const userId = req.user.id;
-		const user = await this.usersService.userModel.findById(userId);
-		const friend = await this.usersService.userModel.findById(friendId);
-
-		if (!user.friends.includes(friendId))
-			throw new HttpException(
-				"User is not in your friend list",
-				HttpStatus.BAD_REQUEST
-			);
-
-		await user.updateOne({ $pull: { friends: friendId } });
-		await friend.updateOne({ $pull: { friends: userId } });
-
-		return await this.usersService.userModel
-			.findById(userId)
-			.select(userSelectOptions)
-			.populate(populateOptions);
-	}
-
 	@Get("other/peopleYouMightKnow")
 	async peopleYouMightKnow(@Req() req: any) {
-		const loggedInUser: UserType = req.user;
+		const loggedInUserId = req.user.id;
+		const userFriends = (await this.friendsService.getUserFriends(
+			loggedInUserId
+		)) as unknown as UserType[];
+		const friendsIDsArray = userFriends.map(user => String(user._id));
 		const users = await this.usersService.userModel
-			.find({
-				$and: [
-					{ _id: { $ne: loggedInUser } },
-					{ friends: { $nin: [loggedInUser.id] } },
-				],
-			})
-			.populate(populateOptions)
+			.find({ _id: { $ne: loggedInUserId } })
 			.select(userSelectOptions);
-		return users;
+
+		return users.filter(user => !friendsIDsArray.includes(String(user._id)));
 	}
 
 	// For updating all the documents, adding new fields etc

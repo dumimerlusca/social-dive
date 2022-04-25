@@ -1,14 +1,23 @@
 import Button from "components/Button/Button";
 import React from "react";
-import { useCancelFriendRequest } from "modules/users/apiClient";
+import {
+	useDeleteFriendRequest,
+	useGetSentFriendRequests,
+} from "modules/users/apiClient";
 
 const CancelSentFriendRequestButton = ({ userId }: { userId: string }) => {
-	const { mutate: cancelFriendRequest } = useCancelFriendRequest(userId);
+	const { data: sentFriendRequests = [] } = useGetSentFriendRequests();
+	const { mutate: deleteFriendRequest } = useDeleteFriendRequest();
+
+	const currentRequest = sentFriendRequests.find(
+		request => request.to === userId
+	);
+
 	return (
 		<Button
 			color='danger'
 			onClick={() => {
-				cancelFriendRequest();
+				deleteFriendRequest(currentRequest?._id);
 			}}
 		>
 			Cancel request

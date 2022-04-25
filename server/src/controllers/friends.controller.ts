@@ -15,8 +15,9 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { FriendRequestType } from "../schemas/friendRequest.chema";
 import { FriendshipType } from "../schemas/friendship.schema";
+import { UserType } from "../schemas/user.schema";
 import FriendsService from "../services/friends.service";
-import UsersService from "../services/users.service";
+import UsersService, { populateOptions } from "../services/users.service";
 
 @Injectable()
 @Controller("api/friends")
@@ -35,12 +36,18 @@ export default class FriendsController {
 
 	@Get("/:userId")
 	async getUserFriends(@Param("userId") userId: string) {
-		const friendships = await this.friendshipModel.find({
-			users: { $all: [userId] },
+		const friends = await this.friendsService.getUserFriends(userId);
+		return friends;
+	}
+
+	@Delete("/delete/:userId")
+	async deleteFriendship(@Req() req: any, @Param("userId") userId: string) {
+		const loggedInUserId = req.user.id;
+
+		await this.friendshipModel.deleteOne({
+			users: { $all: [userId, loggedInUserId] },
 		});
-		return friendships.map(
-			friendship => friendship.users.filter(id => id !== userId)[0]
-		);
+		return "Friend deleted successfully";
 	}
 
 	@Get("/requests/me/sent")
@@ -60,6 +67,9 @@ export default class FriendsController {
 		const toUserId = body.to;
 		const sender = await this.usersService.userModel.findById(fromUserId);
 		const receiver = await this.usersService.userModel.findById(toUserId);
+
+		if (fromUserId === toUserId)
+			throw new HttpException("The 2 ids are the same", HttpStatus.BAD_REQUEST);
 
 		if (!receiver || !sender)
 			throw new HttpException("User not found", HttpStatus.NOT_FOUND);

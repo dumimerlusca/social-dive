@@ -5,6 +5,7 @@ import SearchChat from "./SearchChat";
 import Button from "components/Button/Button";
 import { useSelector } from "react-redux";
 import { getCurrentChat } from "store/selectors/appSelectors";
+import { ActiveChatContextProvider } from "./context/activeChatContext";
 
 const ChatPanel = () => {
 	const currentChat = useSelector(getCurrentChat);
@@ -21,7 +22,9 @@ const ChatPanel = () => {
 				</div>
 				<div className='col-span-8'>
 					{currentChat ? (
-						<ActiveChatPanel chat={currentChat} />
+						<ActiveChatContextProvider>
+							<ActiveChatPanel chat={currentChat} />
+						</ActiveChatContextProvider>
 					) : (
 						"No active chat"
 					)}

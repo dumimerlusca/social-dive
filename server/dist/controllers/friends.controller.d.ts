@@ -17,6 +17,7 @@ export default class FriendsController {
     readonly friendsService: FriendsService;
     constructor(friendRequestModel: Model<FriendRequestType>, friendshipModel: Model<FriendshipType>, usersService: UsersService, friendsService: FriendsService);
     getUserFriends(userId: string): Promise<string[]>;
+    deleteFriendship(req: any, userId: string): Promise<string>;
     getUserSentFriendRequest(req: any): Promise<(FriendRequestType & {
         _id: any;
     })[]>;

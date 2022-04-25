@@ -5,11 +5,13 @@ import { PostSchema } from "../schemas/post.schema";
 import CommentsService from "../services/comments.service";
 import { PostsService } from "../services/posts.service";
 import CommentsModule from "./comments.module";
+import FriendsModule from "./friends.module";
 import { UsersModule } from "./users.module";
 
 @Module({
 	imports: [
 		UsersModule,
+		FriendsModule,
 		MongooseModule.forFeatureAsync([
 			{
 				name: "Post",

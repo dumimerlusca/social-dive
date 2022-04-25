@@ -9,4 +9,12 @@ export declare class EventsGateway implements OnGatewayConnection, OnGatewayDisc
     handleConnection(client: Socket): void;
     handleDisconnect(client: Socket): void;
     test(data: any, client: Socket): void;
+    privateMessage(data: {
+        content: any;
+        to: string;
+    }, client: Socket): void;
+    isTyping(client: Socket, data: {
+        from: string;
+        to: string;
+    }): void;
 }

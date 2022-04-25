@@ -13,4 +13,7 @@ export const queryKeys = {
 	loggedInUser: "loggedInUser",
 	chats: "chats",
 	chatMessages: (chatId: string) => `chat/${chatId}/messages`,
+	friends: (userId: string) => `friends/${userId}`,
+	sentFriendRequest: "sentFriendRequest",
+	receivedFriendRequest: "receivedFriendRequest",
 };

@@ -3,10 +3,10 @@ import { createContext, useContext, useEffect } from "react";
 import { useQueryClient } from "react-query";
 import { useSelector } from "react-redux";
 import { SERVER_URL } from "services/api";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 import { getCurrentUser } from "store/selectors/appSelectors";
 
-const SocketContext = createContext<any>({} as any);
+const SocketContext = createContext<{ socket: Socket }>({} as any);
 
 const socket = io(SERVER_URL, { autoConnect: false });
 

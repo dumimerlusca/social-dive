@@ -4,13 +4,7 @@ import { UserSchema, UserType } from "../schemas/user.schema";
 import { Model, PopulateOptions } from "mongoose";
 
 export const userSelectOptions = "-password -photo";
-export const populateOptions: PopulateOptions[] = [
-	{
-		path: "friends friendRequestsReceived friendRequestsSent",
-		model: "User",
-		select: userSelectOptions,
-	},
-];
+export const populateOptions: PopulateOptions[] = [];
 
 @Injectable()
 export default class UsersService {

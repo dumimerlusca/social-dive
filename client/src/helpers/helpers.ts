@@ -9,7 +9,7 @@ export const formatDate = (date: Date) => {
 	if (minutes < 59) return `${Math.floor(minutes)}m`;
 	if (hours < 24) return `${Math.floor(hours)}h`;
 
-	return `${Math.floor(days)}days ago`;
+	return `${Math.floor(days)}d`;
 };
 
 export const truncateString = (string: string, maxLength: number) => {

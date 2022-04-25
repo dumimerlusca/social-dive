@@ -7,6 +7,7 @@ export default class FriendsService {
     readonly friendshipModel: Model<FriendshipType>;
     readonly usersService: UsersService;
     constructor(friendRequestModel: Model<FriendRequestType>, friendshipModel: Model<FriendshipType>, usersService: UsersService);
+    getUserFriends(userId: string): Promise<string[]>;
     isPartOfFriendRequest(userId: string, friendRequest: FriendRequestType): boolean;
     isFriedRequestRecepient(userId: string, friendRequest: FriendRequestType): boolean;
 }

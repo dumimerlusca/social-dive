@@ -13,6 +13,7 @@ const post_schema_1 = require("../schemas/post.schema");
 const comments_service_1 = require("../services/comments.service");
 const posts_service_1 = require("../services/posts.service");
 const comments_module_1 = require("./comments.module");
+const friends_module_1 = require("./friends.module");
 const users_module_1 = require("./users.module");
 let PostsModule = class PostsModule {
 };
@@ -20,6 +21,7 @@ PostsModule = __decorate([
     (0, common_1.Module)({
         imports: [
             users_module_1.UsersModule,
+            friends_module_1.default,
             mongoose_1.MongooseModule.forFeatureAsync([
                 {
                     name: "Post",

@@ -20,7 +20,7 @@ const ChatList: React.FC = () => {
 	return (
 		<ul className='flex flex-col gap-3'>
 			{chats.map(chat => {
-				return <ChatListItem chat={chat} />;
+				return <ChatListItem key={chat._id} chat={chat} />;
 			})}
 		</ul>
 	);

@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserSchema = exports.User = exports.PhotoType = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
-const mongoose_2 = require("mongoose");
 class PhotoType {
 }
 exports.PhotoType = PhotoType;
@@ -46,32 +45,11 @@ __decorate([
     __metadata("design:type", PhotoType)
 ], User.prototype, "photo", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({
-        type: [{ type: mongoose_2.default.Schema.Types.ObjectId, ref: "User" }],
-        default: [],
-    }),
-    __metadata("design:type", Array)
-], User.prototype, "friends", void 0);
-__decorate([
-    (0, mongoose_1.Prop)({
-        type: [{ type: mongoose_2.default.Schema.Types.ObjectId, ref: "User" }],
-        default: [],
-    }),
-    __metadata("design:type", Array)
-], User.prototype, "friendRequestsSent", void 0);
-__decorate([
-    (0, mongoose_1.Prop)({
-        type: [{ type: mongoose_2.default.Schema.Types.ObjectId, ref: "User" }],
-        default: [],
-    }),
-    __metadata("design:type", Array)
-], User.prototype, "friendRequestsReceived", void 0);
-__decorate([
     (0, mongoose_1.Prop)({ default: false }),
     __metadata("design:type", Boolean)
 ], User.prototype, "isActive", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ default: 0 }),
+    (0, mongoose_1.Prop)({ default: new Date(Date.now()) }),
     __metadata("design:type", Date)
 ], User.prototype, "lastActive", void 0);
 User = __decorate([

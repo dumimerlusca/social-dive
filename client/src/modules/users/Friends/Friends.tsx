@@ -1,11 +1,13 @@
 import Button from "components/Button/Button";
 import React from "react";
 import { useSelector } from "react-redux";
-import { getCurrentUserFriends } from "store/selectors/appSelectors";
+import { getCurrentUserId } from "store/selectors/appSelectors";
+import { useGetUserFriends } from "../apiClient";
 import FriendsListItem from "./FriendsListItem";
 
 const Friends = () => {
-	const friends = useSelector(getCurrentUserFriends) ?? [];
+	const currentUserId = useSelector(getCurrentUserId);
+	const { data: friends = [] } = useGetUserFriends(currentUserId);
 
 	return (
 		<div className='p-5 bg-primary rounded-3xl'>

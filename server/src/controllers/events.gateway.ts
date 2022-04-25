@@ -35,7 +35,7 @@ export class EventsGateway
 		console.log("Connected", client.handshake.auth.fullName, client.id);
 
 		const userId = client.handshake.auth._id;
-		console.log(userId);
+		client.join(userId);
 		// Make user active
 		this.usersService.makeUserActive(userId);
 	}
@@ -50,7 +50,23 @@ export class EventsGateway
 
 	@SubscribeMessage("test")
 	test(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
-		console.log("test", client.id);
 		client.emit("hello", client.id);
+	}
+
+	@SubscribeMessage("privateMessage")
+	privateMessage(
+		@MessageBody() data: { content: any; to: string },
+		@ConnectedSocket() client: Socket
+	) {
+		const { content, to } = data;
+		client.to(to).emit("privateMessage", content);
+	}
+
+	@SubscribeMessage("isTyping")
+	isTyping(
+		@ConnectedSocket() client: Socket,
+		@MessageBody() data: { from: string; to: string }
+	) {
+		client.to(data.to).emit("isTyping", data.from);
 	}
 }

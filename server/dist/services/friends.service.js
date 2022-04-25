@@ -22,6 +22,16 @@ let FriendsService = class FriendsService {
         this.friendshipModel = friendshipModel;
         this.usersService = usersService;
     }
+    async getUserFriends(userId) {
+        const friendships = await this.friendshipModel
+            .find({
+            users: { $all: [userId] },
+        })
+            .populate([{ path: "users", model: "User", select: "-password -photo" }]);
+        return friendships.map(friendship => {
+            return friendship.users.find((user) => String(user.id) !== String(userId));
+        });
+    }
     isPartOfFriendRequest(userId, friendRequest) {
         return (String(friendRequest.from) === userId ||
             String(friendRequest.to) === userId);

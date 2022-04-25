@@ -28,6 +28,7 @@ import * as fs from "fs";
 import { UserType } from "../schemas/user.schema";
 import UsersService from "../services/users.service";
 import { Public } from "../decorators/decorators";
+import FriendsService from "../services/friends.service";
 
 @Controller("api/posts")
 @Injectable()
@@ -35,7 +36,8 @@ export default class PostsController {
 	constructor(
 		@InjectModel("Post") private postModel: Model<PostType>,
 		private usersService: UsersService,
-		private postsService: PostsService
+		private postsService: PostsService,
+		private friendsService: FriendsService
 	) {}
 
 	@Post()
@@ -80,9 +82,9 @@ export default class PostsController {
 	@Get("newsfeed")
 	async getNewsfeedPosts(@Req() req: any) {
 		const userId = req.user.id;
-		const user = await this.usersService.userModel.findById(userId);
+		const friends = await this.friendsService.getUserFriends(userId);
 		return await this.postsService.postModel
-			.find({ $or: [{ user: { $in: user.friends } }, { user: userId }] })
+			.find({ $or: [{ user: { $in: friends } }, { user: userId }] })
 			.sort({ createdAt: -1 })
 			.populate(populateOptions);
 	}

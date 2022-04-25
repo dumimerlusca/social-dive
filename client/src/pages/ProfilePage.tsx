@@ -2,7 +2,7 @@ import { useUserPosts } from "modules/posts/apiClient";
 import ProfilePagePosts from "modules/posts/ProfilePagePosts/ProfilePagePosts";
 import { useNavigate, useParams } from "react-router";
 import { userImageUrl } from "services/api";
-import { useGetUser } from "modules/users/apiClient";
+import { useGetUser, useGetUserFriends } from "modules/users/apiClient";
 import ProfilePageUserActions from "modules/users/ProfilePageUserActions";
 import { useCreateChat } from "modules/chat/apiClient";
 import { useEffect } from "react";
@@ -17,6 +17,7 @@ function ProfilePage() {
 
 	const currentUserId = useSelector(getCurrentUserId);
 	const { data: user } = useGetUser(userId!);
+	const { data: friends = [] } = useGetUserFriends(currentUserId);
 	const { data: posts = [], isLoading } = useUserPosts(userId!);
 	const { mutate: createChat, isSuccess, data: chat } = useCreateChat();
 
@@ -48,7 +49,7 @@ function ProfilePage() {
 
 					<div className='flex gap-6'>
 						<p>{posts?.length ?? 0} Posts</p>
-						<p>{user?.friends.length ?? 0} Friends</p>
+						<p>{friends.length ?? 0} Friends</p>
 					</div>
 					{!isCurrentUserProfile && (
 						<button

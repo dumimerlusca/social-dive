@@ -27,7 +27,7 @@ let EventsGateway = class EventsGateway {
     handleConnection(client) {
         console.log("Connected", client.handshake.auth.fullName, client.id);
         const userId = client.handshake.auth._id;
-        console.log(userId);
+        client.join(userId);
         this.usersService.makeUserActive(userId);
     }
     handleDisconnect(client) {
@@ -36,8 +36,14 @@ let EventsGateway = class EventsGateway {
         this.usersService.makeUserInactive(userId);
     }
     test(data, client) {
-        console.log("test", client.id);
         client.emit("hello", client.id);
+    }
+    privateMessage(data, client) {
+        const { content, to } = data;
+        client.to(to).emit("privateMessage", content);
+    }
+    isTyping(client, data) {
+        client.to(data.to).emit("isTyping", data.from);
     }
 };
 __decorate([
@@ -58,6 +64,22 @@ __decorate([
     __metadata("design:paramtypes", [Object, socket_io_1.Socket]),
     __metadata("design:returntype", void 0)
 ], EventsGateway.prototype, "test", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)("privateMessage"),
+    __param(0, (0, websockets_1.MessageBody)()),
+    __param(1, (0, websockets_1.ConnectedSocket)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, socket_io_1.Socket]),
+    __metadata("design:returntype", void 0)
+], EventsGateway.prototype, "privateMessage", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)("isTyping"),
+    __param(0, (0, websockets_1.ConnectedSocket)()),
+    __param(1, (0, websockets_1.MessageBody)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
+    __metadata("design:returntype", void 0)
+], EventsGateway.prototype, "isTyping", null);
 EventsGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({
         cors: {
