@@ -1,6 +1,7 @@
 DONE ------------- Separate friends, friendRequests fields from user to other individuals collections
 
 Implement notifications
+Integrate notifications with sochet io
 
 Cases for notifications
 
@@ -8,3 +9,11 @@ Cases for notifications
 - when someone likes/comments a post
 - when someone sends you a friend request
 - when someone accepts the friend request
+
+Don't save the images directly in the database
+
+Add a chat bot
+
+Add pagination to notifications, newsfeed posts, friends, people you might know, mesages
+
+Scroll to the bottom of the messages list

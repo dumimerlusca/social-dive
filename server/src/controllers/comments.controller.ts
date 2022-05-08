@@ -59,6 +59,18 @@ export default class CommentsController {
     if (comment.likes.includes(userId)) throw new HttpException('Comment is already liked', HttpStatus.BAD_REQUEST);
 
     await comment.updateOne({ $push: { likes: userId } });
+
+    const isCommentAuthor = userId === String(comment.user);
+
+    if (!isCommentAuthor) {
+      this.notificationsService.sendPostNotificationToUser(
+        userId,
+        comment.user,
+        String(comment.postId),
+        NotificationTypeEnum.postCommentLiked,
+      );
+    }
+
     return 'Comment liked successfuly';
   }
 

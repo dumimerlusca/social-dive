@@ -1,21 +1,75 @@
-import React from "react";
+import classNames from 'classnames';
+import { formatDate } from 'helpers/helpers';
+import UserFriendsActionsButton from 'modules/users/UserActions/UserFriendsActionsButton';
+import React from 'react';
+import { useNavigate } from 'react-router';
+import { userImageUrl } from 'services/api';
+import { useMarkNotificationSeen } from './apiClient';
+import { isFriendRequestContentType, isPostContentType, NotificationType, NotificationTypeEnum } from './types';
 
-const NotificationListItem = () => {
-	return (
-		<li className='flex gap-3 items-center'>
-			<img
-				className='rounded-full h-8 w-8'
-				src='https://images.unsplash.com/photo-1527980965255-d3b416303d12?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8YXZhdGFyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60'
-				alt=''
-			/>
-			<div>
-				<p className='text-thin'>
-					<span className='font-bold mr-2'>Paula comanac</span>liked your photo
-				</p>
-				<p className='text-sm'>5 min ago</p>
-			</div>
-		</li>
-	);
+type NotificationListItemProps = {
+  notification: NotificationType;
+};
+
+const NotificationListItem: React.FC<NotificationListItemProps> = ({ notification }) => {
+  const { from, type, createdAt, seen, _id, content } = notification;
+
+  const { mutate: markAsSeen } = useMarkNotificationSeen();
+  const navigate = useNavigate();
+
+  const onClick = () => {
+    if (isPostContentType(content)) {
+      const postId = content.postId;
+      markAsSeen(_id);
+      navigate(`/posts/${postId}`);
+      return;
+    }
+
+    if (type === NotificationTypeEnum.friendRequestAccepted || type === NotificationTypeEnum.friendRequest) {
+      markAsSeen(_id);
+      navigate(`/profile/${from._id}`);
+      return;
+    }
+  };
+
+  return (
+    <li className={classNames('', { 'text-gray-400': seen })}>
+      <div className='flex gap-3 items-center cursor-pointer' onClick={onClick}>
+        <img className='rounded-full h-8 w-8' src={userImageUrl(from._id)} alt='' />
+        <div>
+          <p className='text-thin text-inherit'>
+            <span className='font-bold mr-2'>{from.fullName}</span>
+            {getNotificationMessage(type)}
+          </p>
+          <p className='text-sm text-inherit'>{formatDate(new Date(createdAt))}</p>
+        </div>
+      </div>
+      {type === NotificationTypeEnum.friendRequest && !seen && (
+        <div className='flex justify-center'>
+          <UserFriendsActionsButton userId={from._id} />
+        </div>
+      )}
+    </li>
+  );
 };
 
 export default NotificationListItem;
+
+function getNotificationMessage(notificationType: NotificationTypeEnum) {
+  switch (notificationType) {
+    case NotificationTypeEnum.postLike:
+      return 'Liked your post';
+    case NotificationTypeEnum.postCommentAdded:
+      return 'Commented on your post';
+    case NotificationTypeEnum.postCreate:
+      return 'Just posted something new, go check it out!';
+    case NotificationTypeEnum.postCommentLiked:
+      return 'Liked your comment';
+    case NotificationTypeEnum.friendRequest:
+      return 'Sent you a friend request';
+    case NotificationTypeEnum.friendRequestAccepted:
+      return 'Accepted your friend request';
+    default:
+      return 'New Notification';
+  }
+}

@@ -47,9 +47,16 @@ async function isValidContent(content: any, notificationType: NotificationTypeEn
   if (
     notificationType === NotificationTypeEnum.postLike ||
     notificationType === NotificationTypeEnum.postCreate ||
-    notificationType === NotificationTypeEnum.postCommentAdded
+    notificationType === NotificationTypeEnum.postCommentAdded ||
+    notificationType === NotificationTypeEnum.postCommentLiked
   ) {
     return NotificationContentSchemas.postContent.isValidSync(content);
+  }
+  if (
+    notificationType === NotificationTypeEnum.friendRequest ||
+    notificationType === NotificationTypeEnum.friendRequestAccepted
+  ) {
+    return NotificationContentSchemas.friendRequestContent.isValidSync(content);
   }
   return false;
 }

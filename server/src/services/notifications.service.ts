@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { NotificationType } from '../schemas/notification.schema';
-import { NotificationTypeEnum, NotificationTypeLikePost } from '../schemas/notificationTypes';
+import {
+  NotificationTypeEnum,
+  NotificationTypeFriendRequest,
+  NotificationTypeLikePost,
+} from '../schemas/notificationTypes';
 import FriendsService from './friends.service';
 
 @Injectable()
@@ -33,6 +37,18 @@ export default class NotificationService {
       type: type,
       content: {
         postId,
+      },
+    };
+    await this.notificationModel.create(notification);
+  }
+
+  async sendFriendRequestNotification(from: string, to: string, friendRequestId: string, type: NotificationTypeEnum) {
+    const notification: NotificationTypeFriendRequest = {
+      from,
+      to,
+      type: type,
+      content: {
+        friendRequestId,
       },
     };
     await this.notificationModel.create(notification);
