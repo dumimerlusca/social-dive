@@ -5,8 +5,8 @@
 	"license": "MIT",
 	"scripts": {
 		"client": "npm run start --prefix client",
-		"server": "yarn start:dev --prefix server",
-		"dev": "concurrently \"npm run server\" \"npm run client\""
+		"server": "yarn --cwd server start:dev",
+		"dev": "concurrently \"yarn server\" \"npm run client\""
 	},
 	"devDependencies": {
 		"concurrently": "^7.0.0"

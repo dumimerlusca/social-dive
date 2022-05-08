@@ -12,6 +12,7 @@ import { AuthGuard } from "./guards/auth.guard";
 import ChatModule from "./modules/chat.module";
 import EventsModule from "./modules/events.module";
 import FriendsModule from "./modules/friends.module";
+import NotificationModule from "./modules/notifications.module";
 
 @Module({
 	imports: [
@@ -24,6 +25,7 @@ import FriendsModule from "./modules/friends.module";
 		ChatModule,
 		EventsModule,
 		FriendsModule,
+		NotificationModule,
 	],
 	controllers: [AppController],
 	providers: [

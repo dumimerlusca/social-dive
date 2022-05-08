@@ -1,3 +1,10 @@
- Separate friends, friendRequests fields from user to other individuals collections
+DONE ------------- Separate friends, friendRequests fields from user to other individuals collections
 
- 
+Implement notifications
+
+Cases for notifications
+
+- when a friend creates a new post
+- when someone likes/comments a post
+- when someone sends you a friend request
+- when someone accepts the friend request

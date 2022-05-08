@@ -6,12 +6,14 @@ import CommentsService from "../services/comments.service";
 import { PostsService } from "../services/posts.service";
 import CommentsModule from "./comments.module";
 import FriendsModule from "./friends.module";
+import NotificationModule from "./notifications.module";
 import { UsersModule } from "./users.module";
 
 @Module({
 	imports: [
 		UsersModule,
 		FriendsModule,
+		NotificationModule,
 		MongooseModule.forFeatureAsync([
 			{
 				name: "Post",
