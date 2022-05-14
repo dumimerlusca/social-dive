@@ -78,13 +78,16 @@ export default class PostsController {
   }
 
   @Get('newsfeed')
-  async getNewsfeedPosts(@Req() req: any) {
+  async getNewsfeedPosts(@Req() req: any, @Query('limit') limitQ: number, @Query('page') page: number) {
+    const limit = limitQ ?? 5;
     const userId = req.user.id;
     const friends = await this.friendsService.getUserFriends(userId);
     return await this.postsService.postModel
       .find({ $or: [{ user: { $in: friends } }, { user: userId }] })
       .sort({ createdAt: -1 })
-      .populate(populateOptions);
+      .populate(populateOptions)
+      .skip((page - 1) * limit)
+      .limit(limit);
   }
 
   @Get()
@@ -141,7 +144,7 @@ export default class PostsController {
       { runValidators: true },
     );
 
-    const isPostCreator = user.id === post.user;
+    const isPostCreator = user.id === String(post.user);
     if (!isPostCreator) {
       this.notificationService.sendPostNotificationToUser(user.id, post.user, post.id, NotificationTypeEnum.postLike);
     }

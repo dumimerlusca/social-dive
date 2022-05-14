@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Injectable, Param, Patch, Req } from '@nestjs/common';
+import { Body, Controller, Get, Injectable, Param, Patch, Query, Req } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { NotificationType } from '../schemas/notification.schema';
 import { Model } from 'mongoose';
@@ -12,13 +12,17 @@ export default class NotificationsController {
   ) {}
 
   @Get('')
-  async getUserNotifications(@Req() req: any) {
+  async getUserNotifications(@Req() req: any, @Query('limit') limitQ: number, @Query('page') page: number) {
     const userId = req.user.id;
+    const limit = limitQ ?? 10;
+
     return await this.notificationModel
       .find({ to: userId })
       .populate('from to')
       .select('-password -photo')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
   }
 
   @Patch(':id/markseen')

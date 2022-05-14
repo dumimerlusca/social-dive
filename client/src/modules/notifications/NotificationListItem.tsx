@@ -5,7 +5,7 @@ import React from 'react';
 import { useNavigate } from 'react-router';
 import { userImageUrl } from 'services/api';
 import { useMarkNotificationSeen } from './apiClient';
-import { isFriendRequestContentType, isPostContentType, NotificationType, NotificationTypeEnum } from './types';
+import { isPostContentType, NotificationType, NotificationTypeEnum } from './types';
 
 type NotificationListItemProps = {
   notification: NotificationType;
@@ -45,7 +45,12 @@ const NotificationListItem: React.FC<NotificationListItemProps> = ({ notificatio
         </div>
       </div>
       {type === NotificationTypeEnum.friendRequest && !seen && (
-        <div className='flex justify-center'>
+        <div
+          className='flex justify-center'
+          onClick={() => {
+            markAsSeen(_id);
+          }}
+        >
           <UserFriendsActionsButton userId={from._id} />
         </div>
       )}

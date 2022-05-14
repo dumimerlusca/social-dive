@@ -35,12 +35,17 @@ export default class CommentsController {
       postId,
       user: userId,
     });
-    this.notificationsService.sendPostNotificationToUser(
-      userId,
-      post.user,
-      post.id,
-      NotificationTypeEnum.postCommentAdded,
-    );
+
+    const isPostAuthor = userId === String(post.user);
+    if (!isPostAuthor) {
+      this.notificationsService.sendPostNotificationToUser(
+        userId,
+        post.user,
+        post.id,
+        NotificationTypeEnum.postCommentAdded,
+      );
+    }
+
     return await comment.populate(populateOptions);
   }
 

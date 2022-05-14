@@ -134,8 +134,8 @@ export default class FriendsController {
     });
 
     this.notificationsService.sendFriendRequestNotification(
-      friendRequest.from,
       friendRequest.to,
+      friendRequest.from,
       friendRequest.id,
       NotificationTypeEnum.friendRequestAccepted,
     );
