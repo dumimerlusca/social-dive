@@ -12,7 +12,7 @@ const NotificationsPanel = ({ wrapperClassName }: { wrapperClassName?: string })
       <h3 className='text-3xl mb-5'>Notification</h3>
       <ul className='flex flex-col gap-2'>
         {notifications.map((notification) => {
-          return <NotificationListItem notification={notification} />;
+          return <NotificationListItem key={notification._id} notification={notification} />;
         })}
       </ul>
       <Button color='secondary' className='w-full mt-5'>

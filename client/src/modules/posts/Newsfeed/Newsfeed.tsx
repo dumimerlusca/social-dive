@@ -1,35 +1,80 @@
 import classNames from 'classnames';
-import useIsIntersecting from 'common/hooks/useIsIntersecting';
+import IPost from 'interfaces/IPost';
 import { useNewsfeedPosts } from 'modules/posts/apiClient';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import NewPost from './NewPost';
-import NewsfeedPostsList from './NewsfeedPostsList';
+import NewsfeedPostListItem from './NewsfeedPostListItem';
 
 type NewsfeedProps = {
   wrapperClassName?: string;
 };
 
+const LIMIT = 2;
+
 const Newsfeed = ({ wrapperClassName }: NewsfeedProps) => {
-  const [totalCount, setTotalCount] = useState(2);
-  const { data: postsData = [], isLoading } = useNewsfeedPosts(totalCount);
-  const [posts, setPosts] = useState(postsData);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [totalDocumentsCount, setTotalDocumentsCount] = useState(0);
+  const { data: newsfeedPostsData, isLoading } = useNewsfeedPosts(pageNumber, LIMIT);
+  const [posts, setPosts] = useState<IPost[]>([]);
 
   useEffect(() => {
-    if (postsData.length === 0) return;
-    setPosts(postsData);
-  }, [postsData]);
+    if (!newsfeedPostsData?.count) return;
+    setTotalDocumentsCount(newsfeedPostsData.count);
+  }, [newsfeedPostsData?.count]);
+
+  useEffect(() => {
+    if (!newsfeedPostsData) return;
+    if (Number(newsfeedPostsData.page) !== pageNumber) return;
+    if (posts.length >= pageNumber * LIMIT) return;
+    setPosts((prev) => [...prev, ...newsfeedPostsData.data]);
+  }, [newsfeedPostsData, pageNumber, posts.length]);
+
+  const observer = useRef<IntersectionObserver | null>(null);
+
+  const hasMore = pageNumber < Math.ceil(totalDocumentsCount / LIMIT);
+
+  const lastPostElementRef = useCallback(
+    (node) => {
+      if (!node) return;
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+      observer.current = new IntersectionObserver(
+        (entries) => {
+          if (isLoading) return;
+          if (!hasMore) return;
+          if (!entries[0].isIntersecting) return;
+          setPageNumber((prev) => prev + 1);
+        },
+        { threshold: 0.5 },
+      );
+
+      observer.current.observe(node);
+    },
+    [hasMore, isLoading],
+  );
 
   return (
     <div className={classNames(wrapperClassName)}>
       <NewPost />
-      <NewsfeedPostsList isLoading={isLoading} posts={posts ?? []} />
-      {isLoading && (
-        <div className='flex flex-col gap-5'>
-          <Skeleton className='h-[500px]' />
-          <Skeleton className='h-[500px]' />
-        </div>
-      )}
+      <div>
+        <h1 className='text-3xl mb-5 ml-5'>Newsfeed</h1>
+        <ul>
+          {posts.map((post, index) => {
+            if (index === posts.length - 1) {
+              return <NewsfeedPostListItem ref={lastPostElementRef} key={post._id} post={post} />;
+            }
+            return <NewsfeedPostListItem key={post._id} post={post} />;
+          })}
+        </ul>
+        {isLoading && (
+          <div className='flex flex-col gap-5'>
+            <Skeleton className='h-[500px]' />
+            <Skeleton className='h-[500px]' />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

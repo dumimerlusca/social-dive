@@ -79,15 +79,26 @@ export default class PostsController {
 
   @Get('newsfeed')
   async getNewsfeedPosts(@Req() req: any, @Query('limit') limitQ: number, @Query('page') page: number) {
-    const limit = limitQ ?? 5;
+    const limit = limitQ ?? 2;
     const userId = req.user.id;
     const friends = await this.friendsService.getUserFriends(userId);
-    return await this.postsService.postModel
+    const posts = await this.postsService.postModel
       .find({ $or: [{ user: { $in: friends } }, { user: userId }] })
       .sort({ createdAt: -1 })
       .populate(populateOptions)
       .skip((page - 1) * limit)
       .limit(limit);
+
+    const documentsCount = await this.postsService.postModel
+      .find({ $or: [{ user: { $in: friends } }, { user: userId }] })
+      .countDocuments();
+
+    return {
+      page,
+      limit,
+      count: documentsCount,
+      data: posts,
+    };
   }
 
   @Get()

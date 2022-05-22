@@ -27,13 +27,15 @@ export const useGetPost = (postId: string) => {
   return useQuery<IPost>(queryKeys.post(postId), getPost);
 };
 
-export const useNewsfeedPosts = (limit = 2) => {
-  const getPosts = async () => {
-    const res = await get(`/posts/newsfeed`);
+export const useNewsfeedPosts = (pageNumber: number, limit: number) => {
+  const getPosts = async (data: any) => {
+    const res = await get(`/posts/newsfeed?page=${pageNumber}&limit=${limit}`);
     return res.data;
   };
-  const { data, isLoading, error } = useQuery<IPost[]>(queryKeys.newsfeedPosts, getPosts);
-  return { data, isLoading, error };
+  return useQuery<{ page: number; limit: number; count: number; data: IPost[] }>(
+    [queryKeys.newsfeedPosts, pageNumber, limit],
+    getPosts,
+  );
 };
 
 export const useUserPosts = (userId: string) => {
