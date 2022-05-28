@@ -1,5 +1,5 @@
 import { formatDate } from "helpers/helpers";
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { userImageUrl } from "services/api";
 import IUser from "../../../interfaces/IUser";
@@ -13,7 +13,7 @@ const FriendsListItem: React.FC<PropTypes> = ({ user }) => {
 		<li className='mb-5'>
 			<Link to={`/profile/${user._id}`}>
 				<div className='flex gap-5 items-center'>
-					<div className='rounded-full w-14 h-14 overflow-hidden'>
+					<div className='rounded-full w-14 h-14 overflow-hidden flex-shrink-0'>
 						<img
 							className='w-full h-full object-fill'
 							src={userImageUrl(user._id)}

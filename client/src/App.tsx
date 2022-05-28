@@ -8,8 +8,10 @@ import HomePage from "./pages/HomePage";
 import MainPage from "./pages/MainPage";
 import PrivateRoute from "components/routes/PrivateRoute";
 import ChatPage from "pages/ChatPage";
+import useWindowWidth from "common/hooks/useWindowWidth";
 
 function App() {
+	useWindowWidth()
 	return (
 		<>
 			<BrowserRouter>

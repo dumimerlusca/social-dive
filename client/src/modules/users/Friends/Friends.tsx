@@ -12,7 +12,7 @@ const Friends = () => {
 	return (
 		<div className='p-5 bg-primary rounded-3xl'>
 			<h3 className='text-3xl mb-5'>Friends</h3>
-			<ul>
+			<ul className="overflow-auto mb-2">
 				{friends.map(user => {
 					return <FriendsListItem key={user._id} user={user} />;
 				})}
