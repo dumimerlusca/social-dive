@@ -6,7 +6,8 @@
 	"scripts": {
 		"client": "npm run start --prefix client",
 		"server": "yarn --cwd server start:dev",
-		"dev": "concurrently \"yarn server\" \"npm run client\""
+		"dev": "concurrently \"yarn server\" \"npm run client\"",
+		"build": "cd server && npm run build"
 	},
 	"devDependencies": {
 		"concurrently": "^7.0.0"
