@@ -30,6 +30,7 @@ export const NewsfeedContextProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (!newsfeedPostsData) return;
+    console.log('newsfeed posts',newsfeedPostsData)
     const newPosts = newsfeedPostsData.data.filter((post) => {
       const alreadyExists = posts.find((existentPost) => existentPost._id === post._id);
       const isDeleted = deletedPostsIDs.includes(post._id);
