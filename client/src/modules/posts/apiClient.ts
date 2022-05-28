@@ -1,22 +1,16 @@
 import { queryKeys } from 'common/constansts';
+import useAsyncFunction from 'common/hooks/useAsyncFunction';
 import IComment from 'interfaces/IComment';
 import IPost from 'interfaces/IPost';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { APIdelete, get, patch, post } from 'services/api';
-import { getCurrentUser } from 'store/selectors/appSelectors';
-import { useAppSelector } from 'store/store';
 
 export const useCreatePost = () => {
   const createPost = async (formData: FormData) => {
-    await post('/posts', formData);
+    const res = await post('/posts', formData);
+    return res;
   };
-  const queryClient = useQueryClient();
-  const mutation = useMutation(createPost, {
-    onSettled: () => {
-      queryClient.invalidateQueries(queryKeys.newsfeedPosts);
-    },
-  });
-  return { ...mutation };
+  return useAsyncFunction<IPost>(createPost);
 };
 
 export const useGetPost = (postId: string) => {
@@ -50,184 +44,36 @@ export const useUserPosts = (userId: string) => {
 
 export const useLikePost = (postId: string) => {
   const likePost = () => patch(`/posts/${postId}/like`);
-  const queryClient = useQueryClient();
-  const currentUser = useAppSelector(getCurrentUser);
-
-  const mutation = useMutation(likePost, {
-    onMutate: async () => {
-      await queryClient.cancelQueries(queryKeys.newsfeedPosts);
-      const previousData = queryClient.getQueryData(queryKeys.newsfeedPosts);
-      queryClient.setQueryData(queryKeys.newsfeedPosts, (previousData: any) => {
-        return previousData.map((post: IPost) => {
-          if (post._id !== postId) return post;
-          return {
-            ...post,
-            likes: [...post.likes, currentUser],
-          };
-        });
-      });
-
-      return { previousData };
-    },
-    onError: (err, _, context) => {
-      queryClient.setQueryData(queryKeys.newsfeedPosts, context?.previousData ?? []);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries(queryKeys.newsfeedPosts);
-    },
-  });
-
-  return { ...mutation };
+  return useAsyncFunction(likePost);
 };
 
 export const useUnlikePost = (postId: string) => {
   const unlikePost = () => patch(`/posts/${postId}/unlike`);
-  const queryClient = useQueryClient();
-  const currentUser = useAppSelector(getCurrentUser);
-
-  const mutation = useMutation(unlikePost, {
-    onMutate: async () => {
-      await queryClient.cancelQueries(queryKeys.newsfeedPosts);
-      const previousData = queryClient.getQueryData(queryKeys.newsfeedPosts);
-      queryClient.setQueryData(queryKeys.newsfeedPosts, (previousData: any) => {
-        return previousData.map((post: IPost) => {
-          if (post._id !== postId) return post;
-          return {
-            ...post,
-            likes: post.likes.filter((user) => user._id !== currentUser?._id),
-          };
-        });
-      });
-
-      return { previousData };
-    },
-    onError: (err, _, context) => {
-      queryClient.setQueryData(queryKeys.newsfeedPosts, context?.previousData ?? []);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries(queryKeys.newsfeedPosts);
-    },
-  });
-
-  return { ...mutation };
+  return useAsyncFunction(unlikePost);
 };
 
-export const useLikeComment = (postId: string, commentId: string) => {
+export const useLikeComment = (commentId: string) => {
   const likeComment = () => patch(`/comments/${commentId}/like`);
-  const queryClient = useQueryClient();
-  const currentUser = useAppSelector(getCurrentUser);
-
-  const mutation = useMutation(likeComment, {
-    onMutate: async () => {
-      await queryClient.cancelQueries(queryKeys.postComments(postId));
-      const previousData = queryClient.getQueryData(queryKeys.postComments(postId));
-
-      queryClient.setQueryData(queryKeys.postComments(postId), (previousData: any) => {
-        return previousData.map((comment: IComment) => {
-          if (comment._id !== commentId) return comment;
-          return {
-            ...comment,
-            likes: [...comment.likes, currentUser],
-          };
-        });
-      });
-
-      return { previousData };
-    },
-    onError: (err, _, context) => {
-      queryClient.setQueryData(queryKeys.newsfeedPosts, context?.previousData ?? []);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries(queryKeys.newsfeedPosts);
-    },
-  });
-
-  return { ...mutation };
+  return useAsyncFunction(likeComment);
 };
 
-export const useUnlikeComment = (postId: string, commentId: string) => {
+export const useUnlikeComment = (commentId: string) => {
   const unlikeComment = () => patch(`/comments/${commentId}/unlike`);
-  const queryClient = useQueryClient();
-  const currentUser = useAppSelector(getCurrentUser);
-
-  const mutation = useMutation(unlikeComment, {
-    onMutate: async () => {
-      await queryClient.cancelQueries(queryKeys.postComments(postId));
-      const previousData = queryClient.getQueryData(queryKeys.postComments(postId));
-
-      queryClient.setQueryData(queryKeys.postComments(postId), (previousData: any) => {
-        return previousData.map((comment: IComment) => {
-          if (comment._id !== commentId) return comment;
-          return {
-            ...comment,
-            likes: comment.likes.filter((user) => user._id !== currentUser?._id),
-          };
-        });
-      });
-
-      return { previousData };
-    },
-    onError: (err, _, context) => {
-      queryClient.setQueryData(queryKeys.postComments(postId), context?.previousData ?? []);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries(queryKeys.postComments(postId));
-    },
-  });
-
-  return { ...mutation };
+  return useAsyncFunction(unlikeComment);
 };
 
 export const useAddComment = (postId: string, text: string) => {
-  const addComment = () => post(`/comments/post/${postId}/addComment`, { text });
-  const queryClient = useQueryClient();
-  const currentUser = useAppSelector(getCurrentUser);
+  const addComment = async () => {
+    const res = await post(`/comments/post/${postId}/addComment`, { text });
+    return res;
+  };
 
-  const mutation = useMutation(addComment, {
-    onMutate: async () => {
-      await queryClient.cancelQueries(queryKeys.newsfeedPosts);
-      const previousData = queryClient.getQueryData(queryKeys.postComments(postId));
-
-      const newComment: IComment = {
-        _id: Math.random().toString(),
-        postId: postId,
-        user: currentUser!,
-        text: text,
-        likes: [],
-        createdAt: Date.now() as any,
-        updatedAt: Date.now() as any,
-      };
-
-      queryClient.setQueriesData(queryKeys.postComments(postId), (previousData: any) => {
-        return [newComment, ...previousData];
-      });
-
-      return { previousData };
-    },
-    onError: (err, _, context) => {
-      queryClient.setQueryData(queryKeys.postComments(postId), context?.previousData ?? []);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries(queryKeys.postComments(postId));
-    },
-  });
-
-  return { ...mutation };
+  return useAsyncFunction<IComment>(addComment);
 };
 
-export const useDeleteComment = (postId: string, commentId: string) => {
+export const useDeleteComment = (commentId: string) => {
   const deleteComment = () => APIdelete(`/comments/${commentId}`);
-  const queryClient = useQueryClient();
-
-  const mutate = useMutation(deleteComment, {
-    onSuccess: async () => {
-      queryClient.setQueryData(queryKeys.postComments(postId), (prevData: any) => {
-        return prevData.filter((comment: IComment) => comment._id !== commentId);
-      });
-    },
-  });
-
-  return { ...mutate };
+  return useAsyncFunction(deleteComment);
 };
 
 export const useGetPostComments = (postId: string) => {
@@ -235,34 +81,10 @@ export const useGetPostComments = (postId: string) => {
     const res = await get(`/comments/post/${postId}`);
     return res.data;
   };
-  const { data, isLoading, error } = useQuery<IComment[]>(queryKeys.postComments(postId), getPostComments);
-  return { data, isLoading, error };
+  return useQuery<IComment[]>(queryKeys.postComments(postId), getPostComments, { retry: false });
 };
 
 export const useDeletePost = (postId: string) => {
-  const deleteComment = async () => {
-    const res = await APIdelete(`/posts/${postId}`);
-    return res.data;
-  };
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation(deleteComment, {
-    onMutate: async () => {
-      await queryClient.cancelQueries(queryKeys.newsfeedPosts);
-      const previousData = queryClient.getQueryData(queryKeys.postComments(postId));
-
-      queryClient.setQueriesData(queryKeys.newsfeedPosts, (previousData: any) => {
-        return previousData.filter((post: IPost) => post._id !== postId);
-      });
-
-      return { previousData };
-    },
-    onError: (err, _, context) => {
-      queryClient.setQueryData(queryKeys.newsfeedPosts, context?.previousData ?? []);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries(queryKeys.newsfeedPosts);
-    },
-  });
-  return mutation;
+  const deleteComment = () => APIdelete(`/posts/${postId}`);
+  return useAsyncFunction(deleteComment);
 };

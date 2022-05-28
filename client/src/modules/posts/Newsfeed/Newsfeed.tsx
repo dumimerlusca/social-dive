@@ -1,8 +1,7 @@
 import classNames from 'classnames';
-import IPost from 'interfaces/IPost';
-import { useNewsfeedPosts } from 'modules/posts/apiClient';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef } from 'react';
 import Skeleton from 'react-loading-skeleton';
+import useNewsfeedContext from '../context/newsfeedContext';
 import NewPost from './NewPost';
 import NewsfeedPostListItem from './NewsfeedPostListItem';
 
@@ -13,22 +12,7 @@ type NewsfeedProps = {
 const LIMIT = 2;
 
 const Newsfeed = ({ wrapperClassName }: NewsfeedProps) => {
-  const [pageNumber, setPageNumber] = useState(1);
-  const [totalDocumentsCount, setTotalDocumentsCount] = useState(0);
-  const { data: newsfeedPostsData, isLoading } = useNewsfeedPosts(pageNumber, LIMIT);
-  const [posts, setPosts] = useState<IPost[]>([]);
-
-  useEffect(() => {
-    if (!newsfeedPostsData?.count) return;
-    setTotalDocumentsCount(newsfeedPostsData.count);
-  }, [newsfeedPostsData?.count]);
-
-  useEffect(() => {
-    if (!newsfeedPostsData) return;
-    if (Number(newsfeedPostsData.page) !== pageNumber) return;
-    if (posts.length >= pageNumber * LIMIT) return;
-    setPosts((prev) => [...prev, ...newsfeedPostsData.data]);
-  }, [newsfeedPostsData, pageNumber, posts.length]);
+  const { pageNumber, totalDocumentsCount, setPageNumber, isLoading, posts } = useNewsfeedContext();
 
   const observer = useRef<IntersectionObserver | null>(null);
 
@@ -45,14 +29,14 @@ const Newsfeed = ({ wrapperClassName }: NewsfeedProps) => {
           if (isLoading) return;
           if (!hasMore) return;
           if (!entries[0].isIntersecting) return;
-          setPageNumber((prev) => prev + 1);
+          setPageNumber((prev: number) => prev + 1);
         },
         { threshold: 0.5 },
       );
 
       observer.current.observe(node);
     },
-    [hasMore, isLoading],
+    [hasMore, isLoading, setPageNumber],
   );
 
   return (

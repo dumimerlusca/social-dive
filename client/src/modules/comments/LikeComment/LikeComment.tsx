@@ -1,50 +1,53 @@
-import IUser from "interfaces/IUser";
-import { useLikeComment, useUnlikeComment } from "modules/posts/apiClient";
-import React, { useEffect, useState } from "react";
-import { AiFillLike } from "react-icons/ai";
-import postsService from "services/posts.service";
-import { useAppSelector } from "store/store";
-import { FcLike } from "react-icons/fc";
-import { getCurrentUser } from "store/selectors/appSelectors";
+import IUser from 'interfaces/IUser';
+import { useLikeComment, useUnlikeComment } from 'modules/posts/apiClient';
+import { useCallback, useEffect, useState } from 'react';
+import { AiFillLike } from 'react-icons/ai';
+import postsService from 'services/posts.service';
+import { useAppSelector } from 'store/store';
+import { FcLike } from 'react-icons/fc';
+import { getCurrentUser } from 'store/selectors/appSelectors';
 
 type LikeCommentProps = {
-	postId: string;
-	commentId: string;
-	likes: IUser[];
+  postId: string;
+  commentId: string;
+  initialLikes: IUser[];
 };
 
-const LikeComment = ({ postId, commentId, likes }: LikeCommentProps) => {
-	const currentUser = useAppSelector(getCurrentUser);
+const LikeComment = ({ commentId, initialLikes }: LikeCommentProps) => {
+  const currentUser = useAppSelector(getCurrentUser);
 
-	const [isCommentLiked, setIsCommentLiked] = useState(
-		postsService.isItemLiked(likes, currentUser?._id)
-	);
+  const [likes, setLikes] = useState(initialLikes);
+  const [isCommentLiked, setIsCommentLiked] = useState(postsService.isItemLiked(initialLikes, currentUser?._id));
 
-	useEffect(() => {
-		setIsCommentLiked(postsService.isItemLiked(likes, currentUser?._id));
-	}, [likes, currentUser?._id]);
+  const { execute: likeComment, isSucceeded: isLikeCommentSucceeded } = useLikeComment(commentId);
+  const { execute: unlikeComment, isSucceeded: isUnlikeCommentSucceeded } = useUnlikeComment(commentId);
 
-	const { mutate: likeComment } = useLikeComment(postId, commentId);
-	const { mutate: unlikeComment } = useUnlikeComment(postId, commentId);
+  const onClick = useCallback(() => {
+    if (isCommentLiked) {
+      unlikeComment();
+      return;
+    }
+    likeComment();
+  }, [isCommentLiked, likeComment, unlikeComment]);
 
-	const likeCommenthandler = () => {
-		likeComment();
-	};
+  useEffect(() => {
+    if (!isLikeCommentSucceeded) return;
+    setIsCommentLiked(true);
+    setLikes((prev) => [...prev, currentUser]);
+  }, [currentUser, isLikeCommentSucceeded]);
 
-	const unlikeCommentHandler = () => {
-		unlikeComment();
-	};
+  useEffect(() => {
+    if (!isUnlikeCommentSucceeded) return;
+    setIsCommentLiked(false);
+    setLikes((prev) => prev.filter((user) => user._id !== currentUser._id));
+  }, [isUnlikeCommentSucceeded, currentUser]);
 
-	return (
-		<div className='flex gap-2 items-center'>
-			<p className='text-md'>{likes.length}</p>
-			<button
-				onClick={isCommentLiked ? unlikeCommentHandler : likeCommenthandler}
-			>
-				{isCommentLiked ? <FcLike /> : <AiFillLike />}
-			</button>
-		</div>
-	);
+  return (
+    <div className='flex gap-2 items-center'>
+      <p className='text-md'>{likes.length}</p>
+      <button onClick={onClick}>{isCommentLiked ? <FcLike /> : <AiFillLike />}</button>
+    </div>
+  );
 };
 
 export default LikeComment;
