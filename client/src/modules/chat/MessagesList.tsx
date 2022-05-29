@@ -1,5 +1,5 @@
 import DotTyping from 'components/loadingSpinners/DotTyping';
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import useSocketContext from 'socket/socketContext';
 import { getCurrentChat, getCurrentUserId } from 'store/selectors/appSelectors';

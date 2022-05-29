@@ -1,20 +1,20 @@
+TODO Integrate notifications with sochet io
+TODO Optimize stored images
+TODO Add a chat bot
+TODO Add pagination to notifications, newsfeed posts, friends, people you might know, mesages
+TODO Create one context for the notifications
+TODO Create mobile navigation
+TODO Add search functionlity to search for users
+TODO Add the ability to edit the profile
+TODO Create a modal to show all the friends
+TODO Emprove responsivenes for the profile page
+
 DONE ------------- Separate friends, friendRequests fields from user to other individuals collections
-
-Implement notifications
-Integrate notifications with sochet io
-
-Cases for notifications
+DONE Scroll to the bottom of the messages list
+DONE Implement notifications
+DONE Cases for notifications
 
 - when a friend creates a new post
 - when someone likes/comments a post
 - when someone sends you a friend request
 - when someone accepts the friend request
-
-Optimize stored images
-
-Add a chat bot
-
-Add pagination to notifications, newsfeed posts, friends, people you might know, mesages
-
-Scroll to the bottom of the messages list
-

@@ -23,10 +23,13 @@ ReactDOM.render(
         <QueryClientProvider client={queryClient}>
           <SocketContextProvider>
             <ReactQueryDevtools initialIsOpen={false} />
-            <SkeletonTheme baseColor='#1D1C21' highlightColor='rgba(135, 255, 239,0.2)' borderRadius={10} duration={1}>
-              <NewsfeedContextProvider>
-                <App />
-              </NewsfeedContextProvider>
+            <SkeletonTheme
+              baseColor='#1D1C21'
+              highlightColor='rgba(135, 255, 239,0.2)'
+              borderRadius={10}
+              duration={1}
+            >
+              <App />
             </SkeletonTheme>
           </SocketContextProvider>
         </QueryClientProvider>
