@@ -9,7 +9,6 @@ const UiSlice = createSlice({
     initialState: initialState,
     reducers: {
         setWindowWidth(state, action) {
-            console.log(action.payload)
             state.windowWidth = action.payload
         }
     }

@@ -1,16 +1,23 @@
 import { queryKeys } from 'common/constansts';
+import { PaginatedData } from 'common/types';
 import { useCallback } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { get, patch } from 'services/api';
 import { NotificationType } from './types';
 
-export const useGetNotifications = () => {
-  const getNotifications = useCallback(async () => {
-    const res = await get('/notifications');
-    return res.data;
-  }, []);
+export const useGetNotifications = (pageNumber = 1) => {
+  const getNotifications = useCallback(
+    async (data) => {
+      const res = await get(`/notifications?page=${pageNumber}`);
+      return res.data;
+    },
+    [pageNumber],
+  );
 
-  return useQuery<NotificationType[]>(queryKeys.notifications, getNotifications);
+  return useQuery<PaginatedData<NotificationType>>(
+    [queryKeys.notifications, pageNumber],
+    getNotifications,
+  );
 };
 
 export const useMarkNotificationSeen = () => {

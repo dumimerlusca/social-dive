@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { IoMdImages } from 'react-icons/io';
 import Button from 'components/Button/Button';
 import { truncateString } from 'helpers/helpers';
 import { useCreatePost } from 'modules/posts/apiClient';
-import IPost from 'interfaces/IPost';
 import useNewsfeedContext from '../context/newsfeedContext';
 
 interface IValues {
@@ -20,10 +19,16 @@ const NewPost = () => {
   const { onCreatePostSucceeded } = useNewsfeedContext();
   const { execute: createPost, isLoading, data: newPost, isSucceeded } = useCreatePost();
 
+  const resetFormValues = useCallback(() => {
+    setValues({description: '', image: undefined})
+    setImageName('')
+  },[])
+
   useEffect(() => {
     if (!isSucceeded || !newPost) return;
     onCreatePostSucceeded(newPost);
-  }, [isSucceeded, newPost, onCreatePostSucceeded]);
+    resetFormValues()
+  }, [isSucceeded, newPost, onCreatePostSucceeded, resetFormValues]);
 
   const onSubmit = (e: any) => {
     e.preventDefault();
@@ -36,6 +41,7 @@ const NewPost = () => {
     if (image) formData.append('photo', image);
     createPost(formData);
   };
+
 
   const onChange = (e: any) => {
     if (e.target.files && e.target.files[0]) {
@@ -51,6 +57,7 @@ const NewPost = () => {
       <h1 className='text-3xl mb-5 ml-5'>Update your activity</h1>
       <textarea
         onChange={onChange}
+        value={values.description}
         className='w-full bg-primary p-5 rounded-xl'
         placeholder="What's on your mind today?"
         name='description'
@@ -60,7 +67,7 @@ const NewPost = () => {
       <div className='flex gap-5 mt-3'>
         <div className=' flex-1'>
           <label
-            className='flex items-center justify-center w-full rounded-2xl bg-primary text-center py-4 m-auto'
+            className='flex items-center justify-center w-full rounded-2xl hover:opacity-80 bg-primary text-center py-4 m-auto'
             htmlFor='image'
           >
             <IoMdImages className='text-3xl mr-5 text-yellow-200' />

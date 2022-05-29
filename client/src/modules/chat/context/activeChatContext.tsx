@@ -1,5 +1,14 @@
 import { MessageType } from 'common/types';
-import { ChangeEvent, createContext, FormEvent, useContext, useEffect, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  createContext,
+  FormEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useSelector } from 'react-redux';
 import useSocketContext from 'socket/socketContext';
 import { getCurrentChat, getCurrentUserId } from 'store/selectors/appSelectors';
@@ -12,6 +21,7 @@ type ActiveChatContextType = {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   isLoading: boolean;
   isTyping: boolean;
+  resetMessages: () => void;
 };
 
 const activeChatContext = createContext<ActiveChatContextType>({} as ActiveChatContextType);
@@ -24,7 +34,9 @@ const ActiveChatContextProvider: React.FC = ({ children }) => {
 
   const currentActiveChat = useSelector(getCurrentChat);
 
-  const { data: messagesData = [], isLoading } = useGetChatMessages(currentActiveChat?._id!);
+  const { data: messagesData = [], isLoading } = useGetChatMessages(
+    currentActiveChat ? currentActiveChat._id : null,
+  );
   const { mutate: sendMessage } = useSendMessage(currentActiveChat?._id!);
   const { socket } = useSocketContext();
   const currentUserId = useSelector(getCurrentUserId);
@@ -84,8 +96,14 @@ const ActiveChatContextProvider: React.FC = ({ children }) => {
     };
   }, [otherUser?._id, socket]);
 
+  const resetMessages = useCallback(() => {
+    setMessages([]);
+  }, []);
+
   return (
-    <activeChatContext.Provider value={{ messages, onSubmit, inputValue, isLoading, onChange, isTyping }}>
+    <activeChatContext.Provider
+      value={{ messages, onSubmit, inputValue, isLoading, onChange, isTyping, resetMessages }}
+    >
       {children}
     </activeChatContext.Provider>
   );

@@ -1,8 +1,9 @@
 import { queryKeys } from 'common/constansts';
 import useAsyncFunction from 'common/hooks/useAsyncFunction';
+import { PaginatedData } from 'common/types';
 import IComment from 'interfaces/IComment';
 import IPost from 'interfaces/IPost';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import { APIdelete, get, patch, post } from 'services/api';
 
 export const useCreatePost = () => {
@@ -26,10 +27,7 @@ export const useNewsfeedPosts = (pageNumber: number, limit: number) => {
     const res = await get(`/posts/newsfeed?page=${pageNumber}&limit=${limit}`);
     return res.data;
   };
-  return useQuery<{ page: number; limit: number; count: number; data: IPost[] }>(
-    [queryKeys.newsfeedPosts, pageNumber, limit],
-    getPosts,
-  );
+  return useQuery<PaginatedData<IPost>>([queryKeys.newsfeedPosts, pageNumber, limit], getPosts);
 };
 
 export const useUserPosts = (userId: string) => {

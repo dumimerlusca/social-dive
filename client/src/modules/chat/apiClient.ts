@@ -1,47 +1,47 @@
-import { queryKeys } from "common/constansts";
-import { ChatType, MessageType } from "common/types";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { get, post } from "services/api";
+import { queryKeys } from 'common/constansts';
+import { ChatType, MessageType } from 'common/types';
+import { useCallback } from 'react';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { get, post } from 'services/api';
 
 export const useGetChats = () => {
-	const fetcher = async () => {
-		const res = await get("/chat");
-		return res.data;
-	};
-	return useQuery<ChatType[]>(queryKeys.chats, fetcher);
+  const fetcher = useCallback(async () => {
+    const res = await get('/chat');
+    return res.data;
+  }, []);
+  return useQuery<ChatType[]>(queryKeys.chats, fetcher);
 };
 
-export const useGetChatMessages = (chatId: string) => {
-	const fetcher = async () => {
-		const res = await get(`/messages/chat/${chatId}`);
-		return res.data;
-	};
-	return useQuery<MessageType[]>(queryKeys.chatMessages(chatId), fetcher);
+export const useGetChatMessages = (chatId: string | null) => {
+  const fetcher = async () => {
+    const res = await get(`/messages/chat/${chatId}`);
+    return res.data;
+  };
+  return useQuery<MessageType[]>(queryKeys.chatMessages(chatId ? chatId : ''), fetcher, {
+    enabled: !!chatId,
+  });
 };
 
 export const useSendMessage = (chatId: string) => {
-	const queryClient = useQueryClient();
-	const sendMessage = (message: string) =>
-		post(`/messages/chat/${chatId}`, { message });
-	return useMutation(sendMessage, {
-		onSettled: () => {
-			queryClient.invalidateQueries(queryKeys.chatMessages(chatId));
-			queryClient.invalidateQueries(queryKeys.chats);
-		},
-	});
+  const queryClient = useQueryClient();
+  const sendMessage = (message: string) => post(`/messages/chat/${chatId}`, { message });
+  return useMutation(sendMessage, {
+    onSettled: () => {
+      queryClient.invalidateQueries(queryKeys.chatMessages(chatId));
+      queryClient.invalidateQueries(queryKeys.chats);
+    },
+  });
 };
 
 export const useCreateChat = () => {
-	const createChat: (userId: string) => Promise<ChatType> = async (
-		userId: string
-	) => {
-		const res = await post(`/chat`, { userId });
-		return res.data;
-	};
-	const queryClient = useQueryClient();
-	return useMutation(createChat, {
-		onSettled: () => {
-			queryClient.invalidateQueries(queryKeys.chats);
-		},
-	});
+  const createChat: (userId: string) => Promise<ChatType> = async (userId: string) => {
+    const res = await post(`/chat`, { userId });
+    return res.data;
+  };
+  const queryClient = useQueryClient();
+  return useMutation(createChat, {
+    onSettled: () => {
+      queryClient.invalidateQueries(queryKeys.chats);
+    },
+  });
 };

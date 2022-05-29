@@ -24,13 +24,12 @@ export const NewsfeedContextProvider: React.FC = ({ children }) => {
   const [deletedPostsIDs, setDeletedPostsIDs] = useState<string[]>([]);
 
   useEffect(() => {
-    if (!newsfeedPostsData?.count) return;
-    setTotalDocumentsCount(newsfeedPostsData.count);
-  }, [newsfeedPostsData?.count]);
+    if (!newsfeedPostsData?.total) return;
+    setTotalDocumentsCount(newsfeedPostsData.total);
+  }, [newsfeedPostsData?.total]);
 
   useEffect(() => {
     if (!newsfeedPostsData) return;
-    console.log('newsfeed posts',newsfeedPostsData)
     const newPosts = newsfeedPostsData.data.filter((post) => {
       const alreadyExists = posts.find((existentPost) => existentPost._id === post._id);
       const isDeleted = deletedPostsIDs.includes(post._id);
@@ -38,7 +37,6 @@ export const NewsfeedContextProvider: React.FC = ({ children }) => {
       return post;
     });
     if (newPosts.length === 0) return;
-    console.log('HELLO', newsfeedPostsData);
     setPosts((prev) => [...prev, ...newPosts]);
   }, [deletedPostsIDs, newsfeedPostsData, pageNumber, posts]);
 
@@ -49,12 +47,6 @@ export const NewsfeedContextProvider: React.FC = ({ children }) => {
   const onDeletePostsSucceeded = useCallback((postId: string) => {
     setDeletedPostsIDs((prev) => [...prev, postId]);
     setPosts((prev) => prev.filter((post) => post._id !== postId));
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      console.log('UNMOUNT');
-    };
   }, []);
 
   return (

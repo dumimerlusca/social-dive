@@ -19,17 +19,9 @@ const MessagesLlst = () => {
     containerRef.current.scrollTop = containerRef.current.scrollHeight;
   }, []);
 
-  const initialScrollToBottom = useCallback(() => {
-    if (!containerRef.current) return;
-    const scrollTop = containerRef.current.scrollTop;
-    const scrollHeight = containerRef.current.scrollHeight;
-    console.log(scrollTop, scrollHeight);
-    containerRef.current.scrollTop = scrollHeight;
-  }, []);
-
   useEffect(() => {
     scrollToBottom();
-  }, [currentActiveChat, scrollToBottom]);
+  }, [currentActiveChat, scrollToBottom, messages]);
 
   useEffect(() => {
     socket.on('isTyping', scrollToBottom);
@@ -45,9 +37,19 @@ const MessagesLlst = () => {
       ref={containerRef}
       className='scroll-smooth h-screen max-h-[400px] overflow-auto py-5 px-3 flex flex-col gap-5'
     >
-      {isLoading && 'Loading...'}
+      {isLoading && (
+        <div className='h-full w-full flex items-center justify-center'>
+          <h2 className='text-xl'>Loading...</h2>
+        </div>
+      )}
       {messages.map((message) => {
-        return <ChatMessage key={message._id} message={message} sentByCurrentUser={message.user === currentUserId} />;
+        return (
+          <ChatMessage
+            key={message._id}
+            message={message}
+            sentByCurrentUser={message.user === currentUserId}
+          />
+        );
       })}
       {isTyping && (
         <div className='ml-2 p-3'>

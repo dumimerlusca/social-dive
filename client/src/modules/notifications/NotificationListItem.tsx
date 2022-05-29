@@ -9,9 +9,13 @@ import { isPostContentType, NotificationType, NotificationTypeEnum } from './typ
 
 type NotificationListItemProps = {
   notification: NotificationType;
+  onClickItem?: () => void;
 };
 
-const NotificationListItem: React.FC<NotificationListItemProps> = ({ notification }) => {
+const NotificationListItem: React.FC<NotificationListItemProps> = ({
+  notification,
+  onClickItem,
+}) => {
   const { from, type, createdAt, seen, _id, content } = notification;
 
   const { mutate: markAsSeen } = useMarkNotificationSeen();
@@ -25,7 +29,10 @@ const NotificationListItem: React.FC<NotificationListItemProps> = ({ notificatio
       return;
     }
 
-    if (type === NotificationTypeEnum.friendRequestAccepted || type === NotificationTypeEnum.friendRequest) {
+    if (
+      type === NotificationTypeEnum.friendRequestAccepted ||
+      type === NotificationTypeEnum.friendRequest
+    ) {
       markAsSeen(_id);
       navigate(`/profile/${from._id}`);
       return;
@@ -33,7 +40,7 @@ const NotificationListItem: React.FC<NotificationListItemProps> = ({ notificatio
   };
 
   return (
-    <li className={classNames('', { 'text-gray-400': seen })}>
+    <li onClick={onClickItem} className={classNames('', { 'text-gray-400': seen })}>
       <div className='flex gap-3 items-center cursor-pointer' onClick={onClick}>
         <img className='rounded-full h-8 w-8' src={userImageUrl(from._id)} alt='' />
         <div>

@@ -27,6 +27,7 @@ import { Public } from '../decorators/decorators';
 import FriendsService from '../services/friends.service';
 import NotificationService from '../services/notifications.service';
 import { NotificationTypeEnum } from '../schemas/notificationTypes';
+import { getAdvanceResults } from '../helpers';
 
 @Controller('api/posts')
 @Injectable()
@@ -82,23 +83,10 @@ export default class PostsController {
     const limit = limitQ ?? 2;
     const userId = req.user.id;
     const friends = await this.friendsService.getUserFriends(userId);
-    const posts = await this.postsService.postModel
-      .find({ $or: [{ user: { $in: friends } }, { user: userId }] })
-      .sort({ createdAt: -1 })
-      .populate(populateOptions)
-      .skip((page - 1) * limit)
-      .limit(limit);
 
-    const documentsCount = await this.postsService.postModel
-      .find({ $or: [{ user: { $in: friends } }, { user: userId }] })
-      .countDocuments();
+    const query = { $or: [{ user: { $in: friends } }, { user: userId }] };
 
-    return {
-      page,
-      limit,
-      count: documentsCount,
-      data: posts,
-    };
+    return getAdvanceResults(this.postModel, query, page, limit, populateOptions, undefined, { createdAt: -1 });
   }
 
   @Get()

@@ -1,5 +1,6 @@
 import Tippy from '@tippyjs/react';
 import useLogout from 'common/hooks/useLogout';
+import HeaderChatIcon from 'modules/chat/HeaderChatIcon';
 import HeaderNotificationIcon from 'modules/notifications/HeaderNotificationIcon';
 import React from 'react';
 import { AiFillHome, AiFillMessage, AiOutlineLogout } from 'react-icons/ai';
@@ -30,9 +31,7 @@ const Header = () => {
             <AiFillHome className={classes.icon} />
           </Link>
           <HeaderNotificationIcon iconClassName={classes.icon} />
-          <Link to='/chat'>
-            <AiFillMessage className={classes.icon} />
-          </Link>
+          <HeaderChatIcon />
           <Link to={`/profile/${currentUser?._id}`}>
             <FaUser className={classes.icon} />
           </Link>
