@@ -26,14 +26,6 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
     if (!isLoggedIn) {
       dispatch(loadUser());
     }
-
-    // const refreshInterval = setInterval(() => {
-    // 	dispatch(loadUser());
-    // }, 10000);
-
-    // return () => {
-    // 	clearInterval(refreshInterval);
-    // };
   }, [dispatch, isLoggedIn]);
 
   useEffect(() => {
