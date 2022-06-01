@@ -20,15 +20,9 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
   hasMore,
   pageNumber,
 }) => {
-  useEffect(() => {
-    return () => {
-      console.log('Unmount');
-    };
-  }, []);
-
   return (
-    <div className=''>
-      <ul className='max-h-96 overflow-auto max-w-xs'>
+    <div className='w-[300px]'>
+      <ul className='max-h-96 overflow-auto'>
         {notifications.map((notification) => (
           <NotificationListItem
             key={notification._id}

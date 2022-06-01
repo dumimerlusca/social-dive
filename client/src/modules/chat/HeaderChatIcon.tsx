@@ -9,7 +9,7 @@ import ChatListDropdown from './ChatListDropdown';
 import './ChatListDropdown.scss';
 import { ActiveChatContextProvider } from './context/activeChatContext';
 
-const HeaderChatIcon = () => {
+const HeaderChatIcon = ({ text }: { text?: string }) => {
   const isDesktop = useAppSelector(isDesktopDevice);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
@@ -33,11 +33,13 @@ const HeaderChatIcon = () => {
         content={<ChatListDropdown closeDropdown={() => setIsDropdownVisible(false)} />}
       >
         <div
+          className='flex gap-2 items-center'
           onClick={() => {
             setIsDropdownVisible((prev) => !prev);
           }}
         >
           <AiFillMessage className='w-6 h-6' />
+          {text && <p>{text}</p>}
         </div>
       </Tippy>
     </ActiveChatContextProvider>

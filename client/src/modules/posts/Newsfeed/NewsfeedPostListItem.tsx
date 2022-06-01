@@ -21,26 +21,32 @@ const NewsfeedPostListItem = forwardRef<HTMLLIElement, PropTypes>(({ post }, ref
       <PostHeader post={post} />
 
       {post.description && <p className='py-2'>{post.description}</p>}
-      {post.photo && <img className='w-full' src={BASE_API_URL + `/posts/${post._id}/photo`} alt='avatar' />}
+      {post.photo && (
+        <img className='w-full' src={BASE_API_URL + `/posts/${post._id}/photo`} alt='avatar' />
+      )}
 
-      <div className='flex justify-between pt-5'>
+      <div className='flex justify-between pt-5 gap-2'>
         <LikePost postId={post._id} initialLikes={post.likes} />
         <div className='flex items-center gap-2'>
-          <button>
-            <FaRegComments className='text-secondary text-4xl' />
-          </button>
-          <span>{comments.length} Comments</span>
+          <FaRegComments className='text-secondary text-4xl' />
+          <p>{comments.length}</p>
+          <p className='hidden sm:block'>Comments</p>
         </div>
         <div className='flex items-center gap-2'>
           <button>
             <FaShare className='text-blue-500 text-4xl' />
           </button>
-          <span>{0} Shares</span>
+          <p>{0}</p>
+          <p className='hidden sm:block'>Shares</p>
         </div>
       </div>
 
       <div>
-        <NewComment onAddCommentSucceeded={onAddCommentSucceeded} postId={post._id} wrapperClassname='my-2' />
+        <NewComment
+          onAddCommentSucceeded={onAddCommentSucceeded}
+          postId={post._id}
+          wrapperClassname='my-2'
+        />
         <ul className='flex flex-col gap-1 max-h-[300px] overflow-auto p-2'>
           {comments.map((comment) => {
             return (

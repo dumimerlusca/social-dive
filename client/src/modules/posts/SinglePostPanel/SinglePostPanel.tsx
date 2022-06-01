@@ -28,14 +28,14 @@ const SinglePostPanel = () => {
   if (!post) return <div>No post found</div>;
 
   return (
-    <div className='mt-10 flex h-[700px]  gap-10'>
-      <div className='flex-grow-0'>
+    <div className='mt-10 flex flex-col md:flex-row min-h-[700px]  gap-10 w-full justify-end'>
+      <div className='max-h-[700px] overflow-hidden' style={{ flex: '2' }}>
         <img className='w-full h-full object-contain' src={postImageUrl(postId)} alt='' />
       </div>
-      <div className='flex flex-1 flex-col bg-primary rounded-xl min-w-[350px]'>
+      <div className='flex max-h-[700px] flex-col bg-primary rounded-xl' style={{ flex: '1' }}>
         <PostHeader wrapperClassName='p-4 border-b border-secondary' post={post} />
 
-        <ul className='flex-grow px-4 py-2 flex flex-col gap-5 overflow-auto'>
+        <ul className='flex-grow px-4 py-2  flex flex-col gap-5 overflow-auto'>
           {comments.map((comment) => {
             return (
               <CommentListItem

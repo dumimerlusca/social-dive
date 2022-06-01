@@ -20,14 +20,14 @@ const NewPost = () => {
   const { execute: createPost, isLoading, data: newPost, isSucceeded } = useCreatePost();
 
   const resetFormValues = useCallback(() => {
-    setValues({description: '', image: undefined})
-    setImageName('')
-  },[])
+    setValues({ description: '', image: undefined });
+    setImageName('');
+  }, []);
 
   useEffect(() => {
     if (!isSucceeded || !newPost) return;
     onCreatePostSucceeded(newPost);
-    resetFormValues()
+    resetFormValues();
   }, [isSucceeded, newPost, onCreatePostSucceeded, resetFormValues]);
 
   const onSubmit = (e: any) => {
@@ -42,14 +42,14 @@ const NewPost = () => {
     createPost(formData);
   };
 
-
   const onChange = (e: any) => {
     if (e.target.files && e.target.files[0]) {
       setImageName(e.target.files[0]?.name);
       setValues((prev) => ({ ...prev, image: e.target.files[0] }));
       return;
     }
-    if (e.target.name === 'description') setValues((prev) => ({ ...prev, description: e.target.value }));
+    if (e.target.name === 'description')
+      setValues((prev) => ({ ...prev, description: e.target.value }));
   };
 
   return (
@@ -65,13 +65,15 @@ const NewPost = () => {
         rows={5}
       ></textarea>
       <div className='flex gap-5 mt-3'>
-        <div className=' flex-1'>
+        <div className='flex-1'>
           <label
             className='flex items-center justify-center w-full rounded-2xl hover:opacity-80 bg-primary text-center py-4 m-auto'
             htmlFor='image'
           >
-            <IoMdImages className='text-3xl mr-5 text-yellow-200' />
-            <p className='text-xl'>{imageName ? truncateString(imageName, 10) : 'Photo / Video'}</p>
+            <IoMdImages className='text-3xl mr-5 text-yellow-200 flex-shrink-0' />
+            <p className='text-xl truncate whitespace-nowrap w-full flex-grow'>
+              {imageName ? truncateString(imageName, 10) : 'Photo / Video'}
+            </p>
           </label>
           <input
             onChange={onChange}
@@ -82,7 +84,7 @@ const NewPost = () => {
             name='image'
           ></input>
         </div>
-        <Button className='flex-1' color='secondary'>
+        <Button className='flex-1 truncate' color='secondary'>
           {isLoading ? 'Loading...' : 'Submit'}
         </Button>
       </div>

@@ -7,7 +7,13 @@ import NotificationsDropdown from './NotificationsDropdown';
 import './NotificationsDropdown.scss';
 import usePaginatedNotifications from './usePaginatedNotifications';
 
-const HeaderNotificationIcon = ({ iconClassName }: { iconClassName: string }) => {
+const HeaderNotificationIcon = ({
+  iconClassName,
+  text,
+}: {
+  iconClassName?: string;
+  text?: string;
+}) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   const { data: notificationsData } = useGetNotifications();
@@ -45,11 +51,14 @@ const HeaderNotificationIcon = ({ iconClassName }: { iconClassName: string }) =>
         />
       }
     >
-      <div className='relative' onClick={() => setIsDropdownVisible((prev) => !prev)}>
-        <div className='flex items-center justify-center rounded-full bg-red-800 h-4 w-4 absolute -top-2 -right-1'>
-          <span className='text-xs'>{totalUnseen}</span>
+      <div className='flex gap-2' onClick={() => setIsDropdownVisible((prev) => !prev)}>
+        <div className='relative'>
+          <div className='flex items-center justify-center rounded-full bg-red-800 h-4 w-4 absolute -top-2 -right-1'>
+            <span className='text-xs'>{totalUnseen}</span>
+          </div>
+          <AiFillNotification className={iconClassName} />
         </div>
-        <AiFillNotification className={iconClassName} />
+        {text && <p>{text}</p>}
       </div>
     </Tippy>
   );

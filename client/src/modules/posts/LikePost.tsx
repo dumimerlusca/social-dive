@@ -19,7 +19,8 @@ const LikePost = ({ initialLikes, postId }: LikePostProps) => {
           <AiOutlineHeart className='text-red-500 text-4xl' />
         )}
       </button>
-      <span className='font-light'>{likes.length} Likes</span>
+      <span className='font-light'>{likes.length}</span>
+      <p className='hidden sm:block'>Likes</p>
     </div>
   );
 };
