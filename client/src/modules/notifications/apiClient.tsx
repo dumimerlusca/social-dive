@@ -14,7 +14,7 @@ export const useGetNotifications = (pageNumber = 1) => {
     [pageNumber],
   );
 
-  return useQuery<PaginatedData<NotificationType>>(
+  return useQuery<PaginatedData<NotificationType> & { totalUnseen: number }>(
     [queryKeys.notifications, pageNumber],
     getNotifications,
   );

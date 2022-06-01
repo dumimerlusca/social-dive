@@ -1,7 +1,7 @@
-import ChatPanel from "modules/chat/ChatPanel";
+import ChatPanel from 'modules/chat/ChatPanel';
 
 const ChatPage = () => {
-	return <ChatPanel />;
+  return <ChatPanel />;
 };
 
 export default ChatPage;

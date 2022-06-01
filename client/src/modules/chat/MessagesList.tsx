@@ -14,23 +14,33 @@ const MessagesLlst = () => {
 
   const currentActiveChat = useSelector(getCurrentChat);
 
+  const otherUser = currentActiveChat?.users.find((user) => user._id !== currentUserId);
+
   const scrollToBottom = useCallback(() => {
     if (!containerRef.current) return;
     containerRef.current.scrollTop = containerRef.current.scrollHeight;
   }, []);
+
+  const onIsTyping = useCallback(
+    (userId) => {
+      if (userId !== otherUser?._id) return;
+      scrollToBottom();
+    },
+    [otherUser?._id, scrollToBottom],
+  );
 
   useEffect(() => {
     scrollToBottom();
   }, [currentActiveChat, scrollToBottom, messages]);
 
   useEffect(() => {
-    socket.on('isTyping', scrollToBottom);
-    socket.on('privateMessage', scrollToBottom);
+    socket.on('isTyping', onIsTyping);
+    socket.on('privateMessage', onIsTyping);
     return () => {
-      socket.removeListener('isTyping', scrollToBottom);
-      socket.removeListener('privateMessage', scrollToBottom);
+      socket.removeListener('isTyping', onIsTyping);
+      socket.removeListener('privateMessage', onIsTyping);
     };
-  }, [scrollToBottom, socket]);
+  }, [onIsTyping, socket]);
 
   return (
     <div
@@ -40,6 +50,11 @@ const MessagesLlst = () => {
       {isLoading && (
         <div className='h-full w-full flex items-center justify-center'>
           <h2 className='text-xl'>Loading...</h2>
+        </div>
+      )}
+      {messages.length === 0 && !isLoading && (
+        <div className='h-full w-full flex items-center justify-center'>
+          <h2 className='text-xl'>No messages</h2>
         </div>
       )}
       {messages.map((message) => {

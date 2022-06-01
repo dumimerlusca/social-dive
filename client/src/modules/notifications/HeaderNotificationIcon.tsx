@@ -5,15 +5,16 @@ import { useGetNotifications } from './apiClient';
 import NotificationsDropdown from './NotificationsDropdown';
 
 import './NotificationsDropdown.scss';
+import usePaginatedNotifications from './usePaginatedNotifications';
 
 const HeaderNotificationIcon = ({ iconClassName }: { iconClassName: string }) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   const { data: notificationsData } = useGetNotifications();
+  const { notifications, isLoading, changePageNumber, pageNumber, hasMore, resetState } =
+    usePaginatedNotifications();
 
-  const unseen = notificationsData
-    ? notificationsData?.data.filter((notification) => !notification.seen).length
-    : 0;
+  const totalUnseen = notificationsData?.totalUnseen ?? 0;
 
   return (
     <Tippy
@@ -23,11 +24,21 @@ const HeaderNotificationIcon = ({ iconClassName }: { iconClassName: string }) =>
       interactive
       placement='bottom-start'
       arrow={false}
+      onHide={() => {
+        setTimeout(() => {
+          resetState();
+        }, 500);
+      }}
       onClickOutside={(instace, e) => {
         setIsDropdownVisible(false);
       }}
       content={
         <NotificationsDropdown
+          notifications={notifications}
+          isLoading={isLoading}
+          changePageNumber={changePageNumber}
+          pageNumber={pageNumber}
+          hasMore={!!hasMore}
           closeDropdown={() => {
             setIsDropdownVisible(false);
           }}
@@ -36,7 +47,7 @@ const HeaderNotificationIcon = ({ iconClassName }: { iconClassName: string }) =>
     >
       <div className='relative' onClick={() => setIsDropdownVisible((prev) => !prev)}>
         <div className='flex items-center justify-center rounded-full bg-red-800 h-4 w-4 absolute -top-2 -right-1'>
-          <span className='text-xs'>{unseen}</span>
+          <span className='text-xs'>{totalUnseen}</span>
         </div>
         <AiFillNotification className={iconClassName} />
       </div>

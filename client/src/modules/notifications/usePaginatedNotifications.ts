@@ -29,7 +29,12 @@ const usePaginatedNotifications = () => {
     setPageNumber(pageNumber);
   }, []);
 
-  return { notifications, isLoading, pageNumber, changePageNumber, hasMore };
+  const resetState = useCallback(() => {
+    setPageNumber(1);
+    setNotifications([]);
+  }, []);
+
+  return { notifications, isLoading, pageNumber, changePageNumber, hasMore, resetState };
 };
 
 export default usePaginatedNotifications;

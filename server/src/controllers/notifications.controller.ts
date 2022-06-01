@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Injectable,
-  Param,
-  Patch,
-  Query,
-  Req,
-} from '@nestjs/common';
+import { Body, Controller, Get, Injectable, Param, Patch, Query, Req } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { NotificationType } from '../schemas/notification.schema';
 import { Model } from 'mongoose';
@@ -30,7 +21,11 @@ export default class NotificationsController {
     const userId = req.user.id;
     const limit = limitQ ?? 5;
 
-    return getAdvanceResults(
+    const totalUnseeNotifications = await this.notificationModel
+      .find({ to: userId, seen: false })
+      .countDocuments();
+
+    const advancedResults = await getAdvanceResults(
       this.notificationModel,
       { to: userId },
       page,
@@ -39,6 +34,8 @@ export default class NotificationsController {
       '-password -photo',
       { createdAt: -1 },
     );
+
+    return { ...advancedResults, totalUnseen: totalUnseeNotifications };
   }
 
   @Patch(':id/markseen')

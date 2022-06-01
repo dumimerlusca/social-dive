@@ -7,7 +7,6 @@ import { useAppSelector } from 'store/store';
 import { isDesktopDevice, isMobileDevice, isTabletDevice } from 'store/selectors/uiSelectors';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames';
-import { NewsfeedContextProvider } from 'modules/posts/context/newsfeedContext';
 
 const MainPage = () => {
   const isDesktop = useAppSelector(isDesktopDevice);

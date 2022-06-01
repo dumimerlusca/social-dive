@@ -30,6 +30,7 @@ const ActiveChatContextProvider: React.FC = ({ children }) => {
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+
   const typingTimeout = useRef<any>(null);
 
   const currentActiveChat = useSelector(getCurrentChat);
@@ -102,7 +103,15 @@ const ActiveChatContextProvider: React.FC = ({ children }) => {
 
   return (
     <activeChatContext.Provider
-      value={{ messages, onSubmit, inputValue, isLoading, onChange, isTyping, resetMessages }}
+      value={{
+        messages,
+        onSubmit,
+        inputValue,
+        isLoading,
+        onChange,
+        isTyping,
+        resetMessages,
+      }}
     >
       {children}
     </activeChatContext.Provider>

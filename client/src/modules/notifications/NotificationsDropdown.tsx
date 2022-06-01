@@ -1,10 +1,30 @@
 import Button from 'components/Button/Button';
+import { useEffect } from 'react';
 import NotificationListItem from './NotificationListItem';
-import usePaginatedNotifications from './usePaginatedNotifications';
+import { NotificationType } from './types';
 
-const NotificationsDropdown = ({ closeDropdown }: { closeDropdown: () => void }) => {
-  const { notifications, isLoading, changePageNumber, pageNumber, hasMore } =
-    usePaginatedNotifications();
+type NotificationsDropdownProps = {
+  notifications: NotificationType[];
+  isLoading: boolean;
+  changePageNumber: (pageNumber: number) => void;
+  pageNumber: number;
+  hasMore: boolean;
+  closeDropdown: () => void;
+};
+
+const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
+  closeDropdown,
+  notifications,
+  isLoading,
+  changePageNumber,
+  hasMore,
+  pageNumber,
+}) => {
+  useEffect(() => {
+    return () => {
+      console.log('Unmount');
+    };
+  }, []);
 
   return (
     <div className=''>
