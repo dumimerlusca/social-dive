@@ -8,6 +8,7 @@ type ButtonPropTypes = {
   color?: ButtonColorType;
   className?: string;
   disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset';
   [key: string]: unknown;
 };
 
@@ -25,9 +26,12 @@ const Button: React.FC<ButtonPropTypes> = ({
   color = 'primary',
   className,
   disabled = false,
+  type,
+  ...rest
 }) => {
   return (
     <button
+      type={type}
       onClick={onClick}
       disabled={disabled}
       className={classnames(
