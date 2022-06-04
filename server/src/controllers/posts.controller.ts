@@ -28,6 +28,7 @@ import FriendsService from '../services/friends.service';
 import NotificationService from '../services/notifications.service';
 import { NotificationTypeEnum } from '../schemas/notificationTypes';
 import { getAdvanceResults } from '../helpers';
+import * as sharp from 'sharp';
 
 @Controller('api/posts')
 @Injectable()
@@ -44,10 +45,10 @@ export default class PostsController {
   async create(@Req() req: Request, @Res() res: Response) {
     const user = (req as any).user;
     const contentType = req.header('content-type');
-    if (!contentType.includes('multipart/form-data')) throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+    if (!contentType.includes('multipart/form-data'))
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
 
     const form = new IncomingForm();
-
     form.parse(req, async (error: any, fields: any, files: any) => {
       if (error) {
         return res.status(500).json({
@@ -66,38 +67,69 @@ export default class PostsController {
       const post = { ...fields, user: user.id };
 
       if (files.photo) {
+        const transformedPhoto = sharp(files.photo.filepath);
+        let finalPhoto: Buffer;
+
+        const metadata = await transformedPhoto.metadata();
+
+        if (metadata.width > 1024) {
+          finalPhoto = await transformedPhoto.resize({ width: 1024 }).toBuffer();
+        } else {
+          finalPhoto = await transformedPhoto.toBuffer();
+        }
+
         post.photo = {
-          data: fs.readFileSync(files.photo.filepath),
+          data: finalPhoto,
           contentType: files.photo.mimetype,
         };
       }
 
       const createdPost = await this.postsService.create(post);
-      this.notificationService.sendPostNotificationToFriends(user.id, createdPost.id, NotificationTypeEnum.postCreate);
+      this.notificationService.sendPostNotificationToFriends(
+        user.id,
+        createdPost.id,
+        NotificationTypeEnum.postCreate,
+      );
       res.status(HttpStatus.CREATED).json(createdPost);
     });
   }
 
   @Get('newsfeed')
-  async getNewsfeedPosts(@Req() req: any, @Query('limit') limitQ: number, @Query('page') page: number) {
+  async getNewsfeedPosts(
+    @Req() req: any,
+    @Query('limit') limitQ: number,
+    @Query('page') page: number,
+  ) {
     const limit = limitQ ?? 2;
     const userId = req.user.id;
     const friends = await this.friendsService.getUserFriends(userId);
 
     const query = { $or: [{ user: { $in: friends } }, { user: userId }] };
 
-    return getAdvanceResults(this.postModel, query, page, limit, populateOptions, undefined, { createdAt: -1 });
+    return getAdvanceResults(this.postModel, query, page, limit, populateOptions, undefined, {
+      createdAt: -1,
+    });
   }
 
   @Get()
   async getAll(@Query('user') userId: string) {
-    if (!userId) return await this.postsService.postModel.find({}).populate(populateOptions).sort({ createdAt: -1 });
-    return await this.postsService.postModel.find({ user: userId }).populate(populateOptions).sort({ createdAt: -1 });
+    if (!userId)
+      return await this.postsService.postModel
+        .find({})
+        .populate(populateOptions)
+        .sort({ createdAt: -1 });
+    return await this.postsService.postModel
+      .find({ user: userId })
+      .populate(populateOptions)
+      .sort({ createdAt: -1 });
   }
 
   @Get(':id')
   async getSingle(@Param('id') id: string) {
-    const post = await this.postsService.postModel.findById(id).populate(populateOptions).select('-photo');
+    const post = await this.postsService.postModel
+      .findById(id)
+      .populate(populateOptions)
+      .select('-photo');
     if (!post) throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
     return post;
   }
@@ -124,7 +156,8 @@ export default class PostsController {
   async delete(@Param('id') id: string, @Req() req: any) {
     const loggedInUser = req.user;
     const post = await this.postsService.postModel.findById(id);
-    if (post.user.toString() !== loggedInUser.id) throw new HttpException('UNAUTHORIZED', HttpStatus.UNAUTHORIZED);
+    if (post.user.toString() !== loggedInUser.id)
+      throw new HttpException('UNAUTHORIZED', HttpStatus.UNAUTHORIZED);
     await post.remove();
     return 'Post deleted';
   }
@@ -135,7 +168,8 @@ export default class PostsController {
     const post = await this.postModel.findById(postId).select(selectOptions);
     if (!post) throw new HttpException('No photo found', HttpStatus.NOT_FOUND);
 
-    if (post.likes.includes(user.id)) throw new HttpException('Post is liked already', HttpStatus.BAD_REQUEST);
+    if (post.likes.includes(user.id))
+      throw new HttpException('Post is liked already', HttpStatus.BAD_REQUEST);
     await post.updateOne(
       {
         $push: { likes: user.id },
@@ -145,7 +179,12 @@ export default class PostsController {
 
     const isPostCreator = user.id === String(post.user);
     if (!isPostCreator) {
-      this.notificationService.sendPostNotificationToUser(user.id, post.user, post.id, NotificationTypeEnum.postLike);
+      this.notificationService.sendPostNotificationToUser(
+        user.id,
+        post.user,
+        post.id,
+        NotificationTypeEnum.postLike,
+      );
     }
 
     return 'Post liked successfully';
@@ -157,7 +196,8 @@ export default class PostsController {
     let post = await this.postModel.findById(id).select(selectOptions);
     if (!post) throw new HttpException('No photo found', HttpStatus.NOT_FOUND);
 
-    if (!post.likes.includes(user.id)) throw new HttpException('Post is not liked', HttpStatus.BAD_REQUEST);
+    if (!post.likes.includes(user.id))
+      throw new HttpException('Post is not liked', HttpStatus.BAD_REQUEST);
 
     await post.updateOne(
       {

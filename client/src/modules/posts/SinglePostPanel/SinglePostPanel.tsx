@@ -65,7 +65,9 @@ const SinglePostPanel = () => {
           {comments.map((comment) => {
             return (
               <CommentListItem
-                onDeleteCommentSucceeded={() => {}}
+                onDeleteCommentSucceeded={(commentId) => {
+                  setComments((prev) => prev.filter((comment) => comment._id !== commentId));
+                }}
                 key={comment._id}
                 comment={comment}
                 postId={post._id}

@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 import IPost from '../../../interfaces/IPost';
-import { FaRegComments, FaShare } from 'react-icons/fa';
+import { FaRegComments } from 'react-icons/fa';
 import { BASE_API_URL } from 'services/api';
 import LikePost from 'modules/posts/LikePost';
 
