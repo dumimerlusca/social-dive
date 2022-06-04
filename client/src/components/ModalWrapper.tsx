@@ -25,7 +25,7 @@ const ModalWrapper: React.FC<PropsWithChildren<ModalWrapperPropTypes>> = ({
         'fixed flex text-white items-center justify-center top-0 left-0 w-full h-screen z-[998] px-3',
         !isModalOpen ? 'hidden' : '',
       )}
-      style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
+      style={{ backgroundColor: 'rgba(0, 0, 0, 0.9)' }}
     >
       {children}
     </div>,

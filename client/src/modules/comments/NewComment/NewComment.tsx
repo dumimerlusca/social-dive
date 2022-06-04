@@ -12,10 +12,19 @@ type NewCommentProps = {
   onAddCommentSucceeded: (newComment: IComment) => void;
 };
 
-const NewComment: React.FC<NewCommentProps> = ({ wrapperClassname, postId, onAddCommentSucceeded }) => {
+const NewComment: React.FC<NewCommentProps> = ({
+  wrapperClassname,
+  postId,
+  onAddCommentSucceeded,
+}) => {
   const [text, setText] = useState('');
 
-  const { execute: addComment, data: newComment, isSucceeded } = useAddComment(postId, text);
+  const {
+    execute: addComment,
+    data: newComment,
+    isSucceeded,
+    resetSucceeded,
+  } = useAddComment(postId, text);
 
   const currentUserId = useSelector(getCurrentUserId);
 
@@ -31,8 +40,9 @@ const NewComment: React.FC<NewCommentProps> = ({ wrapperClassname, postId, onAdd
 
   useEffect(() => {
     if (!isSucceeded || !newComment) return;
+    resetSucceeded();
     onAddCommentSucceeded(newComment);
-  }, [isSucceeded, newComment, onAddCommentSucceeded]);
+  }, [isSucceeded, newComment, onAddCommentSucceeded, resetSucceeded]);
 
   return (
     <form onSubmit={onSubmit} className={classNames(wrapperClassname)}>

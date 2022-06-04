@@ -4,6 +4,9 @@ import Button from 'components/Button/Button';
 import { truncateString } from 'helpers/helpers';
 import { useCreatePost } from 'modules/posts/apiClient';
 import useNewsfeedContext from '../context/newsfeedContext';
+import { useDispatch } from 'react-redux';
+import { showNotification } from 'store/ui/uiSlice';
+import { NotificationTypesEnum } from 'components/Notification';
 
 interface IValues {
   description: string;
@@ -19,6 +22,8 @@ const NewPost = () => {
   const { onCreatePostSucceeded } = useNewsfeedContext();
   const { execute: createPost, isLoading, data: newPost, isSucceeded } = useCreatePost();
 
+  const dispatch = useDispatch();
+
   const resetFormValues = useCallback(() => {
     setValues({ description: '', image: undefined });
     setImageName('');
@@ -27,8 +32,15 @@ const NewPost = () => {
   useEffect(() => {
     if (!isSucceeded || !newPost) return;
     onCreatePostSucceeded(newPost);
+    dispatch(
+      showNotification({
+        text: 'Post created successfuly!',
+        type: NotificationTypesEnum.success,
+        autoDismiss: 2000,
+      }),
+    );
     resetFormValues();
-  }, [isSucceeded, newPost, onCreatePostSucceeded, resetFormValues]);
+  }, [dispatch, isSucceeded, newPost, onCreatePostSucceeded, resetFormValues]);
 
   const onSubmit = (e: any) => {
     e.preventDefault();

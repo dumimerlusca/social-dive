@@ -46,7 +46,6 @@ const EditProfileModal = () => {
     register,
     handleSubmit,
     formState: { errors },
-    clearErrors,
   } = useForm<FormType>({
     defaultValues: {
       fullName: currentUser.fullName,

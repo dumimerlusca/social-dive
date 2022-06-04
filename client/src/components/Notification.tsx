@@ -32,7 +32,6 @@ const Notification = () => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-    console.log('Hello');
     timeoutRef.current = setTimeout(() => {
       removeNotificationHandler();
     }, notification.autoDismiss);
@@ -41,7 +40,7 @@ const Notification = () => {
   return createPortal(
     <div
       className={classNames(
-        'w-full max-w-sm absolute top-1/4 right-0 p-5 bg-[#2cf5eb] text-black z-[999] flex items-center rounded-xl h-20 gap-2 transition-transform duration-300',
+        'w-full max-w-sm fixed top-1/4 right-0 p-5 bg-[#2cf5eb] text-black z-[999] flex items-center rounded-xl h-20 gap-2 transition-transform duration-300',
         {
           'translate-x-0': notification,
           'translate-x-full': !notification,
@@ -51,7 +50,7 @@ const Notification = () => {
       <div className='w-12 h-12 rounded-full bg-white flex items-center justify-center shrink-0'>
         {<AiOutlineCheckCircle className='w-6 h-6' />}
       </div>
-      <p>Settings changed successfuly!</p>
+      <p>{notification?.text}</p>
       <button
         className='ml-10'
         onClick={() => {
@@ -61,7 +60,7 @@ const Notification = () => {
         <AiOutlineClose />
       </button>
     </div>,
-    document.body,
+    document.getElementById('root')!,
   );
 };
 

@@ -32,13 +32,13 @@ const NewsfeedPostListItem = forwardRef<HTMLLIElement, PropTypes>(({ post }, ref
           <p>{comments.length}</p>
           <p className='hidden sm:block'>Comments</p>
         </div>
-        <div className='flex items-center gap-2'>
+        {/* <div className='flex items-center gap-2'>
           <button>
             <FaShare className='text-blue-500 text-4xl' />
           </button>
           <p>{0}</p>
           <p className='hidden sm:block'>Shares</p>
-        </div>
+        </div> */}
       </div>
 
       <div>

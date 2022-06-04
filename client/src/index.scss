@@ -4,9 +4,13 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap");
 
+body, html, #root {
+	overflow-x: hidden;
+	position: relative
+}
+
 body {
 	@apply bg-dark text-white;
-	overflow-x: hidden;
 }
 
 body {

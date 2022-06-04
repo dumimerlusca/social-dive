@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 
-function useAsyncFunction<T, D = Error>(asyncFunction: (...data: any) => Promise<any>, immediate = false) {
+function useAsyncFunction<T, D = Error>(
+  asyncFunction: (...data: any) => Promise<any>,
+  immediate = false,
+) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSucceeded, setSucceeded] = useState<boolean>(false);
   const [data, setData] = useState<T | null>(null);
@@ -32,6 +35,10 @@ function useAsyncFunction<T, D = Error>(asyncFunction: (...data: any) => Promise
     setError(null);
   }, []);
 
+  const resetSucceeded = () => {
+    setSucceeded(false);
+  };
+
   // Call execute if we want to fire it right away.
   // Otherwise execute can be called later, such as
   // in an onClick handler.
@@ -41,7 +48,7 @@ function useAsyncFunction<T, D = Error>(asyncFunction: (...data: any) => Promise
     }
   }, [execute, immediate]);
 
-  return { execute, isLoading, data, error, isSucceeded, clearError };
+  return { execute, isLoading, data, error, isSucceeded, clearError, resetSucceeded };
 }
 
 export default useAsyncFunction;

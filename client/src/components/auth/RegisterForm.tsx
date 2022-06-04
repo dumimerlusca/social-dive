@@ -44,6 +44,7 @@ const RegisterForm = () => {
     >
       <div>
         <Input
+          error={errors.fullName?.message}
           className={classNames(
             errors.fullName && 'border border-red-500 focus:ring-red-500 focus:ring-2',
           )}
@@ -54,10 +55,10 @@ const RegisterForm = () => {
             maxLength: 20,
           })}
         />
-        <p className='text-red-500 mt-3 ml-5'>{errors.fullName?.message} </p>
       </div>
       <div>
         <Input
+          error={errors.email?.message}
           placeholder='Email...'
           className={classNames(
             errors.email && 'border border-red-500 focus:ring-red-500 focus:ring-2',
@@ -70,10 +71,10 @@ const RegisterForm = () => {
             },
           })}
         />
-        <p className='text-red-500 mt-3 ml-5'>{errors.email?.message} </p>
       </div>
       <div>
         <Input
+          error={errors.password?.message}
           placeholder='Password...'
           type='password'
           className={classNames(
@@ -91,7 +92,6 @@ const RegisterForm = () => {
             },
           })}
         />
-        <p className='text-red-500 mt-3 ml-5'>{errors.password?.message} </p>
       </div>
       {registerSuccess && (
         <p className='p-1 text-green-300'>Account created successfuly, you can log in now!</p>
