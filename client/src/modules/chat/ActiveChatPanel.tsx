@@ -13,8 +13,8 @@ const ActiveChatPanel = ({ chat }: { chat: ChatType }) => {
   const user = getOtherUser(chat, currentUserId);
 
   return (
-    <div>
-      <div className='flex items-center gap-5 rounded-3xl p-5 bg-primary'>
+    <div className='w-full'>
+      <div className='flex w-full items-center gap-5 rounded-3xl p-5 bg-primary'>
         <div className='w-16 h-16 rounded-full overflow-hidden'>
           <img className='w-full h-full object-cover' src={userImageUrl(user?._id)} alt='' />
         </div>

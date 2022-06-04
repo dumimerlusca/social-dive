@@ -1,4 +1,3 @@
-import Tippy from '@tippyjs/react';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { isMobileDevice } from 'store/selectors/uiSelectors';

@@ -43,7 +43,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
 
   return (
     <NewsfeedContextProvider>
-      <Layout layout={layout}>{element}</Layout>;
+      <Layout layout={layout}>{element}</Layout>
     </NewsfeedContextProvider>
   );
 };

@@ -67,11 +67,11 @@ const NewPost = () => {
       <div className='flex gap-5 mt-3'>
         <div className='flex-1'>
           <label
-            className='flex items-center justify-center w-full rounded-2xl hover:opacity-80 bg-primary text-center py-4 m-auto'
+            className='flex items-center px-3 justify-center w-full rounded-2xl hover:opacity-80 bg-primary text-center py-4 m-auto'
             htmlFor='image'
           >
             <IoMdImages className='text-3xl mr-5 text-yellow-200 flex-shrink-0' />
-            <p className='text-xl truncate whitespace-nowrap w-full flex-grow'>
+            <p className='text-xl truncate whitespace-nowrap'>
               {imageName ? truncateString(imageName, 10) : 'Photo / Video'}
             </p>
           </label>

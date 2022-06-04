@@ -12,7 +12,6 @@ import './index.scss';
 import 'tippy.js/dist/tippy.css';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { SocketContextProvider } from 'socket/socketContext';
-import { NewsfeedContextProvider } from 'modules/posts/context/newsfeedContext';
 
 const queryClient = new QueryClient();
 

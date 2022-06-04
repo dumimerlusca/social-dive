@@ -19,8 +19,8 @@ const ChatPanel = () => {
 
   return (
     <ActiveChatContextProvider>
-      <div className='container mt-[100px]'>
-        <div className='grid grid-cols-12 gap-10'>
+      <div className='container mt-[50px] lg:mt-[100px]'>
+        <div className='block lg:grid grid-cols-12 gap-10 overflow-hidden'>
           {isDesktop && (
             <div className='col-span-4'>
               <h1 className='text-3xl font-bold text-center mb-5'>CHAT</h1>
@@ -31,7 +31,12 @@ const ChatPanel = () => {
               </Button>
             </div>
           )}
-          <div className={classNames({ 'col-span-8': isDesktop, 'col-span-12': !isDesktop })}>
+          <div
+            className={classNames({
+              'col-span-8': isDesktop,
+              'w-full': !isDesktop,
+            })}
+          >
             {currentChat ? (
               <ActiveChatPanel chat={currentChat} />
             ) : (

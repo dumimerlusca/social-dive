@@ -15,7 +15,7 @@ const SinglePostPanel = () => {
 
   if (isLoading)
     return (
-      <div className='flex gap-5'>
+      <div className='flex flex-col md:flex-row gap-5'>
         <div className='flex-grow-2'>
           <Skeleton className='h-[700px]' />
         </div>
@@ -28,7 +28,7 @@ const SinglePostPanel = () => {
   if (!post) return <div>No post found</div>;
 
   return (
-    <div className='mt-10 flex flex-col md:flex-row min-h-[700px]  gap-10 w-full justify-end'>
+    <div className='mt-10 flex flex-col md:flex-row  md:min-h-[700px]  gap-10 w-full justify-end'>
       <div className='max-h-[700px] overflow-hidden' style={{ flex: '2' }}>
         <img className='w-full h-full object-contain' src={postImageUrl(postId)} alt='' />
       </div>
