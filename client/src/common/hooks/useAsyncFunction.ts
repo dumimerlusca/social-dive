@@ -16,7 +16,7 @@ function useAsyncFunction<T, D = Error>(
         setSucceeded(false);
         setError(null);
         const res = await asyncFunction(...data);
-        setData(res.data);
+        setData(res);
         setSucceeded(true);
       } catch (error) {
         setError(error as any);

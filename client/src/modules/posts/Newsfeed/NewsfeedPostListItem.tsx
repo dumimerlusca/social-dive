@@ -26,7 +26,7 @@ const NewsfeedPostListItem = forwardRef<HTMLLIElement, PropTypes>(({ post }, ref
       )}
 
       <div className='flex justify-between pt-5 gap-2'>
-        <LikePost postId={post._id} initialLikes={post.likes} />
+        <LikePost post={post} initialLikes={post.likes} />
         <div className='flex items-center gap-2'>
           <FaRegComments className='text-secondary text-4xl' />
           <p>{comments.length}</p>

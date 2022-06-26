@@ -10,21 +10,24 @@ import { isPostContentType, NotificationType, NotificationTypeEnum } from './typ
 type NotificationListItemProps = {
   notification: NotificationType;
   onClickItem?: () => void;
+  markSeenSuccess: (notificationId: string) => void;
 };
 
 const NotificationListItem: React.FC<NotificationListItemProps> = ({
   notification,
   onClickItem,
+  markSeenSuccess,
 }) => {
   const { from, type, createdAt, seen, _id, content } = notification;
 
-  const { mutate: markAsSeen } = useMarkNotificationSeen();
+  const { execute: markAsSeen } = useMarkNotificationSeen();
   const navigate = useNavigate();
 
   const onClick = () => {
     if (isPostContentType(content)) {
       const postId = content.postId;
       markAsSeen(_id);
+      markSeenSuccess(_id);
       navigate(`/posts/${postId}`);
       return;
     }

@@ -10,7 +10,7 @@ const Header = () => {
   return (
     <div className='container m-auto py-4 px-6 bg-primary rounded-3xl my-6'>
       <div className='flex justify-between items-center gap-3'>
-        <h1 className='text-xl font-bold hidden sm:block'>INSTAGRAM</h1>
+        <h1 className='text-xl font-bold hidden sm:block'>SocialDive</h1>
         <form className='flex-grow'>
           <input className='bg-transparent text-xl w-full' placeholder='Search..' />
         </form>

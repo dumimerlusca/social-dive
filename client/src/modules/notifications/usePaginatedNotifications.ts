@@ -22,7 +22,11 @@ const usePaginatedNotifications = () => {
     });
 
     if (newNotifications.length === 0) return;
-    setNotifications((prev) => [...prev, ...newNotifications]);
+    setNotifications((prev) =>
+      [...prev, ...newNotifications]
+        .filter((notification) => !notification.fromSocket)
+        .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)),
+    );
   }, [notifications, notificationsData]);
 
   const changePageNumber = useCallback((pageNumber: number) => {
@@ -34,7 +38,29 @@ const usePaginatedNotifications = () => {
     setNotifications([]);
   }, []);
 
-  return { notifications, isLoading, pageNumber, changePageNumber, hasMore, resetState };
+  const markSeenSuccess = useCallback((notificationId: string) => {
+    setNotifications((prev) =>
+      prev.map((notification) => {
+        if (notification._id !== notificationId) return notification;
+        return { ...notification, seen: true };
+      }),
+    );
+  }, []);
+
+  const addNotification = useCallback((notification: NotificationType) => {
+    setNotifications((prev) => [notification, ...prev]);
+  }, []);
+
+  return {
+    notifications,
+    isLoading,
+    pageNumber,
+    changePageNumber,
+    hasMore,
+    resetState,
+    markSeenSuccess,
+    addNotification,
+  };
 };
 
 export default usePaginatedNotifications;

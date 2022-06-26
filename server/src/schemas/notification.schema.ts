@@ -1,9 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { NotificationContentSchemas, NotificationsTypeList, NotificationTypeEnum } from './notificationTypes';
+import {
+  NotificationContentSchemas,
+  NotificationsTypeList,
+  NotificationTypeEnum,
+} from './notificationTypes';
 
 @Schema({ timestamps: true })
-class Notification {
+export class Notification {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

@@ -1,5 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
+import Tippy from '@tippyjs/react';
 
 type ButtonColorType = 'primary' | 'secondary' | 'danger' | 'outline-primary' | 'outline-secondary';
 
@@ -9,6 +10,7 @@ type ButtonPropTypes = {
   className?: string;
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
+  tooltip?: string;
   [key: string]: unknown;
 };
 
@@ -27,22 +29,28 @@ const Button: React.FC<ButtonPropTypes> = ({
   className,
   disabled = false,
   type,
+  tooltip,
   ...rest
 }) => {
   return (
-    <button
-      type={type}
-      onClick={onClick}
-      disabled={disabled}
-      className={classnames(
-        defaultStyles,
-        getColorClassName(color),
-        { 'opacity-80 text-gray-500 cursor-not-allowed hover:!bg-none': disabled },
-        className,
-      )}
-    >
-      {children}
-    </button>
+    <Tippy content={tooltip} disabled={!tooltip}>
+      <button
+        type={type}
+        onClick={() => {
+          if (disabled) return;
+          if (!onClick) return;
+          onClick();
+        }}
+        className={classnames(
+          defaultStyles,
+          getColorClassName(color),
+          { 'opacity-80 text-gray-500 cursor-not-allowed hover:!bg-none': disabled },
+          className,
+        )}
+      >
+        {children}
+      </button>
+    </Tippy>
   );
 };
 

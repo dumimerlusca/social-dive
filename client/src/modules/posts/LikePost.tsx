@@ -1,14 +1,15 @@
+import IPost from 'interfaces/IPost';
 import IUser from 'interfaces/IUser';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import usePostLikes from './usePostLikes';
 
 type LikePostProps = {
   initialLikes: IUser[];
-  postId: string;
+  post: IPost;
 };
 
-const LikePost = ({ initialLikes, postId }: LikePostProps) => {
-  const { onClick, isPostLiked, likes, isLoading } = usePostLikes(initialLikes, postId);
+const LikePost = ({ initialLikes, post }: LikePostProps) => {
+  const { onClick, isPostLiked, likes, isLoading } = usePostLikes(initialLikes, post);
 
   return (
     <div className='flex items-center gap-2'>

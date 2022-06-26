@@ -5,7 +5,6 @@ import { useGetNotifications } from './apiClient';
 import NotificationsDropdown from './NotificationsDropdown';
 
 import './NotificationsDropdown.scss';
-import usePaginatedNotifications from './usePaginatedNotifications';
 
 const HeaderNotificationIcon = ({
   iconClassName,
@@ -17,8 +16,6 @@ const HeaderNotificationIcon = ({
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   const { data: notificationsData } = useGetNotifications();
-  const { notifications, isLoading, changePageNumber, pageNumber, hasMore, resetState } =
-    usePaginatedNotifications();
 
   const totalUnseen = notificationsData?.totalUnseen ?? 0;
 
@@ -30,21 +27,11 @@ const HeaderNotificationIcon = ({
       interactive
       placement='bottom-start'
       arrow={false}
-      onHide={() => {
-        setTimeout(() => {
-          resetState();
-        }, 500);
-      }}
       onClickOutside={(instace, e) => {
         setIsDropdownVisible(false);
       }}
       content={
         <NotificationsDropdown
-          notifications={notifications}
-          isLoading={isLoading}
-          changePageNumber={changePageNumber}
-          pageNumber={pageNumber}
-          hasMore={!!hasMore}
           closeDropdown={() => {
             setIsDropdownVisible(false);
           }}

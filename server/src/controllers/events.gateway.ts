@@ -11,7 +11,11 @@ import {
   OnGatewayInit,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { Notification, NotificationType } from '../schemas/notification.schema';
+import { NotificationTypeEnum } from '../schemas/notificationTypes';
 import UsersService from '../services/users.service';
+import { User } from '../schemas/user.schema';
+import { date } from 'yup';
 
 @WebSocketGateway({
   cors: {
@@ -52,7 +56,10 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
   }
 
   @SubscribeMessage('privateMessage')
-  privateMessage(@MessageBody() data: { content: any; to: string }, @ConnectedSocket() client: Socket) {
+  privateMessage(
+    @MessageBody() data: { content: any; to: string },
+    @ConnectedSocket() client: Socket,
+  ) {
     const { content, to } = data;
     client.to(to).emit('privateMessage', content);
   }
@@ -60,5 +67,31 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
   @SubscribeMessage('isTyping')
   isTyping(@ConnectedSocket() client: Socket, @MessageBody() data: { from: string; to: string }) {
     client.to(data.to).emit('isTyping', data.from);
+  }
+  // Notifications
+  @SubscribeMessage('likePost')
+  likePost(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: { to: User & { _id: string }; from: User; postId: string },
+  ) {
+    const notification: Notification & {
+      _id: string;
+      createdAt: string;
+      updatedAt: string;
+      fromSocket: boolean;
+    } = {
+      _id: Math.random().toString(),
+      from: data.from as any,
+      to: data.to as any,
+      type: NotificationTypeEnum.postLike,
+      content: {
+        postId: data.postId,
+      },
+      seen: false,
+      createdAt: new Date(Date.now()).toISOString(),
+      updatedAt: new Date(Date.now()).toISOString(),
+      fromSocket: true,
+    };
+    client.to(data.to._id).emit('likePost', notification);
   }
 }

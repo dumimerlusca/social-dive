@@ -18,6 +18,7 @@ export type NotificationType = {
   seen: boolean;
   updatedAt: string;
   createdAt: string;
+  fromSocket?: boolean;
 };
 
 type NotificationContentType = PostContentType | FriendRequestContentType;
@@ -30,7 +31,9 @@ type FriendRequestContentType = {
   friendRequestId: string;
 };
 
-export const isFriendRequestContentType = (content: NotificationContentType): content is FriendRequestContentType => {
+export const isFriendRequestContentType = (
+  content: NotificationContentType,
+): content is FriendRequestContentType => {
   return (content as FriendRequestContentType).friendRequestId !== undefined;
 };
 

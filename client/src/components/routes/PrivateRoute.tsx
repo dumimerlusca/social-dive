@@ -7,6 +7,7 @@ import Layout from 'components/layout/Layout';
 
 import Skeleton from 'react-loading-skeleton';
 import { NewsfeedContextProvider } from 'modules/posts/context/newsfeedContext';
+import { NotificationsContextProvider } from 'modules/notifications/context/notificationsContext';
 
 type PrivateRouteProps = {
   element: React.ReactNode;
@@ -43,7 +44,9 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
 
   return (
     <NewsfeedContextProvider>
-      <Layout layout={layout}>{element}</Layout>
+      <NotificationsContextProvider>
+        <Layout layout={layout}>{element}</Layout>
+      </NotificationsContextProvider>
     </NewsfeedContextProvider>
   );
 };

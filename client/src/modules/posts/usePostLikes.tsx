@@ -1,19 +1,26 @@
+import IPost from 'interfaces/IPost';
 import IUser from 'interfaces/IUser';
 import { useCallback, useEffect, useState } from 'react';
 import postsService from 'services/posts.service';
+import useSocketContext from 'socket/socketContext';
 import { getCurrentUser } from 'store/selectors/appSelectors';
 import { useAppSelector } from 'store/store';
 import { useLikePost, useUnlikePost } from './apiClient';
 
-const usePostLikes = (initialLikes: IUser[], postId: string) => {
+const usePostLikes = (initialLikes: IUser[], post: IPost) => {
   const [likes, setLikes] = useState(initialLikes);
+  const { socket } = useSocketContext();
 
-  const { execute: likePost, isSucceeded: isLikePostSucceeded, isLoading: isLoadingLikePost } = useLikePost(postId);
+  const {
+    execute: likePost,
+    isSucceeded: isLikePostSucceeded,
+    isLoading: isLoadingLikePost,
+  } = useLikePost(post._id);
   const {
     execute: unlikePost,
     isSucceeded: isUnlikePostSucceeded,
     isLoading: isLoadingUnlikePost,
-  } = useUnlikePost(postId);
+  } = useUnlikePost(post._id);
 
   const isLoading = isLoadingLikePost || isLoadingUnlikePost;
   const currentUser = useAppSelector(getCurrentUser);
@@ -31,8 +38,9 @@ const usePostLikes = (initialLikes: IUser[], postId: string) => {
   useEffect(() => {
     if (!isLikePostSucceeded) return;
     setIsPostLiked(true);
+    socket.emit('likePost', { to: post.user, from: currentUser, postId: post._id });
     setLikes((prev) => [...prev, currentUser]);
-  }, [currentUser, isLikePostSucceeded]);
+  }, [currentUser, isLikePostSucceeded, post._id, post.user, socket]);
 
   useEffect(() => {
     if (!isUnlikePostSucceeded) return;

@@ -1,7 +1,8 @@
 import { queryKeys } from 'common/constansts';
+import useAsyncFunction from 'common/hooks/useAsyncFunction';
 import { PaginatedData } from 'common/types';
 import { useCallback } from 'react';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import { get, patch } from 'services/api';
 import { NotificationType } from './types';
 
@@ -21,11 +22,6 @@ export const useGetNotifications = (pageNumber = 1) => {
 };
 
 export const useMarkNotificationSeen = () => {
-  const queryClient = useQueryClient();
   const markSeen = (notificationId: string) => patch(`/notifications/${notificationId}/markseen`);
-  return useMutation(markSeen, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.notifications);
-    },
-  });
+  return useAsyncFunction(markSeen);
 };

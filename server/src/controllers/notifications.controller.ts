@@ -19,7 +19,7 @@ export default class NotificationsController {
     @Query('page') page: number,
   ) {
     const userId = req.user.id;
-    const limit = limitQ ?? 5;
+    const limit = limitQ ?? 10;
 
     const totalUnseeNotifications = await this.notificationModel
       .find({ to: userId, seen: false })

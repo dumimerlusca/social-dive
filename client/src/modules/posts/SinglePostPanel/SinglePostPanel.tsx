@@ -46,7 +46,7 @@ const SinglePostPanel = () => {
         <div className='border-b border-secondary p-4'>
           <PostHeader post={post} />
           <div className='flex gap-3 justify-between'>
-            <LikePost initialLikes={post.likes} postId={post._id} />
+            <LikePost post={post} initialLikes={post.likes} />
             <div className='flex items-center gap-2'>
               <FaRegComments className='text-secondary text-4xl' />
               <p>{comments.length}</p>
