@@ -9,7 +9,7 @@ import { APIdelete, get, patch, post } from 'services/api';
 export const useCreatePost = () => {
   const createPost = async (formData: FormData) => {
     const res = await post('/posts', formData);
-    return res;
+    return res.data;
   };
   return useAsyncFunction<IPost>(createPost);
 };
