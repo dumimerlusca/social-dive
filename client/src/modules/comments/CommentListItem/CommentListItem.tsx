@@ -13,13 +13,10 @@ type CommentListItemProps = {
   onDeleteCommentSucceeded: (commentId: string) => void;
 };
 
-const CommentListItem = ({
-  postId,
-  onDeleteCommentSucceeded,
-  comment: { user, createdAt, likes, text, _id },
-}: CommentListItemProps) => {
+const CommentListItem = ({ postId, onDeleteCommentSucceeded, comment }: CommentListItemProps) => {
+  const { user, createdAt, likes, text, _id } = comment;
   const currentUser = useAppSelector(getCurrentUser);
-  const isCommentAuthor = user._id === currentUser?._id;
+  const isCommentAuthor = user?._id === currentUser?._id;
 
   return (
     <li className='p-1 flex justify-between items-center gap-2'>
@@ -37,7 +34,11 @@ const CommentListItem = ({
       </div>
       <div className='flex flex-col gap-1 items-center justify-end'>
         {isCommentAuthor && (
-          <DeleteComment onDeleteCommentSucceeded={onDeleteCommentSucceeded} postId={postId} commentId={_id} />
+          <DeleteComment
+            onDeleteCommentSucceeded={onDeleteCommentSucceeded}
+            postId={postId}
+            commentId={_id}
+          />
         )}
         <p className='text-sm'>{formatDate(new Date(createdAt))}</p>
       </div>

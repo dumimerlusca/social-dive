@@ -63,7 +63,7 @@ export const useUnlikeComment = (commentId: string) => {
 export const useAddComment = (postId: string, text: string) => {
   const addComment = async () => {
     const res = await post(`/comments/post/${postId}/addComment`, { text });
-    return res;
+    return res.data;
   };
 
   return useAsyncFunction<IComment>(addComment);
