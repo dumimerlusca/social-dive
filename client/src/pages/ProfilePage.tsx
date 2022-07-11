@@ -18,7 +18,7 @@ function ProfilePage() {
 
   const currentUserId = useSelector(getCurrentUserId);
   const { data: user } = useGetUser(userId!);
-  const { data: friends = [] } = useGetUserFriends(currentUserId);
+  const { data: friends = [] } = useGetUserFriends(userId!);
   const { data: posts = [], isLoading } = useUserPosts(userId!);
   const { mutate: createChat, isSuccess, data: chat } = useCreateChat();
 
@@ -26,7 +26,6 @@ function ProfilePage() {
 
   useEffect(() => {
     if (isSuccess && chat) {
-      console.log(chat);
       dispatch(setCurrentChat(chat));
       navigate('/chat');
     }
