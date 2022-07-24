@@ -40,7 +40,7 @@ const Notification = () => {
   return createPortal(
     <div
       className={classNames(
-        'w-full max-w-sm fixed top-1/4 right-0 p-5 bg-[#2cf5eb] text-black z-[999] flex items-center rounded-xl h-20 gap-2 transition-transform duration-300',
+        'w-full max-w-sm fixed top-1/4 right-0 p-5 bg-[#2cf5eb] text-black z-[999] flex items-center justify-between rounded-xl h-20 gap-2 transition-transform duration-300',
         {
           'translate-x-0': notification,
           'translate-x-full': !notification,

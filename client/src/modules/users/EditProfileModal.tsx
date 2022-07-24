@@ -32,6 +32,7 @@ const EditProfileModal = () => {
 
   useEffect(() => {
     if (!isSucceeded) return;
+    dispatch(closeModalAction(modalNames.editProfile));
     dispatch(
       showNotification({
         text: 'Update succeeded!',

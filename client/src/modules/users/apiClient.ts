@@ -27,7 +27,8 @@ export const useUpdateUser = () => {
   const currentUserId = useSelector(getCurrentUserId);
   const updateUser = useCallback(
     async (data: any) => {
-      return await put(`/users/${currentUserId}`, data);
+      const res = await put(`/users/${currentUserId}`, data);
+      return res.data;
     },
     [currentUserId],
   );
