@@ -22,6 +22,7 @@ const MobileNavigation = () => {
       visible={isDropdownVisible}
       className='!bg-transparent'
       arrow={false}
+      placement='bottom'
       onClickOutside={() => setIsDropdownVisible(false)}
       content={<DropdownContent closeDropdown={closeDropdown} />}
     >
