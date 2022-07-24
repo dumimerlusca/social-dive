@@ -25,6 +25,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
 
   useEffect(() => {
     if (!isLoggedIn) {
+      console.log('LOAD user');
       dispatch(loadUser());
     }
   }, [dispatch, isLoggedIn]);
