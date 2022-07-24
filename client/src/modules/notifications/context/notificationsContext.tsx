@@ -23,11 +23,8 @@ export const NotificationsContextProvider: React.FC<PropsWithChildren<{}>> = ({ 
 
   const { socket } = useSocketContext();
 
-  console.log(notifications);
-
   useEffect(() => {
     const onLikePostReceived = (notification: NotificationType) => {
-      console.log('Like post received', notification);
       addNotification(notification);
     };
     socket.on('likePost', onLikePostReceived);

@@ -9,7 +9,7 @@ type ProfilePagePostsProps = {
 
 const ProfilePagePosts = ({ posts, isLoading }: ProfilePagePostsProps) => {
   return (
-    <div className='mt-10'>
+    <div className='mt-10 pb-10'>
       <h1 className='text-3xl font-bold text-center mb-5'>POSTS</h1>
       {posts.length === 0 && !isLoading && (
         <h1 className='text-2xl font-light text-center mt-20'>No posts to show</h1>
