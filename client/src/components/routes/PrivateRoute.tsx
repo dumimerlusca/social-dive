@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Navigate, useNavigate } from 'react-router';
+import { Navigate } from 'react-router';
 import { RootState, useAppDispatch, useAppSelector } from 'store/store';
 import { layoutNames } from 'common/constansts';
 import { loadUser } from 'store/auth/authActions';
@@ -18,10 +18,8 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   element,
   layout = layoutNames.authenticated,
 }) => {
-  const { isLoggedIn, loadUserLoading, error } = useAppSelector((state: RootState) => state.auth);
+  const { isLoggedIn, loadUserLoading } = useAppSelector((state: RootState) => state.auth);
   const dispatch = useAppDispatch();
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -29,10 +27,6 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
       dispatch(loadUser());
     }
   }, [dispatch, isLoggedIn]);
-
-  useEffect(() => {
-    if (error) navigate('/login');
-  }, [error, navigate]);
 
   if (loadUserLoading && !isLoggedIn)
     return (
