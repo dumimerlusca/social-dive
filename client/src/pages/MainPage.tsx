@@ -7,6 +7,7 @@ import { useAppSelector } from 'store/store';
 import { isDesktopDevice, isMobileDevice, isTabletDevice } from 'store/selectors/uiSelectors';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames';
+import { HEADER_HEIGHT } from 'common/constansts';
 
 const MainPage = () => {
   const isDesktop = useAppSelector(isDesktopDevice);
@@ -23,8 +24,13 @@ const MainPage = () => {
             hidden: isMobile,
           })}
         >
-          <Friends />
-          <PeopleYouMightKnow />
+          <div
+            className={classNames(`overflow-auto sticky`)}
+            style={{ maxHeight: `calc(100vh - ${HEADER_HEIGHT}px)`, top: `${HEADER_HEIGHT}px` }}
+          >
+            <Friends />
+            <PeopleYouMightKnow />
+          </div>
         </div>
         <Newsfeed
           wrapperClassName={classNames({
@@ -33,7 +39,14 @@ const MainPage = () => {
             '!col-span-12': isMobile,
           })}
         />
-        {isDesktop && <NotificationsPanel wrapperClassName='col-span-3' />}
+        {isDesktop && (
+          <div className='col-span-3 '>
+            <NotificationsPanel
+              style={{ maxHeight: `calc(100vh - ${HEADER_HEIGHT}px)`, top: `${HEADER_HEIGHT}px` }}
+              wrapperClassName='sticky'
+            />
+          </div>
+        )}
       </main>
     </div>
   );
