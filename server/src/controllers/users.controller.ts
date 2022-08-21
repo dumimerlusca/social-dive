@@ -99,7 +99,11 @@ export class UsersController {
   }
 
   @Get('other/peopleYouMightKnow')
-  async peopleYouMightKnow(@Req() req: any) {
+  async peopleYouMightKnow(
+    @Req() req: any,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 5,
+  ) {
     const loggedInUserId = req.user.id;
     const userFriends = (await this.friendsService.getUserFriends(
       loggedInUserId,
@@ -109,7 +113,12 @@ export class UsersController {
       .find({ _id: { $ne: loggedInUserId } })
       .select(userSelectOptions);
 
-    return users.filter((user) => !friendsIDsArray.includes(String(user._id)));
+    const startIndex = (Number(page) - 1) * Number(limit);
+    const endIndex = startIndex + Number(limit);
+
+    return users
+      .filter((user) => !friendsIDsArray.includes(String(user._id)))
+      .slice(startIndex, endIndex);
   }
 
   // For updating all the documents, adding new fields etc
