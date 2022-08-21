@@ -10,7 +10,7 @@ interface PropTypes {
 
 const FriendsListItem: React.FC<PropTypes> = ({ user }) => {
   return (
-    <li className='mb-5'>
+    <li>
       <Link to={`/profile/${user._id}`}>
         <div className='flex gap-2 items-center'>
           <div className='rounded-full w-14 h-14 overflow-hidden flex-shrink-0'>

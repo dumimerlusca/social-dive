@@ -25,11 +25,18 @@ const MainPage = () => {
           })}
         >
           <div
-            className={classNames(`overflow-auto sticky`)}
-            style={{ maxHeight: `calc(100vh - ${HEADER_HEIGHT}px)`, top: `${HEADER_HEIGHT}px` }}
+            className='sticky flex flex-col gap-7'
+            style={{
+              height: `calc(100vh - ${HEADER_HEIGHT}px)`,
+              top: `${HEADER_HEIGHT}px`,
+            }}
           >
-            <Friends />
-            <PeopleYouMightKnow />
+            <div className='flex-1 overflow-hidden'>
+              <Friends />
+            </div>
+            <div className='flex-1 overflow-hidden'>
+              <PeopleYouMightKnow />
+            </div>
           </div>
         </div>
         <Newsfeed
