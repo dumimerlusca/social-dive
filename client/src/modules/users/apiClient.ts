@@ -21,8 +21,10 @@ export const useGetUsers = (query: string | null) => {
   );
 };
 
-export const useGetPeopleYouMightKnow = () => {
-  return useQuery<IUser[]>(queryKeys.peopleYouMightKnow, usersService.getPeopleYouMightKnow);
+export const useGetPeopleYouMightKnow = (page = 1, limit = 5) => {
+  return useQuery<IUser[]>([queryKeys.peopleYouMightKnow, page, limit], () => {
+    return usersService.getPeopleYouMightKnow(page, limit);
+  });
 };
 
 export const useGetUser = (userId: string) => {
