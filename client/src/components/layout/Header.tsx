@@ -11,8 +11,8 @@ const Header = () => {
   const isLoggedIn = useSelector(isLoggedInSelector);
 
   return (
-    <div className='container fixed z-[999] top-0 left-1/2 -translate-x-1/2 bg-dark'>
-      <div className='py-4 px-6 bg-primary rounded-3xl my-6'>
+    <div className='container z-[999] sticky top-0 py-6 bg-dark'>
+      <div className='py-4 px-6 bg-primary rounded-3xl'>
         <div className='flex justify-between items-center gap-3'>
           <h1 className='text-xl font-bold hidden sm:block'>SocialDive</h1>
           {isLoggedIn && <SearchUsers />}
