@@ -1,0 +1,23 @@
+/***
+ TRANSPARENT THEME
+  ***/
+.tippy-box[data-theme~='transparent'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: transparent;
+}
+.tippy-box[data-theme~='transparent'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-bottom-color: transparent;
+}
+.tippy-box[data-theme~='transparent'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: transparent;
+}
+.tippy-box[data-theme~='transparent'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: transparent;
+}
+
+.tippy-box[data-theme~='transparent'] {
+  background-color: transparent;
+
+  .tippy-content {
+    padding: 0;
+  }
+}

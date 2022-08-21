@@ -10,6 +10,8 @@ import { SkeletonTheme } from 'react-loading-skeleton';
 
 import './index.scss';
 import 'tippy.js/dist/tippy.css';
+import 'tippy.js/themes/translucent.css';
+import 'common/styles/tippyThemes.scss';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { SocketContextProvider } from 'socket/socketContext';
 

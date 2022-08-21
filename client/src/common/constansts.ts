@@ -9,6 +9,7 @@ export const queryKeys = {
   post: (postId: string) => `posts/${postId}`,
   userPosts: (userId: string) => `user/${userId}/posts`,
   user: (userId: string) => `user/${userId}`,
+  searchUsers: (query: string) => `users/search/${query}`,
   peopleYouMightKnow: 'peopleYouMightKnow',
   loggedInUser: 'loggedInUser',
   chats: 'chats',

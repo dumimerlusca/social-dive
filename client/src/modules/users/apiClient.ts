@@ -10,6 +10,12 @@ import { APIdelete, get, post, put } from 'services/api';
 import usersService from 'services/users.service';
 import { getCurrentUserId } from 'store/selectors/appSelectors';
 
+export const useGetUsers = (query: string) => {
+  return useQuery<IUser[]>(queryKeys.searchUsers(query), () => {
+    return usersService.getUsers(query);
+  });
+};
+
 export const useGetPeopleYouMightKnow = () => {
   return useQuery<IUser[]>(queryKeys.peopleYouMightKnow, usersService.getPeopleYouMightKnow);
 };
