@@ -2,8 +2,8 @@ import IUser from 'interfaces/IUser';
 import { get } from './api';
 
 class UsersService {
-  async getPeopleYouMightKnow() {
-    const res = await get('/users/other/peopleYouMightKnow');
+  async getPeopleYouMightKnow(page = 1, limit = 5) {
+    const res = await get(`/users/other/peopleYouMightKnow?page=${page}&limit=${limit}`);
     return res.data;
   }
 
