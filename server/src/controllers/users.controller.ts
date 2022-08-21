@@ -35,7 +35,7 @@ export class UsersController {
   @UseGuards(AuthGuard)
   async getAll(@Req() req: any, @Query('search') search: string) {
     return await this.usersService.userModel
-      .find(search ? { fullName: { $regex: search } } : {})
+      .find(search ? { fullName: { $regex: search, $options: 'i' } } : {})
       .select(userSelectOptions);
   }
 

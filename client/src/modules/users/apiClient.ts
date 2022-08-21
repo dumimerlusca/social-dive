@@ -9,11 +9,16 @@ import { useSelector } from 'react-redux';
 import { APIdelete, get, post, put } from 'services/api';
 import usersService from 'services/users.service';
 import { getCurrentUserId } from 'store/selectors/appSelectors';
+import { isNil } from 'lodash';
 
-export const useGetUsers = (query: string) => {
-  return useQuery<IUser[]>(queryKeys.searchUsers(query), () => {
-    return usersService.getUsers(query);
-  });
+export const useGetUsers = (query: string | null) => {
+  return useQuery<IUser[]>(
+    queryKeys.searchUsers(String(query)),
+    () => {
+      return usersService.getUsers(String(query));
+    },
+    { enabled: !isNil(query) },
+  );
 };
 
 export const useGetPeopleYouMightKnow = () => {

@@ -7,8 +7,8 @@ module.exports = {
       colors: {
         dark: '#111111',
         primary: '#1D1C21',
-        'primary-lighter': '#4b445c',
-        'primary-darker': '#15131a',
+        'primary-lighter': '#928bad',
+        'primary-darker': '#18171c',
         secondary: '#31C0D2',
       },
       flexGrow: {
