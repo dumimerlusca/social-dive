@@ -13,7 +13,6 @@ const SearchUsers = () => {
   const { data: users = [] } = useGetUsers(search === '' ? null : search);
 
   const inputRef = useRef<HTMLInputElement>(null);
-  console.log(users);
 
   const hideDropdown = useCallback(() => {
     setIsDropdownVisible(false);
