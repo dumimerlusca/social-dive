@@ -46,12 +46,6 @@ const DropdownContent = ({ closeDropdown }: { closeDropdown: () => void }) => {
         {isAuthenticated ? (
           <>
             <li className='w-full px-2'>
-              <Link to='/' className='flex items-center gap-2'>
-                <AiFillHome className='w-6 h-6' />
-                <p>Home</p>
-              </Link>
-            </li>
-            <li className='w-full px-2'>
               <HeaderNotificationIcon iconClassName='w-6 h-6' text='Notifications' />
             </li>
             <li className='w-full px-2'>

@@ -11,14 +11,12 @@ const Header = () => {
   const isLoggedIn = useSelector(isLoggedInSelector);
 
   return (
-    <div className='container fixed z-[999] top-0 left-1/2 -translate-x-1/2 bg-dark'>
-      <div className='py-4 px-6 bg-primary rounded-3xl my-6'>
-        <div className='flex justify-between items-center gap-3'>
-          <h1 className='text-xl font-bold hidden sm:block'>SocialDive</h1>
-          {isLoggedIn && <SearchUsers />}
-          <div className='flex items-center gap-2 flex-shrink-0'>
-            {isMobile ? <MobileNavigation /> : <DesktopNavigation />}
-          </div>
+    <div className='container m-auto py-4 px-6 bg-primary rounded-3xl my-6'>
+      <div className='flex justify-between items-center gap-3'>
+        <h1 className='text-xl font-bold hidden sm:block'>SocialDive</h1>
+        {isLoggedIn && <SearchUsers />}
+        <div className='flex items-center gap-2 flex-shrink-0'>
+          {isMobile ? <MobileNavigation /> : <DesktopNavigation />}
         </div>
       </div>
     </div>
