@@ -13,7 +13,7 @@ const FriendsListItem: React.FC<PropTypes> = ({ user }) => {
     <li>
       <Link to={`/profile/${user._id}`}>
         <div className='flex gap-2 items-center'>
-          <div className='rounded-full w-14 h-14 overflow-hidden flex-shrink-0'>
+          <div className='rounded-full w-12 h-12 overflow-hidden flex-shrink-0'>
             <img
               className='w-full h-full object-fill'
               src={userImageUrl(user._id)}

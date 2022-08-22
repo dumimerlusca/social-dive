@@ -64,9 +64,7 @@ const NotificationListItem: React.FC<NotificationListItemProps> = ({
           className='flex justify-center'
           onClick={() => {
             markAsSeen(_id);
-            setTimeout(() => {
-              markSeenSuccess(_id);
-            }, 2000);
+            markSeenSuccess(_id);
           }}
         >
           <UserFriendsActionsButton userId={from._id} />

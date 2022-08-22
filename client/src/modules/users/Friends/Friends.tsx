@@ -16,7 +16,9 @@ const Friends = () => {
 
   const sortedFriendsArr = useMemo(
     () =>
-      friends.sort((a, b) => new Date(b.lastActive).getTime() - new Date(a.lastActive).getTime()),
+      friends
+        .sort((a, b) => new Date(b.lastActive).getTime() - new Date(a.lastActive).getTime())
+        .slice(0, 5),
     [friends],
   );
 
@@ -25,7 +27,7 @@ const Friends = () => {
       <h3 className='text-3xl mb-5'>Friends</h3>
       <div className='grow overflow-auto px-2'>
         {!hasFriends && <h3>You don't have any friends right now</h3>}
-        <ul>
+        <ul className='space-y-2'>
           {sortedFriendsArr.map((user) => {
             return <FriendsListItem key={user._id} user={user} />;
           })}
