@@ -7,13 +7,10 @@ import { get, patch } from 'services/api';
 import { NotificationType } from './types';
 
 export const useGetNotifications = (pageNumber = 1) => {
-  const getNotifications = useCallback(
-    async (data) => {
-      const res = await get(`/notifications?page=${pageNumber}`);
-      return res.data;
-    },
-    [pageNumber],
-  );
+  const getNotifications = useCallback(async () => {
+    const res = await get(`/notifications?page=${pageNumber}`);
+    return res.data;
+  }, [pageNumber]);
 
   return useQuery<PaginatedData<NotificationType> & { totalUnseen: number }>(
     [queryKeys.notifications, pageNumber],

@@ -26,8 +26,10 @@ const NotificationListItem: React.FC<NotificationListItemProps> = ({
   const onClick = () => {
     if (isPostContentType(content)) {
       const postId = content.postId;
-      markAsSeen(_id);
-      markSeenSuccess(_id);
+      if (!seen) {
+        markAsSeen(_id);
+        markSeenSuccess(_id);
+      }
       navigate(`/posts/${postId}`);
       return;
     }
@@ -36,7 +38,10 @@ const NotificationListItem: React.FC<NotificationListItemProps> = ({
       type === NotificationTypeEnum.friendRequestAccepted ||
       type === NotificationTypeEnum.friendRequest
     ) {
-      markAsSeen(_id);
+      if (!seen) {
+        markAsSeen(_id);
+        markSeenSuccess(_id);
+      }
       navigate(`/profile/${from._id}`);
       return;
     }
@@ -59,6 +64,9 @@ const NotificationListItem: React.FC<NotificationListItemProps> = ({
           className='flex justify-center'
           onClick={() => {
             markAsSeen(_id);
+            setTimeout(() => {
+              markSeenSuccess(_id);
+            }, 2000);
           }}
         >
           <UserFriendsActionsButton userId={from._id} />

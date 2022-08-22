@@ -79,7 +79,7 @@ export const useGetPostComments = (postId: string) => {
     const res = await get(`/comments/post/${postId}`);
     return res.data;
   };
-  return useQuery<IComment[]>(queryKeys.postComments(postId), getPostComments, { retry: false });
+  return useQuery<IComment[]>([queryKeys.postComments(postId), postId], getPostComments);
 };
 
 export const useDeletePost = (postId: string) => {

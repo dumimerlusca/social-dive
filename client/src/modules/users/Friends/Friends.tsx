@@ -17,7 +17,7 @@ const Friends = () => {
   return (
     <div className='p-5 bg-primary rounded-3xl flex flex-col h-full'>
       <h3 className='text-3xl mb-5'>Friends</h3>
-      <div className='grow overflow-auto'>
+      <div className='grow overflow-auto px-2'>
         {!hasFriends && <h3>You don't have any friends right now</h3>}
         <ul>
           {friends.map((user) => {
