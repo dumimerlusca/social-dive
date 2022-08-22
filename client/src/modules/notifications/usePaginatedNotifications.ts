@@ -5,7 +5,13 @@ import { NotificationType } from './types';
 const usePaginatedNotifications = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
+  const [totalUnseen, setTotalUnseen] = useState<number>(0);
   const { data: notificationsData, isLoading } = useGetNotifications(pageNumber);
+
+  useEffect(() => {
+    if (!notificationsData) return;
+    setTotalUnseen(notificationsData.totalUnseen);
+  }, [notificationsData]);
 
   const hasMore = useMemo(() => {
     if (!notificationsData) return;
@@ -45,6 +51,7 @@ const usePaginatedNotifications = () => {
         return { ...notification, seen: true };
       }),
     );
+    setTotalUnseen((prev) => prev - 1);
   }, []);
 
   const addNotification = useCallback((notification: NotificationType) => {
@@ -60,6 +67,7 @@ const usePaginatedNotifications = () => {
     resetState,
     markSeenSuccess,
     addNotification,
+    totalUnseen,
   };
 };
 

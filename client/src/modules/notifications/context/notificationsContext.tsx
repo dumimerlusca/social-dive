@@ -19,6 +19,7 @@ export const NotificationsContextProvider: React.FC<PropsWithChildren<{}>> = ({ 
     resetState,
     markSeenSuccess,
     addNotification,
+    totalUnseen,
   } = usePaginatedNotifications();
 
   const { socket } = useSocketContext();
@@ -44,6 +45,7 @@ export const NotificationsContextProvider: React.FC<PropsWithChildren<{}>> = ({ 
         resetState,
         markSeenSuccess,
         addNotification,
+        totalUnseen,
       }}
     >
       {children}

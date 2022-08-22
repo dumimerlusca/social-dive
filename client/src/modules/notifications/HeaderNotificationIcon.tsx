@@ -1,7 +1,7 @@
 import Tippy from '@tippyjs/react';
 import { useState } from 'react';
 import { AiFillNotification } from 'react-icons/ai';
-import { useGetNotifications } from './apiClient';
+import useNotificationsContext from './context/notificationsContext';
 import NotificationsDropdown from './NotificationsDropdown';
 
 import './NotificationsDropdown.scss';
@@ -15,9 +15,7 @@ const HeaderNotificationIcon = ({
 }) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
-  const { data: notificationsData } = useGetNotifications();
-
-  const totalUnseen = notificationsData?.totalUnseen ?? 0;
+  const { totalUnseen } = useNotificationsContext();
 
   return (
     <Tippy
