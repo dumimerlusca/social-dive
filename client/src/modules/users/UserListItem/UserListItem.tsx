@@ -13,7 +13,7 @@ const UserListItem: React.FC<UserListItemProps> = ({ user, onClickListItem }) =>
   return (
     <li onClick={onClickListItem}>
       <div className='flex gap-2 items-center'>
-        <div className='flex-shrink-0 rounded-full w-14 h-14 overflow-hidden'>
+        <div className='flex-shrink-0 rounded-full w-12 h-12 overflow-hidden'>
           <img className='w-full' src={userImageUrl(user._id)} alt='user profile' />
         </div>
         <Link to={`/profile/${user._id}`} className='hover:cursor-pointer'>

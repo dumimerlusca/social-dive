@@ -16,6 +16,7 @@ const PeopleYouMightKnow = () => {
   const hasMore = newUsers.length !== 0;
 
   useEffect(() => {
+    if (newUsers.length === 0) return;
     setUsers((prevUsers) => {
       const newUsersTemp = newUsers.filter((newUser) => {
         const isAlredy = prevUsers.find((prevUser) => prevUser._id === newUser._id);
@@ -30,7 +31,7 @@ const PeopleYouMightKnow = () => {
     <div className='bg-primary rounded-3xl p-5 flex flex-col h-full'>
       <h1 className='text-3xl mb-3'>People you might know</h1>
       <div className='grow overflow-auto px-2'>
-        <ul>
+        <ul className='space-y-2'>
           {users.map((user) => {
             return <UserListItem key={user._id} user={user} />;
           })}

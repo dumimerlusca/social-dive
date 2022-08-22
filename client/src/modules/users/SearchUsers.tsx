@@ -93,13 +93,13 @@ const UserItem = ({ user, hideDropdown }: { user: IUser; hideDropdown: () => voi
 
   return (
     <div
-      className='flex items-center cursor-pointer'
+      className='flex items-center gap-3 cursor-pointer'
       onClick={() => {
         hideDropdown();
         navigate(`/profile/${user._id}`);
       }}
     >
-      <img className='w-8 h-8' src={userImageUrl(user._id)} alt='profile' />
+      <img className='w-8 h-8 rounded-full' src={userImageUrl(user._id)} alt='profile' />
       <p>{user.fullName}</p>
     </div>
   );

@@ -21,6 +21,15 @@ export const useGetUsers = (query: string | null) => {
   );
 };
 
+export const useUploadUserProfilePhoto = () => {
+  const currentUserId = useSelector(getCurrentUserId);
+  const uploadUserPhoto = useCallback(
+    (data: FormData) => put(`/users/${currentUserId}/upload`, data),
+    [currentUserId],
+  );
+  return useAsyncFunction(uploadUserPhoto);
+};
+
 export const useGetPeopleYouMightKnow = (page = 1, limit = 5) => {
   return useQuery<IUser[]>([queryKeys.peopleYouMightKnow, page, limit], () => {
     return usersService.getPeopleYouMightKnow(page, limit);
