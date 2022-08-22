@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useGetPeopleYouMightKnow } from 'modules/users/apiClient';
 import UserListItem from 'modules/users/UserListItem/UserListItem';
 import Button from 'components/Button/Button';
-import { loadUserLoading } from 'store/auth/authSlice';
 import IUser from 'interfaces/IUser';
 import Tippy from '@tippyjs/react';
 
@@ -30,14 +29,14 @@ const PeopleYouMightKnow = () => {
   return (
     <div className='bg-primary rounded-3xl p-5 flex flex-col h-full'>
       <h1 className='text-3xl mb-3'>People you might know</h1>
-      <div className='grow overflow-auto'>
+      <div className='grow overflow-auto px-2'>
         <ul>
           {users.map((user) => {
             return <UserListItem key={user._id} user={user} />;
           })}
         </ul>
       </div>
-      <Tippy disabled={false} content='No more people to show'>
+      <Tippy disabled={hasMore} content='No more people to show'>
         <div>
           <Button
             className='m-auto block w-full mt-4'
