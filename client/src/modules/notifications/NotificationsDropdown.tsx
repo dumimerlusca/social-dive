@@ -11,7 +11,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({ closeDrop
     useNotificationsContext();
 
   return (
-    <div className='w-[300px]'>
+    <div className='w-[300px] p-3'>
       <ul className='max-h-96 overflow-auto'>
         {notifications.map((notification) => (
           <NotificationListItem
@@ -25,7 +25,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({ closeDrop
       <Button
         tooltip={!hasMore ? 'No more notifications' : undefined}
         disabled={isLoading || !hasMore}
-        className='w-full'
+        className='w-full mt-4'
         onClick={() => changePageNumber(pageNumber + 1)}
       >
         Show More

@@ -10,9 +10,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentUserId } from 'store/selectors/appSelectors';
 import { setCurrentChat } from 'store/chat/chatSlice';
 import EditProfileModal from 'modules/users/EditProfileModal';
+import AllFriendsModal from 'modules/users/Friends/AllFriendsModal';
+import { openModalAction } from 'store/ui/uiSlice';
+import { modalNames } from 'common/constansts';
 
 function ProfilePage() {
-  const { userId } = useParams();
+  const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -33,6 +36,7 @@ function ProfilePage() {
 
   return (
     <>
+      <AllFriendsModal userId={userId!} />
       <div className='container'>
         <div className='flex gap-1 sm:gap-5 items-center mt-10'>
           <img
@@ -50,7 +54,14 @@ function ProfilePage() {
 
             <div className='flex gap-6'>
               <p>{posts?.length ?? 0} Posts</p>
-              <p>{friends.length ?? 0} Friends</p>
+              <button
+                className='border-b cursor-pointer'
+                onClick={() => {
+                  dispatch(openModalAction(modalNames.allFriends));
+                }}
+              >
+                {friends.length ?? 0} Friends
+              </button>
             </div>
             {!isCurrentUserProfile && (
               <button

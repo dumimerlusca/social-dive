@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { createPortal } from 'react-dom';
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, useEffect } from 'react';
 
 type ModalWrapperPropTypes = {
   closeModal: () => void;
@@ -14,6 +14,15 @@ const ModalWrapper: React.FC<PropsWithChildren<ModalWrapperPropTypes>> = ({
   isModalOpen,
   modalContentRef,
 }) => {
+  useEffect(() => {
+    const htmlElement = document.querySelector('html');
+    if (isModalOpen) {
+      htmlElement?.classList.add('overflow-hidden');
+    } else {
+      htmlElement?.classList.remove('overflow-hidden');
+    }
+  }, [isModalOpen]);
+
   return createPortal(
     <div
       onClick={(e) => {

@@ -1,18 +1,24 @@
+import { modalNames } from 'common/constansts';
 import Button from 'components/Button/Button';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentUserId } from 'store/selectors/appSelectors';
+import { openModalAction } from 'store/ui/uiSlice';
 import { useGetUserFriends } from '../apiClient';
 import FriendsListItem from './FriendsListItem';
 
 const Friends = () => {
   const currentUserId = useSelector(getCurrentUserId);
+  const dispatch = useDispatch();
   const { data: friends = [] } = useGetUserFriends(currentUserId);
+
+  const hasFriends = friends.length !== 0;
 
   return (
     <div className='p-5 bg-primary rounded-3xl flex flex-col h-full'>
       <h3 className='text-3xl mb-5'>Friends</h3>
       <div className='grow overflow-auto'>
+        {!hasFriends && <h3>You don't have any friends right now</h3>}
         <ul>
           {friends.map((user) => {
             return <FriendsListItem key={user._id} user={user} />;
@@ -20,8 +26,15 @@ const Friends = () => {
         </ul>
       </div>
       <div className='text-center'>
-        <Button color='secondary' className='w-full'>
-          Show more
+        <Button
+          color='secondary'
+          className='w-full'
+          disabled={!hasFriends}
+          onClick={() => {
+            dispatch(openModalAction(modalNames.allFriends));
+          }}
+        >
+          Show All
         </Button>
       </div>
     </div>
