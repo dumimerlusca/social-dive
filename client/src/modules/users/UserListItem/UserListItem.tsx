@@ -6,11 +6,12 @@ import UserFriendsActionsButton from 'modules/users/UserActions/UserFriendsActio
 
 type UserListItemProps = {
   user: IUser;
+  onClickListItem?: () => void;
 };
 
-const UserListItem: React.FC<UserListItemProps> = ({ user }) => {
+const UserListItem: React.FC<UserListItemProps> = ({ user, onClickListItem }) => {
   return (
-    <li>
+    <li onClick={onClickListItem}>
       <div className='flex gap-2 items-center'>
         <div className='flex-shrink-0 rounded-full w-14 h-14 overflow-hidden'>
           <img className='w-full' src={userImageUrl(user._id)} alt='user profile' />

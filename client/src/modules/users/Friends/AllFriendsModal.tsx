@@ -40,7 +40,7 @@ const AllFriendsModal: React.FC<AllFriendsModalProps> = ({ userId }) => {
         <div className='overflow-auto px-2'>
           <ul>
             {friends.map((friend) => {
-              return <UserListItem key={friend._id} user={friend} />;
+              return <UserListItem onClickListItem={closeModal} key={friend._id} user={friend} />;
             })}
           </ul>
         </div>
