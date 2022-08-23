@@ -2,11 +2,12 @@ import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import { useForm } from 'react-hook-form';
 import classNames from 'classnames';
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import useClickOutside from 'common/hooks/useClickOutside';
 import { useAppDispatch, useAppSelector } from 'store/store';
 import { loginUserAction } from 'store/auth/authActions';
 import { useNavigate } from 'react-router';
+import useLoginToDemoAccount from './useLoginToDemoAccount';
 
 export type UserOnLoginType = {
   email: string;
@@ -19,6 +20,8 @@ const LoginForm = () => {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const { loginToDemoAccount } = useLoginToDemoAccount();
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -40,10 +43,6 @@ const LoginForm = () => {
   useClickOutside(formRef, () => {
     clearErrors();
   });
-
-  const loginToDemoAccount = useCallback(() => {
-    dispatch(loginUserAction({ email: 'demo1@gmail.com', password: '123456' }));
-  }, [dispatch]);
 
   return (
     <form

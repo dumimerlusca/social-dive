@@ -15,10 +15,7 @@ const SinglePostPanel = () => {
   const [comments, setComments] = useState<IComment[]>([]);
 
   const { data: post, isLoading } = useGetPost(postId!);
-  const { data: commentsData, isLoading: isLoadingComments } = useGetPostComments(postId!);
-
-  console.log(commentsData, postId, isLoadingComments);
-  console.log(post, isLoading);
+  const { data: commentsData } = useGetPostComments(postId!);
 
   useEffect(() => {
     if (!commentsData) return;

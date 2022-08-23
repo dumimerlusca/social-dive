@@ -10,6 +10,7 @@ module.exports = {
         'primary-lighter': '#928bad',
         'primary-darker': '#18171c',
         secondary: '#31C0D2',
+        tertiary: '#FF4848'
       },
       flexGrow: {
         1: '1',
