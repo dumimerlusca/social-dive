@@ -23,7 +23,6 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
 
   useEffect(() => {
     if (!isLoggedIn) {
-      console.log('LOAD user');
       dispatch(loadUser());
     }
   }, [dispatch, isLoggedIn]);
@@ -35,7 +34,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
       </div>
     );
 
-  if (!isLoggedIn && !loadUserLoading) return <Navigate to='/login' />;
+  if (!isLoggedIn && !loadUserLoading) return <Navigate to='/home' />;
 
   return (
     <NewsfeedContextProvider>
