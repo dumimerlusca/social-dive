@@ -22,8 +22,6 @@ const ChatPanel = () => {
   const currentUserId = useSelector(getCurrentUserId);
   const dispatch = useDispatch();
 
-  console.log('Hello');
-
   return (
     <>
       <AllFriendsModal userId={currentUserId} />
