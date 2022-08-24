@@ -3,6 +3,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { userImageUrl } from 'services/api';
 import UserFriendsActionsButton from 'modules/users/UserActions/UserFriendsActionsButton';
+import SendMessageButton from 'modules/chat/SendMessageButton';
+import { FaRegComments } from 'react-icons/fa';
 
 type UserListItemProps = {
   user: IUser;
@@ -19,7 +21,8 @@ const UserListItem: React.FC<UserListItemProps> = ({ user, onClickListItem }) =>
         <Link to={`/profile/${user._id}`} className='hover:cursor-pointer'>
           <h6 className='font-bold leading-4 mb-1'>{user.fullName}</h6>
         </Link>
-        <div className='ml-auto'>
+        <div className='ml-auto flex items-center gap-3'>
+          <SendMessageButton content={<FaRegComments />} userId={user._id} />
           <UserFriendsActionsButton userId={user._id} />
         </div>
       </div>

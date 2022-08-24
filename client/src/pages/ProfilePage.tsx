@@ -1,38 +1,27 @@
 import { useUserPosts } from 'modules/posts/apiClient';
 import ProfilePagePosts from 'modules/posts/ProfilePagePosts/ProfilePagePosts';
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { userImageUrl } from 'services/api';
 import { useGetUser, useGetUserFriends } from 'modules/users/apiClient';
 import ProfilePageUserActions from 'modules/users/ProfilePageUserActions';
-import { useCreateChat } from 'modules/chat/apiClient';
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentUserId } from 'store/selectors/appSelectors';
-import { setCurrentChat } from 'store/chat/chatSlice';
 import EditProfileModal from 'modules/users/EditProfileModal';
 import AllFriendsModal from 'modules/users/Friends/AllFriendsModal';
 import { openModalAction } from 'store/ui/uiSlice';
 import { modalNames } from 'common/constansts';
+import SendMessageButton from 'modules/chat/SendMessageButton';
 
 function ProfilePage() {
   const { userId } = useParams<{ userId: string }>();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const currentUserId = useSelector(getCurrentUserId);
   const { data: user } = useGetUser(userId!);
   const { data: friends = [] } = useGetUserFriends(userId!);
   const { data: posts = [], isLoading } = useUserPosts(userId!);
-  const { mutate: createChat, isSuccess, data: chat } = useCreateChat();
 
   const isCurrentUserProfile = currentUserId === user?._id;
-
-  useEffect(() => {
-    if (isSuccess && chat) {
-      dispatch(setCurrentChat(chat));
-      navigate('/chat');
-    }
-  }, [chat, dispatch, isSuccess, navigate]);
 
   return (
     <>
@@ -64,14 +53,7 @@ function ProfilePage() {
               </button>
             </div>
             {!isCurrentUserProfile && (
-              <button
-                className='self-start underline'
-                onClick={() => {
-                  createChat(userId!);
-                }}
-              >
-                Send message
-              </button>
+              <SendMessageButton className='underline self-start' userId={userId!} />
             )}
           </div>
         </div>
