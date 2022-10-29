@@ -19,8 +19,9 @@ const NotificationsPanel = ({
       className={classNames('p-5 rounded-3xl bg-primary flex flex-col', wrapperClassName)}
       style={{ minHeight: 200, ...style }}
     >
-      <h3 className='text-3xl mb-5'>Notification</h3>
+      <h3 className='text-3xl mb-5'>Notifications</h3>
       <ul className='flex flex-col gap-2 overflow-auto grow'>
+        {notifications.length === 0 && <p>You don't have any notifications</p>}
         {notifications.map((notification) => {
           return (
             <NotificationListItem
