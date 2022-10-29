@@ -58,6 +58,9 @@ const Newsfeed = ({ wrapperClassName }: NewsfeedProps) => {
             <Skeleton className='h-[500px]' />
           </div>
         )}
+        {posts.length === 0 && !isLoading && (
+          <p className='text-center text-4xl mt-40'>Your newsfeed is empty!</p>
+        )}
       </div>
     </div>
   );

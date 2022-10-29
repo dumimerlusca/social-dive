@@ -10,7 +10,7 @@ const ChatList: React.FC<{ chats: ChatType[]; isLoading: boolean }> = ({ chats, 
   const dispatch = useDispatch();
   const currentChat = useSelector(getCurrentChat);
   useEffect(() => {
-    // Update the current chat wenever the chat list changes
+    // Update the current chat whenever the chat list changes
     const updatedChat = chats.find((chat) => chat._id === currentChat?._id);
     if (!updatedChat) return;
     dispatch(setCurrentChat(updatedChat));
@@ -21,6 +21,9 @@ const ChatList: React.FC<{ chats: ChatType[]; isLoading: boolean }> = ({ chats, 
     <div className='max-h-96 overflow-auto px-2'>
       <ul className='flex flex-col gap-3'>
         {isLoading && <Skeleton count={3} className='h-24 rounded-3xl mb-2' />}
+        {chats.length === 0 && !isLoading && (
+          <p className='my-10'>You don't have any conversations</p>
+        )}
         {chats.map((chat) => {
           return <ChatListItem key={chat._id} chat={chat} />;
         })}

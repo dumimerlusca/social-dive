@@ -27,7 +27,8 @@ const EditProfileModal = () => {
   const currentUser = useSelector(getCurrentUser);
 
   const { execute: updateUser, isLoading, isSucceeded, data } = useUpdateUser();
-  const { execute: uploadUserPhoto } = useUploadUserProfilePhoto();
+  const { execute: uploadUserPhoto, isSucceeded: uploadPhotoSucceeded } =
+    useUploadUserProfilePhoto();
 
   const dispatch = useDispatch();
 
@@ -47,6 +48,13 @@ const EditProfileModal = () => {
     );
     dispatch(updateCurrentUser(data));
   }, [data, dispatch, isSucceeded]);
+
+  useEffect(() => {
+    if (uploadPhotoSucceeded) {
+      // eslint-disable-next-line no-restricted-globals
+      location.reload();
+    }
+  }, [uploadPhotoSucceeded]);
 
   const {
     register,

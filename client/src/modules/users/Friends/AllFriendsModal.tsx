@@ -39,6 +39,7 @@ const AllFriendsModal: React.FC<AllFriendsModalProps> = ({ userId }) => {
         <h2 className='text-center text-2xl font-medium'>Friends</h2>
         <div className='overflow-auto px-2'>
           <ul>
+            {friends.length === 0 && <p className='my-10'>You don't have any friends right now!</p>}
             {friends.map((friend) => {
               return <UserListItem onClickListItem={closeModal} key={friend._id} user={friend} />;
             })}

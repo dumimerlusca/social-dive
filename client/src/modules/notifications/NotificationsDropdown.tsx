@@ -13,6 +13,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({ closeDrop
   return (
     <div className='w-[300px] p-3'>
       <ul className='max-h-96 overflow-auto'>
+        {notifications.length === 0 && <p className='p-3'>You don't have any notifications</p>}
         {notifications.map((notification) => (
           <NotificationListItem
             markSeenSuccess={markSeenSuccess}
