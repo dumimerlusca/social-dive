@@ -1,0 +1,30 @@
+.backdrop-blur {
+    animation: animateBackdropWidth 1.5s ease-in forwards;
+}
+
+.fadeIn {
+    opacity: 0;
+    animation: fadeInTranslate 1s ease-in forwards;
+}
+
+@keyframes animateBackdropWidth {
+    from {
+        width: 0vw;
+    }
+
+    to {
+        width: 140vw;
+    }
+}
+
+@keyframes fadeInTranslate {
+    from {
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0px);
+        opacity: 100%;
+    }
+}
