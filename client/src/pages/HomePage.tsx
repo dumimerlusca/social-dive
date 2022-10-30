@@ -2,6 +2,7 @@ import useLoginToDemoAccount from 'components/auth/useLoginToDemoAccount';
 import Button from 'components/Button/Button';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import './HomePage.scss';
 
 type TechStackitemType = {
   imageName: string;
@@ -45,23 +46,36 @@ const HomePage = () => {
     <div className='relative h-auto lg:h-screen min-h-[800px] overflow-hidden'>
       <div
         style={{ backdropFilter: 'blur(5px)' }}
-        className='bg-white/[0.02] absolute w-[140vw] top-0 left-0 z-[1] rounded-full aspect-square -translate-x-1/2 pointer-events-none -translate-y-1/2'
+        className='backdrop-blur bg-white/[0.02] absolute w-[140vw] top-0 left-0 z-[1] rounded-full aspect-square -translate-x-1/2 pointer-events-none -translate-y-1/2'
       ></div>
       <div className='container'>
         <div className='mt-[150px] flex flex-col lg:flex-row justify-between gap-10'>
           <div className='z-[1]'>
-            <h1 className='text-[64px] font-semibold leading-[70px]'>Social Dive</h1>
-            <h4 className='text-[24px] font-light'>Social media platform</h4>
+            <h1
+              className='text-[64px] font-semibold leading-[70px] fadeIn'
+              style={{ animationDelay: '.4s' }}
+            >
+              Social Dive
+            </h1>
+            <h4 className='text-[24px] font-light fadeIn' style={{ animationDelay: '.3s' }}>
+              Social media platform
+            </h4>
             <div className='flex flex-col'>
               <button
-                className='mt-10 px-10 py-3 text-[24px] uppercase bg-tertiary rounded-lg font-bold hover:opacity-75 transition-opacity'
+                className='fadeIn mt-10 px-10 py-3 text-[24px] uppercase bg-tertiary rounded-lg font-bold hover:opacity-75 transition-opacity'
+                style={{ animationDelay: '.2s' }}
                 onClick={loginToDemoAccount}
               >
                 {isLoading ? 'Loading...' : 'try it using a demo account'}
               </button>
               {error && <p className='text-center mt-2 text-red-600'>Something went wrong</p>}
-              <p className='text-center font-bold text-md my-3'>OR</p>
-              <div className='flex gap-5 items-center justify-center'>
+              <p
+                className='fadeIn text-center font-bold text-md my-3'
+                style={{ animationDelay: '.1s' }}
+              >
+                OR
+              </p>
+              <div className='fadeIn flex gap-5 items-center justify-center'>
                 <Button
                   className='rounded-lg'
                   color='secondary'
@@ -83,7 +97,7 @@ const HomePage = () => {
             </div>
             <div className='mt-10 space-y-3'>
               {techstackItems.map((item, index) => (
-                <TechStackItem key={index} item={item} />
+                <TechStackItem key={index} index={index} item={item} />
               ))}
             </div>
           </div>
@@ -121,9 +135,20 @@ const HomePage = () => {
 
 export default HomePage;
 
-const TechStackItem = ({ item: { imageName, text } }: { item: TechStackitemType }) => {
+const TechStackItem = ({
+  item: { imageName, text },
+  index,
+}: {
+  item: TechStackitemType;
+  index: number;
+}) => {
+  const animationDelay = index / 10;
+
   return (
-    <div className='flex items-center gap-3'>
+    <div
+      className='fadeIn flex items-center gap-3'
+      style={{ animationDelay: `-${animationDelay}s` }}
+    >
       <img className='w-10 h-10' src={`/techstack/${imageName}`} alt='' />
       <p className='text-xl font-medium'>{text}</p>
     </div>
