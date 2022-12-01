@@ -1,4 +1,5 @@
 import useLogout from 'common/hooks/useLogout';
+import GamepadIcon from 'common/icons/GamepadIcon';
 import HeaderChatIcon from 'modules/chat/HeaderChatIcon';
 import HeaderNotificationIcon from 'modules/notifications/HeaderNotificationIcon';
 import React from 'react';
@@ -28,6 +29,9 @@ const DesktopNavigation = () => {
           <HeaderChatIcon />
           <Link to={`/profile/${currentUser?._id}`}>
             <FaUser className={classes.icon} />
+          </Link>
+          <Link to='/games'>
+            <GamepadIcon color='white' className={classes.icon} />
           </Link>
           <button onClick={logoutHandler}>
             <AiOutlineLogout className={classes.icon} />
