@@ -6,7 +6,6 @@ import { loadUser } from 'store/auth/authActions';
 import Layout from 'components/layout/Layout';
 
 import Skeleton from 'react-loading-skeleton';
-import { NewsfeedContextProvider } from 'modules/posts/context/newsfeedContext';
 import { NotificationsContextProvider } from 'modules/notifications/context/notificationsContext';
 
 type PrivateRouteProps = {
@@ -37,11 +36,9 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   if (!isLoggedIn && !loadUserLoading) return <Navigate to='/home' />;
 
   return (
-    <NewsfeedContextProvider>
-      <NotificationsContextProvider>
-        <Layout layout={layout}>{element}</Layout>
-      </NotificationsContextProvider>
-    </NewsfeedContextProvider>
+    <NotificationsContextProvider>
+      <Layout layout={layout}>{element}</Layout>
+    </NotificationsContextProvider>
   );
 };
 

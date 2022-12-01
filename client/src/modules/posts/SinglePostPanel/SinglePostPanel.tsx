@@ -9,13 +9,20 @@ import Skeleton from 'react-loading-skeleton';
 import LikePost from '../LikePost';
 import { FaRegComments } from 'react-icons/fa';
 import IComment from 'interfaces/IComment';
+import EditPostDescriptionForm from '../components/EditPostDescriptionForm';
+import { useQueryClient } from 'react-query';
+import { queryKeys } from 'common/constansts';
 
 const SinglePostPanel = () => {
+  const [isEditing, setIsEditing] = useState(false);
+
   const { postId } = useParams();
   const [comments, setComments] = useState<IComment[]>([]);
 
   const { data: post, isLoading } = useGetPost(postId!);
   const { data: commentsData } = useGetPostComments(postId!);
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (!commentsData) return;
@@ -44,7 +51,24 @@ const SinglePostPanel = () => {
       </div>
       <div className='flex max-h-[700px] flex-col bg-primary rounded-xl' style={{ flex: '1' }}>
         <div className='border-b border-secondary p-4'>
-          <PostHeader post={post} />
+          <PostHeader
+            onClickEdit={() => {
+              setIsEditing(true);
+            }}
+            post={post}
+          />
+          {!isEditing ? (
+            <p className='py-2'>{post.description}</p>
+          ) : (
+            <EditPostDescriptionForm
+              onSuccess={() => {
+                setIsEditing(false);
+                queryClient.invalidateQueries(queryKeys.post(postId!));
+              }}
+              postId={post._id}
+              description={post.description ?? ''}
+            />
+          )}
           <div className='flex gap-3 justify-between'>
             <LikePost post={post} initialLikes={post.likes} />
             <div className='flex items-center gap-2'>

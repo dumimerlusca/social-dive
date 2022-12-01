@@ -17,9 +17,7 @@ export const useGetChatMessages = (chatId: string | null) => {
     const res = await get(`/messages/chat/${chatId}`);
     return res.data;
   };
-  return useQuery<MessageType[]>(queryKeys.chatMessages(chatId ? chatId : ''), fetcher, {
-    enabled: !!chatId,
-  });
+  return useQuery<MessageType[]>(queryKeys.chatMessages(chatId ? chatId : ''), fetcher);
 };
 
 export const useSendMessage = (chatId: string) => {

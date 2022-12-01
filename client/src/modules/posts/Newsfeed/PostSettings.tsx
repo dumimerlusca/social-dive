@@ -10,10 +10,12 @@ const liClasses = 'px-7 py-2 hover:bg-gray-300 transition-all duration-300';
 
 type PostSettingsProps = {
   postId: string;
+  onClickEdit: () => void;
+  closeDropdown: () => void;
 };
 
-const PostSettings = ({ postId }: PostSettingsProps) => {
-  const { execute: deletePost, isSucceeded } = useDeletePost(postId);
+const PostSettings = ({ postId, onClickEdit, closeDropdown }: PostSettingsProps) => {
+  const deletePost = useDeletePost(postId);
   const { postId: postIdParam } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -21,7 +23,7 @@ const PostSettings = ({ postId }: PostSettingsProps) => {
   const { onDeletePostsSucceeded } = useNewsfeedContext();
 
   useEffect(() => {
-    if (!isSucceeded) return;
+    if (!deletePost.isSucceeded) return;
     dispatch(
       showNotification({
         text: 'Post deleted successfuly!',
@@ -38,7 +40,7 @@ const PostSettings = ({ postId }: PostSettingsProps) => {
     setTimeout(() => {
       onDeletePostsSucceeded(postId);
     }, 2);
-  }, [dispatch, isSucceeded, navigate, onDeletePostsSucceeded, postId, postIdParam]);
+  }, [deletePost.isSucceeded, dispatch, navigate, onDeletePostsSucceeded, postId, postIdParam]);
 
   return (
     <div className='bg-white text-gray-900'>
@@ -46,14 +48,23 @@ const PostSettings = ({ postId }: PostSettingsProps) => {
         <li
           className={liClasses}
           onClick={() => {
+            closeDropdown();
             if (window.confirm('Are you sure?')) {
-              deletePost();
+              deletePost.execute();
             }
           }}
         >
           Delete
         </li>
-        <li className={liClasses}>Edit</li>
+        <li
+          onClick={() => {
+            closeDropdown();
+            onClickEdit();
+          }}
+          className={liClasses}
+        >
+          Edit
+        </li>
       </ul>
     </div>
   );
