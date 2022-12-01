@@ -1,7 +1,7 @@
 import axios from 'axios';
 export const SERVER_URL =
   process.env.NODE_ENV === 'production'
-    ? 'https://socialdive-api.herokuapp.com/'
+    ? 'https://socialdive-api.herokuapp.com'
     : 'http://localhost:5000';
 export const BASE_API_URL = `${SERVER_URL}/api`;
 export const userImageUrl = (userId: string | undefined) => BASE_API_URL + `/users/${userId}/photo`;
