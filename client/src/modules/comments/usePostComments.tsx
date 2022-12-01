@@ -10,19 +10,21 @@ const usePostComments = (postId: string) => {
 
   const queryClient = useQueryClient();
 
-  useEffect(() => {
-    return () => {
-      queryClient.setQueryDefaults(queryKeys.postComments(postId), { enabled: false });
-    };
-  }, [postId, queryClient]);
+  const onAddCommentSucceeded = useCallback(
+    (newComment: IComment) => {
+      queryClient.invalidateQueries(queryKeys.postComments(postId));
+      setComments((prev) => [newComment, ...prev]);
+    },
+    [postId, queryClient],
+  );
 
-  const onAddCommentSucceeded = useCallback((newComment: IComment) => {
-    setComments((prev) => [newComment, ...prev]);
-  }, []);
-
-  const onDeleteCommentSucceeded = useCallback((commentId: string) => {
-    setComments((prev) => prev.filter((comment) => comment._id !== commentId));
-  }, []);
+  const onDeleteCommentSucceeded = useCallback(
+    (commentId: string) => {
+      queryClient.invalidateQueries(queryKeys.postComments(postId));
+      setComments((prev) => prev.filter((comment) => comment._id !== commentId));
+    },
+    [postId, queryClient],
+  );
 
   useEffect(() => {
     if (currentComments.length === 0) return;

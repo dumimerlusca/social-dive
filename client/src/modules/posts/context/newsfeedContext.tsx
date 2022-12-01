@@ -1,5 +1,7 @@
+import { queryKeys } from 'common/constansts';
 import IPost from 'interfaces/IPost';
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { useQueryClient } from 'react-query';
 import { useNewsfeedPosts } from '../apiClient';
 
 type NewsfeedContextType = {
@@ -19,9 +21,11 @@ const LIMIT = 2;
 export const NewsfeedContextProvider: React.FC = ({ children }) => {
   const [pageNumber, setPageNumber] = useState(1);
   const [totalDocumentsCount, setTotalDocumentsCount] = useState(0);
-  const { data: newsfeedPostsData, isLoading } = useNewsfeedPosts(pageNumber, LIMIT);
+  const { data: newsfeedPostsData, isLoading, isFetching } = useNewsfeedPosts(pageNumber, LIMIT);
   const [posts, setPosts] = useState<IPost[]>([]);
   const [deletedPostsIDs, setDeletedPostsIDs] = useState<string[]>([]);
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (!newsfeedPostsData?.total) return;
@@ -30,15 +34,29 @@ export const NewsfeedContextProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (!newsfeedPostsData) return;
-    const newPosts = newsfeedPostsData.data.filter((post) => {
-      const alreadyExists = posts.find((existentPost) => existentPost._id === post._id);
-      const isDeleted = deletedPostsIDs.includes(post._id);
-      if (alreadyExists || isDeleted) return null;
-      return post;
+
+    setPosts((prev) => {
+      const prevPosts = [...prev];
+
+      const newPosts = newsfeedPostsData.data.filter((post) => {
+        const existingItemIndex = prevPosts.findIndex(
+          (existentPost) => existentPost._id === post._id,
+        );
+        const alreadyExists = existingItemIndex !== -1;
+        // We also need to update the existing ones with the latest data
+        if (alreadyExists) {
+          prevPosts[existingItemIndex] = post;
+        }
+
+        const isDeleted = deletedPostsIDs.includes(post._id);
+        if (alreadyExists || isDeleted) return null;
+        return post;
+      });
+
+      const newPostsList = [...prevPosts, ...newPosts];
+      return newPostsList;
     });
-    if (newPosts.length === 0) return;
-    setPosts((prev) => [...prev, ...newPosts]);
-  }, [deletedPostsIDs, newsfeedPostsData, pageNumber, posts]);
+  }, [deletedPostsIDs, newsfeedPostsData, pageNumber, isFetching]);
 
   const onCreatePostSucceeded = useCallback((newPost: IPost) => {
     setPosts((prev) => [newPost, ...prev]);
@@ -48,6 +66,16 @@ export const NewsfeedContextProvider: React.FC = ({ children }) => {
     setDeletedPostsIDs((prev) => [...prev, postId]);
     setPosts((prev) => prev.filter((post) => post._id !== postId));
   }, []);
+
+  useEffect(() => {
+    return () => {
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.newsfeedPosts],
+        refetchActive: true,
+        refetchInactive: true,
+      });
+    };
+  }, [queryClient]);
 
   return (
     <NewsfeedContext.Provider

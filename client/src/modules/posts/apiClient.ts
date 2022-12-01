@@ -3,8 +3,9 @@ import useAsyncFunction from 'common/hooks/useAsyncFunction';
 import { PaginatedData } from 'common/types';
 import IComment from 'interfaces/IComment';
 import IPost from 'interfaces/IPost';
+import { useCallback } from 'react';
 import { useQuery } from 'react-query';
-import { APIdelete, get, patch, post } from 'services/api';
+import { APIdelete, get, patch, post, put } from 'services/api';
 
 export const useCreatePost = () => {
   const createPost = async (formData: FormData) => {
@@ -79,10 +80,18 @@ export const useGetPostComments = (postId: string) => {
     const res = await get(`/comments/post/${postId}`);
     return res.data;
   };
-  return useQuery<IComment[]>([queryKeys.postComments(postId), postId], getPostComments);
+  return useQuery<IComment[]>(queryKeys.postComments(postId), getPostComments);
 };
 
 export const useDeletePost = (postId: string) => {
   const deleteComment = () => APIdelete(`/posts/${postId}`);
   return useAsyncFunction(deleteComment);
+};
+
+export const useEditPost = () => {
+  const editPost = useCallback(async (postId: string, data: Object) => {
+    const res = await put(`/posts/${postId}`, data);
+    return res.data;
+  }, []);
+  return useAsyncFunction<IPost>(editPost);
 };

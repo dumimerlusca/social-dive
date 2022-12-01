@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, useCallback, useEffect, useState } from 'react';
 import IPost from '../../../interfaces/IPost';
 import { FaRegComments } from 'react-icons/fa';
 import { BASE_API_URL } from 'services/api';
@@ -8,21 +8,47 @@ import PostHeader from 'modules/posts/components/PostHeader';
 import CommentListItem from 'modules/comments/CommentListItem/CommentListItem';
 import NewComment from 'modules/comments/NewComment/NewComment';
 import usePostComments from 'modules/comments/usePostComments';
+import EditPostDescriptionForm from '../components/EditPostDescriptionForm';
 
 interface PropTypes {
   post: IPost;
 }
 
 const NewsfeedPostListItem = forwardRef<HTMLLIElement, PropTypes>(({ post }, ref) => {
-  const { comments, onAddCommentSucceeded, onDeleteCommentSucceeded } = usePostComments(post._id);
+  const [innerPost, setInnerPost] = useState(post);
+  const [isEditing, setIsEditing] = useState(false);
+  const { comments, onAddCommentSucceeded, onDeleteCommentSucceeded } = usePostComments(
+    innerPost._id,
+  );
+
+  useEffect(() => {
+    setInnerPost(post);
+  }, [post]);
+
+  const onClickEdit = useCallback(() => {
+    setIsEditing(true);
+  }, []);
+
+  const onEditSuccess = useCallback((updatedPost: IPost) => {
+    setInnerPost(updatedPost);
+    setIsEditing(false);
+  }, []);
 
   return (
     <li ref={ref} className='p-5 bg-primary mb-10 rounded-xl'>
-      <PostHeader post={post} />
+      <PostHeader onClickEdit={onClickEdit} post={innerPost} />
+      {isEditing ? (
+        <EditPostDescriptionForm
+          onSuccess={onEditSuccess}
+          description={innerPost.description ?? ''}
+          postId={innerPost._id}
+        />
+      ) : (
+        <p className='py-2'>{innerPost.description}</p>
+      )}
 
-      {post.description && <p className='py-2'>{post.description}</p>}
       {post.photo && (
-        <img className='w-full' src={BASE_API_URL + `/posts/${post._id}/photo`} alt='avatar' />
+        <img className='w-full' src={BASE_API_URL + `/posts/${innerPost._id}/photo`} alt='avatar' />
       )}
 
       <div className='flex justify-between pt-5 gap-2'>
@@ -44,7 +70,7 @@ const NewsfeedPostListItem = forwardRef<HTMLLIElement, PropTypes>(({ post }, ref
       <div>
         <NewComment
           onAddCommentSucceeded={onAddCommentSucceeded}
-          postId={post._id}
+          postId={innerPost._id}
           wrapperClassname='my-2'
         />
         <ul className='flex flex-col gap-1 max-h-[300px] overflow-auto p-2'>
@@ -53,7 +79,7 @@ const NewsfeedPostListItem = forwardRef<HTMLLIElement, PropTypes>(({ post }, ref
               <CommentListItem
                 onDeleteCommentSucceeded={onDeleteCommentSucceeded}
                 key={comment._id}
-                postId={post._id}
+                postId={innerPost._id}
                 comment={comment}
               />
             );
