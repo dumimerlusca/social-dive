@@ -10,6 +10,7 @@ import PrivateRoute from 'components/routes/PrivateRoute';
 import ChatPage from 'pages/ChatPage';
 import useWindowWidth from 'common/hooks/useWindowWidth';
 import Notification from 'components/Notification';
+import GamesPage from 'pages/GamesPage';
 
 function App() {
   useWindowWidth();
@@ -21,6 +22,7 @@ function App() {
           <Route path='/profile/:userId' element={<PrivateRoute element={<ProfilePage />} />} />
           <Route path='/posts/:postId' element={<PrivateRoute element={<SinglePostPage />} />} />
           <Route path='/chat' element={<PrivateRoute element={<ChatPage />} />} />
+          <Route path='/games' element={<PrivateRoute element={<GamesPage />} />} />
 
           <Route path='/home' element={<HomePage />} />
           <Route path='/login' element={<LoginPage />} />

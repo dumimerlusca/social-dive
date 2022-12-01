@@ -1,5 +1,6 @@
 import Tippy from '@tippyjs/react';
 import useLogout from 'common/hooks/useLogout';
+import GamepadIcon from 'common/icons/GamepadIcon';
 import HeaderChatIcon from 'modules/chat/HeaderChatIcon';
 import HeaderNotificationIcon from 'modules/notifications/HeaderNotificationIcon';
 import React, { useCallback, useState } from 'react';
@@ -61,6 +62,12 @@ const DropdownContent = ({ closeDropdown }: { closeDropdown: () => void }) => {
               <Link className='flex gap-2' to={`/profile/${currentUserId}`}>
                 <FaUser className='w-6 h-6' />
                 <p>Profile</p>
+              </Link>
+            </li>
+            <li className='w-full px-2'>
+              <Link to='/games' className='flex items-center gap-2'>
+                <GamepadIcon color='white' className='w-6 h-6' />
+                <p>Games</p>
               </Link>
             </li>
             <li className='w-full px-2' onClick={closeDropdown}>
