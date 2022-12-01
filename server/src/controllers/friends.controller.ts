@@ -41,6 +41,9 @@ export default class FriendsController {
   @Delete('/delete/:userId')
   async deleteFriendship(@Req() req: any, @Param('userId') userId: string) {
     const loggedInUserId = req.user.id;
+    if (userId === process.env.ADMIN_ID) {
+      throw new HttpException('You cannot delete this friend', HttpStatus.BAD_REQUEST);
+    }
 
     await this.friendshipModel.deleteOne({
       users: { $all: [userId, loggedInUserId] },
@@ -66,7 +69,8 @@ export default class FriendsController {
     const sender = await this.usersService.userModel.findById(fromUserId);
     const receiver = await this.usersService.userModel.findById(toUserId);
 
-    if (fromUserId === toUserId) throw new HttpException('The 2 ids are the same', HttpStatus.BAD_REQUEST);
+    if (fromUserId === toUserId)
+      throw new HttpException('The 2 ids are the same', HttpStatus.BAD_REQUEST);
 
     if (!receiver || !sender) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
@@ -83,13 +87,15 @@ export default class FriendsController {
       ],
     });
 
-    if (requestAlreadyExists) throw new HttpException('Request already sent', HttpStatus.BAD_REQUEST);
+    if (requestAlreadyExists)
+      throw new HttpException('Request already sent', HttpStatus.BAD_REQUEST);
 
     const isAlreadyFriend = await this.friendshipModel.findOne({
       users: { $all: [fromUserId, toUserId] },
     });
 
-    if (isAlreadyFriend) throw new HttpException('This user is already in your friend list', HttpStatus.BAD_REQUEST);
+    if (isAlreadyFriend)
+      throw new HttpException('This user is already in your friend list', HttpStatus.BAD_REQUEST);
 
     const friendRequest = await this.friendRequestModel.create({
       from: fromUserId,
