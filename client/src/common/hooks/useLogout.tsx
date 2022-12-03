@@ -13,7 +13,7 @@ const useLogout = () => {
   const logoutHandler = () => {
     queryClient.clear();
     navigate('/login');
-    localStorage.removeItem('token');
+    localStorage.removeItem('social-dive-token');
     dispatch(authReset());
     socket.disconnect();
     // eslint-disable-next-line no-restricted-globals

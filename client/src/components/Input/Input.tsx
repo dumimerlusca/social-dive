@@ -1,5 +1,5 @@
-import React, { forwardRef, InputHTMLAttributes } from 'react';
 import classNames from 'classnames';
+import { forwardRef, InputHTMLAttributes } from 'react';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;
@@ -17,9 +17,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ className, error, ...r
         )}
         {...rest}
       />
-      {error && <p className='text-red-500 mt-3 ml-5'>{error} </p>}
+      {error && <InputErrorMessage message={error} />}
     </div>
   );
 });
 
 export default Input;
+
+export const InputErrorMessage = ({ message }: { message: string }) => {
+  return <p className='text-red-500 mt-3 ml-5'>{message} </p>;
+};

@@ -20,7 +20,7 @@ export const useGetPost = (postId: string) => {
     const res = await get(`/posts/${postId}`);
     return res.data;
   };
-  return useQuery<IPost>(queryKeys.post(postId), getPost);
+  return useQuery<IPost>(queryKeys.post(postId), getPost, { retry: false });
 };
 
 export const useNewsfeedPosts = (pageNumber: number, limit: number) => {

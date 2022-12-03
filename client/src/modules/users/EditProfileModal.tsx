@@ -1,16 +1,18 @@
-import { emailRegex, modalNames } from 'common/constansts';
+import { emailRegex, modalNames, queryKeys } from 'common/constansts';
+import useAddNotification from 'common/hooks/useAddNotification';
 import Button from 'components/Button/Button';
-import Input from 'components/Input/Input';
+import Input, { InputErrorMessage } from 'components/Input/Input';
 import ModalWrapper from 'components/ModalWrapper';
-import { NotificationTypesEnum } from 'components/Notification';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useQueryClient } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { userImageUrl } from 'services/api';
+import { getErrorMessage } from 'store/auth/authActions';
 import { updateCurrentUser } from 'store/auth/authSlice';
 import { getCurrentUser } from 'store/selectors/appSelectors';
 import { isModalOpenSelector } from 'store/selectors/uiSelectors';
-import { closeModalAction, showNotification } from 'store/ui/uiSlice';
+import { closeModalAction } from 'store/ui/uiSlice';
 import { useUpdateUser, useUploadUserProfilePhoto } from './apiClient';
 
 type FormType = {
@@ -26,28 +28,27 @@ const EditProfileModal = () => {
   const isModalOpen = useSelector(isModalOpenSelector(modalNames.editProfile));
   const currentUser = useSelector(getCurrentUser);
 
-  const { execute: updateUser, isLoading, isSucceeded, data } = useUpdateUser();
+  const updateUser = useUpdateUser();
   const { execute: uploadUserPhoto, isSucceeded: uploadPhotoSucceeded } =
     useUploadUserProfilePhoto();
 
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+
+  const { showSuccessNotification } = useAddNotification();
 
   const closeModal = () => {
     dispatch(closeModalAction(modalNames.editProfile));
   };
 
   useEffect(() => {
-    if (!isSucceeded) return;
+    if (!updateUser.isSucceeded) return;
+    updateUser.resetSucceeded();
+    queryClient.invalidateQueries(queryKeys.user(currentUser._id));
     dispatch(closeModalAction(modalNames.editProfile));
-    dispatch(
-      showNotification({
-        text: 'Update succeeded!',
-        type: NotificationTypesEnum.success,
-        autoDismiss: 2000,
-      }),
-    );
-    dispatch(updateCurrentUser(data));
-  }, [data, dispatch, isSucceeded]);
+    showSuccessNotification('Update succeeded!');
+    dispatch(updateCurrentUser(updateUser.data));
+  }, [currentUser._id, dispatch, queryClient, showSuccessNotification, updateUser]);
 
   useEffect(() => {
     if (uploadPhotoSucceeded) {
@@ -69,7 +70,7 @@ const EditProfileModal = () => {
 
   const onSubmit = useCallback(
     (data: FormType) => {
-      updateUser(data);
+      updateUser.execute(data);
       if (!photo) return;
       const formData = new FormData();
       formData.append('photo', photo);
@@ -132,10 +133,11 @@ const EditProfileModal = () => {
             className='!bg-primary !text-white'
             placeholder='Email...'
           />
+          {updateUser.error && <InputErrorMessage message={getErrorMessage(updateUser.error)} />}
           <div className='flex gap-3 py-8'>
             <Button
               type='button'
-              disabled={isLoading}
+              disabled={updateUser.isLoading}
               className='flex-1 !bg-[#313134] text-xl !p-3'
               onClick={() => {
                 dispatch(closeModalAction(modalNames.editProfile));
@@ -144,7 +146,7 @@ const EditProfileModal = () => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading}
+              disabled={updateUser.isLoading}
               type='submit'
               className='flex-1 !bg-[#5258ED] text-xl !p-3'
             >

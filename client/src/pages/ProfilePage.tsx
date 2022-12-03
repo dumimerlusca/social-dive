@@ -1,16 +1,16 @@
-import { useUserPosts } from 'modules/posts/apiClient';
-import ProfilePagePosts from 'modules/posts/ProfilePagePosts/ProfilePagePosts';
-import { useParams } from 'react-router';
-import { userImageUrl } from 'services/api';
-import { useGetUser, useGetUserFriends } from 'modules/users/apiClient';
-import ProfilePageUserActions from 'modules/users/ProfilePageUserActions';
-import { useDispatch, useSelector } from 'react-redux';
-import { getCurrentUserId } from 'store/selectors/appSelectors';
-import EditProfileModal from 'modules/users/EditProfileModal';
-import AllFriendsModal from 'modules/users/Friends/AllFriendsModal';
-import { openModalAction } from 'store/ui/uiSlice';
 import { modalNames } from 'common/constansts';
 import SendMessageButton from 'modules/chat/SendMessageButton';
+import { useUserPosts } from 'modules/posts/apiClient';
+import ProfilePagePosts from 'modules/posts/ProfilePagePosts/ProfilePagePosts';
+import { useGetUser, useGetUserFriends } from 'modules/users/apiClient';
+import EditProfileModal from 'modules/users/EditProfileModal';
+import AllFriendsModal from 'modules/users/Friends/AllFriendsModal';
+import ProfilePageUserActions from 'modules/users/ProfilePageUserActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router';
+import { userImageUrl } from 'services/api';
+import { getCurrentUserId } from 'store/selectors/appSelectors';
+import { openModalAction } from 'store/ui/uiSlice';
 
 function ProfilePage() {
   const { userId } = useParams<{ userId: string }>();

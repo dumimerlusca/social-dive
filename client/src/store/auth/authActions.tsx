@@ -1,18 +1,18 @@
-import { AppDispatch } from 'store/store';
+import { UserOnLoginType } from 'components/auth/LoginForm';
 import { UserOnRegisterType } from 'components/auth/RegisterForm';
+import { post } from 'services/api';
+import { AppDispatch } from 'store/store';
 import {
-  loginSucces,
   authError,
-  registerSucces,
   authLoading,
-  registerReset,
   errorReset,
+  loadUserFail,
   loadUserLoading,
   loadUserSucces,
-  loadUserFail,
+  loginSucces,
+  registerReset,
+  registerSucces,
 } from './authSlice';
-import { post } from 'services/api';
-import { UserOnLoginType } from 'components/auth/LoginForm';
 
 export const registerUserAction = (user: UserOnRegisterType) => async (dispatch: AppDispatch) => {
   try {
@@ -40,7 +40,7 @@ export const loginUserAction = (user: UserOnLoginType) => async (dispatch: AppDi
     const {
       data: { token, user: currentUser },
     } = await post('/auth/login', user);
-    localStorage.setItem('token', token);
+    localStorage.setItem('social-dive-token', token);
     dispatch(loginSucces({ token, user: currentUser }));
   } catch (error) {
     dispatch(authError(getErrorMessage(error)));
@@ -52,7 +52,7 @@ export const loginUserAction = (user: UserOnLoginType) => async (dispatch: AppDi
 
 export const loadUser = () => async (dispatch: AppDispatch) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('social-dive-token');
     if (!token) throw new Error('');
     dispatch(loadUserLoading());
     const res = await post('/auth/user', {});
@@ -65,6 +65,6 @@ export const loadUser = () => async (dispatch: AppDispatch) => {
   }
 };
 
-function getErrorMessage(error: any) {
+export function getErrorMessage(error: any) {
   return error?.response?.data?.message ?? error?.message ?? 'Something Went Wrong!';
 }

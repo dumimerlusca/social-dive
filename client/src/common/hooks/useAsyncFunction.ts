@@ -39,6 +39,13 @@ function useAsyncFunction<T, D = Error>(
     setSucceeded(false);
   };
 
+  const reset = useCallback(() => {
+    setError(null);
+    setSucceeded(false);
+    setIsLoading(false);
+    setData(null);
+  }, []);
+
   // Call execute if we want to fire it right away.
   // Otherwise execute can be called later, such as
   // in an onClick handler.
@@ -48,7 +55,7 @@ function useAsyncFunction<T, D = Error>(
     }
   }, [execute, immediate]);
 
-  return { execute, isLoading, data, error, isSucceeded, clearError, resetSucceeded };
+  return { execute, isLoading, data, error, isSucceeded, clearError, resetSucceeded, reset };
 }
 
 export default useAsyncFunction;

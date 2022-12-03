@@ -1,17 +1,18 @@
+import { queryKeys } from 'common/constansts';
+import IComment from 'interfaces/IComment';
 import CommentListItem from 'modules/comments/CommentListItem/CommentListItem';
 import NewComment from 'modules/comments/NewComment/NewComment';
 import { useGetPost, useGetPostComments } from 'modules/posts/apiClient';
 import PostHeader from 'modules/posts/components/PostHeader';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { BiError } from 'react-icons/bi';
+import { FaRegComments } from 'react-icons/fa';
+import Skeleton from 'react-loading-skeleton';
+import { useQueryClient } from 'react-query';
 import { useParams } from 'react-router';
 import { postImageUrl } from 'services/api';
-import Skeleton from 'react-loading-skeleton';
-import LikePost from '../LikePost';
-import { FaRegComments } from 'react-icons/fa';
-import IComment from 'interfaces/IComment';
 import EditPostDescriptionForm from '../components/EditPostDescriptionForm';
-import { useQueryClient } from 'react-query';
-import { queryKeys } from 'common/constansts';
+import LikePost from '../LikePost';
 
 const SinglePostPanel = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -42,7 +43,15 @@ const SinglePostPanel = () => {
       </div>
     );
 
-  if (!post) return <div>No post found</div>;
+  if (!post)
+    return (
+      <div className='flex items-center justify-center min-h-[200px] gap-2'>
+        <div>
+          <BiError className='w-16 h-16' color='red' />
+        </div>
+        <h1 className='text-3xl'>The resorce you are loking for is missing!</h1>
+      </div>
+    );
 
   return (
     <div className='mt-10 flex flex-col md:flex-row  md:min-h-[700px]  gap-10 w-full justify-end'>

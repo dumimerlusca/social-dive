@@ -33,5 +33,5 @@ export const APIdelete = async (url: string) => {
 };
 
 export function getToken() {
-  return localStorage.getItem('token');
+  return localStorage.getItem('social-dive-token');
 }

@@ -42,7 +42,10 @@ export default class FriendsController {
   async deleteFriendship(@Req() req: any, @Param('userId') userId: string) {
     const loggedInUserId = req.user.id;
     if (userId === process.env.ADMIN_ID) {
-      throw new HttpException('You cannot delete this friend', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'This action cannot be performed for the admin',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     await this.friendshipModel.deleteOne({
