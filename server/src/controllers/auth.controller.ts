@@ -46,7 +46,7 @@ export default class AuthController {
   @Public()
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() body: any) {
-    console.log('REGISTERING');
+    console.log('REGISTERINGG');
     try {
       await this.usersService.validate(body);
     } catch (error: any) {
