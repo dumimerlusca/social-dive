@@ -1,8 +1,6 @@
 import axios from 'axios';
 export const SERVER_URL =
-  process.env.NODE_ENV === 'production'
-    ? 'https://socialdive-production.up.railway.app'
-    : 'http://localhost:5000';
+  process.env.NODE_ENV === 'production' ? process.env.REACT_APP_API_URL! : 'http://localhost:5000';
 export const BASE_API_URL = `${SERVER_URL}/api`;
 export const userImageUrl = (userId: string | undefined) => BASE_API_URL + `/users/${userId}/photo`;
 export const postImageUrl = (postId: string | undefined) => BASE_API_URL + `/posts/${postId}/photo`;
