@@ -113,23 +113,12 @@ export default class PostsController {
 
   @Get()
   async getAll(@Query('user') userId: string) {
-    if (!userId)
-      return await this.postsService.postModel
-        .find({})
-        .populate(populateOptions)
-        .sort({ createdAt: -1 });
-    return await this.postsService.postModel
-      .find({ user: userId })
-      .populate(populateOptions)
-      .sort({ createdAt: -1 });
+    return this.postsService.getAllPostsOfSingleUser(userId);
   }
 
   @Get(':id')
   async getSingle(@Param('id') id: string) {
-    const post = await this.postsService.postModel
-      .findById(id)
-      .populate(populateOptions)
-      .select('-photo');
+    const post = await this.postsService.getPostById(id);
     if (!post) throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
     return post;
   }
@@ -155,7 +144,7 @@ export default class PostsController {
   @Delete(':id')
   async delete(@Param('id') id: string, @Req() req: any) {
     const loggedInUser = req.user;
-    const post = await this.postsService.postModel.findById(id);
+    const post = await this.postsService.getPostById(id);
     if (post.user.toString() !== loggedInUser.id)
       throw new HttpException('UNAUTHORIZED', HttpStatus.UNAUTHORIZED);
     await post.remove();
@@ -206,11 +195,5 @@ export default class PostsController {
       { runValidators: true },
     );
     return 'Post unliked successfully';
-  }
-
-  @Post('update')
-  async updateDocuments() {
-    await this.postsService.postModel.deleteMany({});
-    return 'Posts updated';
   }
 }

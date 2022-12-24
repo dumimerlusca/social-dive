@@ -30,8 +30,9 @@ export default class NotificationsController {
       { to: userId },
       page,
       limit,
-      'from to',
-      '-password -photo',
+      { path: 'from to', select: '-password -photo' },
+
+      undefined,
       { createdAt: -1 },
     );
 
