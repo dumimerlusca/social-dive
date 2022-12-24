@@ -4,6 +4,7 @@ import UserListItem from 'modules/users/UserListItem/UserListItem';
 import Button from 'components/Button/Button';
 import IUser from 'interfaces/IUser';
 import Tippy from '@tippyjs/react';
+import FriendListItemSkeleton from '../UserListItemSkeleton';
 
 const DEFAULT_LIMIT = 5;
 
@@ -11,7 +12,7 @@ const PeopleYouMightKnow = () => {
   const [page, setPage] = useState(1);
   const [users, setUsers] = useState<IUser[]>([]);
 
-  const { data: newUsers = [], isLoading, error } = useGetPeopleYouMightKnow(page, DEFAULT_LIMIT);
+  const { data: newUsers = [], isLoading } = useGetPeopleYouMightKnow(page, DEFAULT_LIMIT);
 
   const hasMore = newUsers.length !== 0;
 
@@ -32,9 +33,19 @@ const PeopleYouMightKnow = () => {
       <h1 className='text-3xl mb-3'>People you might know</h1>
       <div className='grow overflow-auto px-2'>
         <ul className='space-y-2'>
-          {users.map((user) => {
-            return <UserListItem key={user._id} user={user} />;
-          })}
+          {isLoading && page === 1 ? (
+            <>
+              <FriendListItemSkeleton />
+              <FriendListItemSkeleton />
+              <FriendListItemSkeleton />
+              <FriendListItemSkeleton />
+              <FriendListItemSkeleton />
+            </>
+          ) : (
+            users.map((user) => {
+              return <UserListItem key={user._id} user={user} />;
+            })
+          )}
         </ul>
       </div>
       <Tippy disabled={hasMore} content='No more people to show'>

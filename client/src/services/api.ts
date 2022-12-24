@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 export const SERVER_URL =
   process.env.NODE_ENV === 'production' ? process.env.REACT_APP_API_URL! : 'http://localhost:5000';
 export const BASE_API_URL = `${SERVER_URL}/api`;
@@ -11,13 +11,13 @@ const getConfig = (token: string | null) => ({
   },
 });
 
-export const get = async (url: string) => {
+export const get = async (url: string, config?: AxiosRequestConfig) => {
   const token = getToken();
-  return axios.get(BASE_API_URL + url, getConfig(token));
+  return axios.get(BASE_API_URL + url, { ...getConfig(token), ...config });
 };
-export const post = async (url: string, data?: any) => {
+export const post = async (url: string, data?: any, config?: AxiosRequestConfig) => {
   const token = getToken();
-  return axios.post(BASE_API_URL + url, data ?? {}, getConfig(token));
+  return axios.post(BASE_API_URL + url, data ?? {}, { ...getConfig(token), ...config });
 };
 export const put = async (url: string, data: any) => {
   const token = getToken();
