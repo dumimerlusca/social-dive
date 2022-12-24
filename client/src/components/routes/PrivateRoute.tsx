@@ -5,8 +5,8 @@ import { layoutNames } from 'common/constansts';
 import { loadUser } from 'store/auth/authActions';
 import Layout from 'components/layout/Layout';
 
-import Skeleton from 'react-loading-skeleton';
 import { NotificationsContextProvider } from 'modules/notifications/context/notificationsContext';
+import LoadUserLoadingScreen from './LoadUserLoadingScreen';
 
 type PrivateRouteProps = {
   element: React.ReactNode;
@@ -26,12 +26,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
     }
   }, [dispatch, isLoggedIn]);
 
-  if (loadUserLoading && !isLoggedIn)
-    return (
-      <div className='h-screen w-screen overflow-hidden'>
-        <Skeleton className='w-full h-full' />
-      </div>
-    );
+  if (loadUserLoading && !isLoggedIn) return <LoadUserLoadingScreen />;
 
   if (!isLoggedIn && !loadUserLoading) return <Navigate to='/home' />;
 
