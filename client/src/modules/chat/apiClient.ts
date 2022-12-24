@@ -14,6 +14,7 @@ export const useGetChats = () => {
 
 export const useGetChatMessages = (chatId: string | null) => {
   const fetcher = async () => {
+    if (!chatId) return undefined;
     const res = await get(`/messages/chat/${chatId}`);
     return res.data;
   };

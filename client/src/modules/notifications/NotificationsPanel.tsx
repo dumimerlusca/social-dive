@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import Button from 'components/Button/Button';
+import UserListItemSkeleton from 'modules/users/UserListItemSkeleton';
 import { CSSProperties } from 'react';
 import useNotificationsContext from './context/notificationsContext';
 import NotificationListItem from './NotificationListItem';
@@ -21,16 +22,27 @@ const NotificationsPanel = ({
     >
       <h3 className='text-3xl mb-5'>Notifications</h3>
       <ul className='flex flex-col gap-2 overflow-auto grow'>
-        {notifications.length === 0 && <p>You don't have any notifications</p>}
-        {notifications.map((notification) => {
-          return (
-            <NotificationListItem
-              markSeenSuccess={markSeenSuccess}
-              key={notification._id}
-              notification={notification}
-            />
-          );
-        })}
+        {notifications.length === 0 && !isLoading && <p>You don't have any notifications</p>}
+        {isLoading && pageNumber === 1 ? (
+          <>
+            <UserListItemSkeleton />
+            <UserListItemSkeleton />
+            <UserListItemSkeleton />
+            <UserListItemSkeleton />
+            <UserListItemSkeleton />
+            <UserListItemSkeleton />
+          </>
+        ) : (
+          notifications.map((notification) => {
+            return (
+              <NotificationListItem
+                markSeenSuccess={markSeenSuccess}
+                key={notification._id}
+                notification={notification}
+              />
+            );
+          })
+        )}
       </ul>
       <Button
         tooltip={!hasMore ? 'No more notifications' : undefined}
