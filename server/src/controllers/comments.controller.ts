@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Req,
+} from '@nestjs/common';
 import CommentsService, { populateOptions } from '../services/comments.service';
 import { PostsService } from '../services/posts.service';
 import NotificationService from '../services/notifications.service';
@@ -14,7 +25,7 @@ export default class CommentsController {
 
   @Get('post/:postId')
   async getPostComments(@Param('postId') postId: string) {
-    const post = await this.postsService.postModel.findById(postId);
+    const post = await this.postsService.getPostById(postId);
     if (!post) throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
 
     return await this.commentsService.commentModel
@@ -26,7 +37,7 @@ export default class CommentsController {
   @Post('post/:postId/addComment')
   async addComment(@Param('postId') postId: string, @Req() req: any, @Body() body: any) {
     const userId = req.user.id;
-    const post = await this.postsService.postModel.findById(postId);
+    const post = await this.postsService.getPostById(postId);
 
     if (!post) throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
 
@@ -61,7 +72,8 @@ export default class CommentsController {
   async likeComment(@Param('commentId') commentId: string, @Req() req: any) {
     const userId = req.user.id;
     const comment = await this.commentsService.commentModel.findById(commentId);
-    if (comment.likes.includes(userId)) throw new HttpException('Comment is already liked', HttpStatus.BAD_REQUEST);
+    if (comment.likes.includes(userId))
+      throw new HttpException('Comment is already liked', HttpStatus.BAD_REQUEST);
 
     await comment.updateOne({ $push: { likes: userId } });
 
@@ -83,7 +95,8 @@ export default class CommentsController {
   async unlikeComment(@Param('commentId') commentId: string, @Req() req: any) {
     const userId = req.user.id;
     const comment = await this.commentsService.commentModel.findById(commentId);
-    if (!comment.likes.includes(userId)) throw new HttpException('Comment is not liked', HttpStatus.BAD_REQUEST);
+    if (!comment.likes.includes(userId))
+      throw new HttpException('Comment is not liked', HttpStatus.BAD_REQUEST);
 
     await comment.updateOne({ $pull: { likes: userId } });
     return 'Comment unliked successfuly';
