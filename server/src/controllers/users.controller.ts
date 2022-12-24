@@ -1,29 +1,27 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Injectable,
+  Controller,
   Delete,
-  Param,
+  Get,
   HttpException,
-  Put,
-  Req,
   HttpStatus,
-  Res,
+  Injectable,
+  Param,
+  Put,
   Query,
-  Patch,
+  Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import UsersService, { populateOptions, userSelectOptions } from '../services/users.service';
 import { IncomingForm } from 'formidable';
 import * as fs from 'fs';
-import { UserType } from '../schemas/user.schema';
 import * as path from 'path';
-import { AuthGuard } from '../guards/auth.guard';
 import { Public } from '../decorators/decorators';
+import { AuthGuard } from '../guards/auth.guard';
+import { UserType } from '../schemas/user.schema';
 import FriendsService from '../services/friends.service';
+import UsersService from '../services/users.service';
 
 @Controller('api/users')
 @Injectable()
@@ -34,17 +32,14 @@ export class UsersController {
   @Public()
   @UseGuards(AuthGuard)
   async getAll(@Req() req: any, @Query('search') search: string) {
-    return await this.usersService.userModel
-      .find(search ? { fullName: { $regex: search, $options: 'i' } } : {})
-      .select(userSelectOptions);
+    return await this.usersService.find(
+      search ? { fullName: { $regex: search, $options: 'i' } } : {},
+    );
   }
 
   @Get(':id')
   async getSingle(@Param('id') id: string) {
-    const user = await this.usersService.userModel
-      .findById(id)
-      .select(userSelectOptions)
-      .populate(populateOptions);
+    const user = await this.usersService.findById(id);
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     return user;
   }
@@ -86,7 +81,7 @@ export class UsersController {
   @Get(':id/photo')
   @Public()
   async getPhoto(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
-    const user = await this.usersService.findById(id);
+    const user = await this.usersService.findById(id, null);
 
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     if (user?.photo) {
@@ -109,9 +104,7 @@ export class UsersController {
       loggedInUserId,
     )) as unknown as UserType[];
     const friendsIDsArray = userFriends.map((user) => String(user._id));
-    const users = await this.usersService.userModel
-      .find({ _id: { $ne: loggedInUserId } })
-      .select(userSelectOptions);
+    const users = await this.usersService.find({ _id: { $ne: loggedInUserId } });
 
     const startIndex = (Number(page) - 1) * Number(limit);
     const endIndex = startIndex + Number(limit);
@@ -119,16 +112,6 @@ export class UsersController {
     return users
       .filter((user) => !friendsIDsArray.includes(String(user._id)))
       .slice(startIndex, endIndex);
-  }
-
-  // For updating all the documents, adding new fields etc
-  @Post('update')
-  async updateDocuments() {
-    await this.usersService.userModel.updateMany(
-      {},
-      { friendRequestsSent: [], friendRequestsReceived: [], friends: [] },
-    );
-    return 'SUcces';
   }
 }
 

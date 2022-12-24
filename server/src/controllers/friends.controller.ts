@@ -7,7 +7,6 @@ import {
   HttpStatus,
   Injectable,
   Param,
-  Patch,
   Post,
   Req,
 } from '@nestjs/common';
@@ -69,8 +68,8 @@ export default class FriendsController {
   async sendFriendRequest(@Body() body: { to: string }, @Req() req: any) {
     const fromUserId = req.user.id;
     const toUserId = body.to;
-    const sender = await this.usersService.userModel.findById(fromUserId);
-    const receiver = await this.usersService.userModel.findById(toUserId);
+    const sender = await this.usersService.findById(fromUserId);
+    const receiver = await this.usersService.findById(toUserId);
 
     if (fromUserId === toUserId)
       throw new HttpException('The 2 ids are the same', HttpStatus.BAD_REQUEST);
