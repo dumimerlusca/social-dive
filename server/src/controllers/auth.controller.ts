@@ -8,12 +8,12 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
-import UsersService, { populateOptions } from '../services/users.service';
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 import { MongoError } from 'mongodb';
 import { Public } from '../decorators/decorators';
 import FriendsService from '../services/friends.service';
+import UsersService from '../services/users.service';
 
 @Controller('/api/auth')
 @Injectable()
@@ -22,11 +22,7 @@ export default class AuthController {
   @Post('login')
   @Public()
   async login(@Body() body: { email: string; password: string }) {
-    const user = await this.usersService.userModel
-      .findOne({ email: body.email })
-      .select('-photo')
-      .populate(populateOptions);
-
+    const user = await this.usersService.findOne({ email: body.email }, '');
     if (!user) throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
 
     const isValidPassword = await bcrypt.compare(body.password, user.password);
