@@ -1,13 +1,14 @@
-import { useRef } from 'react';
 import classNames from 'classnames';
+import { useRef } from 'react';
 
+import { useTranslate } from '@tolgee/react';
+import { emailRegex } from 'common/constansts';
+import useClickOutside from 'common/hooks/useClickOutside';
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import { useForm } from 'react-hook-form';
-import useClickOutside from 'common/hooks/useClickOutside';
 import { registerUserAction } from 'store/auth/authActions';
 import { RootState, useAppDispatch, useAppSelector } from 'store/store';
-import { emailRegex } from 'common/constansts';
 
 export type UserOnRegisterType = {
   fullName: string;
@@ -36,6 +37,8 @@ const RegisterForm = () => {
     clearErrors();
   });
 
+  const t = useTranslate();
+
   return (
     <form
       ref={formRef}
@@ -48,9 +51,9 @@ const RegisterForm = () => {
           className={classNames(
             errors.fullName && 'border border-red-500 focus:ring-red-500 focus:ring-2',
           )}
-          placeholder='Full name...'
+          placeholder={t('form.placeholders.fullName')}
           {...register('fullName', {
-            required: 'Full name required',
+            required: t('form.requiredField'),
             minLength: 4,
             maxLength: 20,
           })}
@@ -59,15 +62,15 @@ const RegisterForm = () => {
       <div>
         <Input
           error={errors.email?.message}
-          placeholder='Email...'
+          placeholder={t('form.placeholders.email')}
           className={classNames(
             errors.email && 'border border-red-500 focus:ring-red-500 focus:ring-2',
           )}
           {...register('email', {
-            required: 'Email required',
+            required: t('form.requiredField'),
             pattern: {
               value: emailRegex,
-              message: 'Please enter a valid email',
+              message: t('form.error.enterValidEmail'),
             },
           })}
         />
@@ -75,20 +78,20 @@ const RegisterForm = () => {
       <div>
         <Input
           error={errors.password?.message}
-          placeholder='Password...'
+          placeholder={t('form.placeholders.password')}
           type='password'
           className={classNames(
             errors.password && 'border border-red-500 focus:ring-red-500 focus:ring-2',
           )}
           {...register('password', {
-            required: 'Password required',
+            required: t('form.requiredField'),
             minLength: {
               value: 6,
-              message: "Password can't have less than 4 characters",
+              message: t('passwordValidation.noLessThan4Char'),
             },
             maxLength: {
               value: 16,
-              message: "Password can' have more than 16 characters",
+              message: t('passwordValidation.noMoreThan16Char'),
             },
           })}
         />
@@ -98,7 +101,7 @@ const RegisterForm = () => {
       )}
       {error && <p className='p-1 text-red-500'>{error}</p>}
       <Button className='w-full mt-5' color='secondary'>
-        {isLoading ? 'Loading...' : 'Create account'}
+        {isLoading ? t('labels.loading') : t('labels.createAccount')}
       </Button>
     </form>
   );

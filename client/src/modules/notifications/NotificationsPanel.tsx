@@ -1,3 +1,4 @@
+import { useTranslate } from '@tolgee/react';
 import classNames from 'classnames';
 import Button from 'components/Button/Button';
 import UserListItemSkeleton from 'modules/users/UserListItemSkeleton';
@@ -15,14 +16,16 @@ const NotificationsPanel = ({
   const { notifications, changePageNumber, pageNumber, isLoading, hasMore, markSeenSuccess } =
     useNotificationsContext();
 
+  const t = useTranslate();
+
   return (
     <div
       className={classNames('p-5 rounded-3xl bg-primary flex flex-col', wrapperClassName)}
       style={{ minHeight: 200, ...style }}
     >
-      <h3 className='text-3xl mb-5'>Notifications</h3>
+      <h3 className='text-3xl mb-5'>{t('labels.notifications.title')}</h3>
       <ul className='flex flex-col gap-2 overflow-auto grow'>
-        {notifications.length === 0 && !isLoading && <p>You don't have any notifications</p>}
+        {notifications.length === 0 && !isLoading && <p>{t('notifications.noNotifications')}</p>}
         {isLoading && pageNumber === 1 ? (
           <>
             <UserListItemSkeleton />
@@ -45,7 +48,7 @@ const NotificationsPanel = ({
         )}
       </ul>
       <Button
-        tooltip={!hasMore ? 'No more notifications' : undefined}
+        tooltip={!hasMore ? t('notifications.noMoreNotifications') : undefined}
         disabled={isLoading || !hasMore}
         onClick={() => {
           if (isLoading) return;
@@ -54,7 +57,7 @@ const NotificationsPanel = ({
         color='secondary'
         className='w-full mt-5'
       >
-        Load more
+        {t('labels.showMore')}
       </Button>
     </div>
   );

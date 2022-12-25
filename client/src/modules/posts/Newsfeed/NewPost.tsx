@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useState } from 'react';
-import { IoMdImages } from 'react-icons/io';
+import { useTranslate } from '@tolgee/react';
 import Button from 'components/Button/Button';
+import { NotificationTypesEnum } from 'components/Notification';
 import { truncateString } from 'helpers/helpers';
 import { useCreatePost } from 'modules/posts/apiClient';
-import useNewsfeedContext from '../context/newsfeedContext';
+import { useCallback, useEffect, useState } from 'react';
+import { IoMdImages } from 'react-icons/io';
 import { useDispatch } from 'react-redux';
 import { showNotification } from 'store/ui/uiSlice';
-import { NotificationTypesEnum } from 'components/Notification';
+import useNewsfeedContext from '../context/newsfeedContext';
 
 interface IValues {
   description: string;
@@ -23,6 +24,7 @@ const NewPost = () => {
   const { execute: createPost, isLoading, data: newPost, isSucceeded } = useCreatePost();
 
   const dispatch = useDispatch();
+  const t = useTranslate();
 
   const resetFormValues = useCallback(() => {
     setValues({ description: '', image: undefined });
@@ -66,12 +68,12 @@ const NewPost = () => {
 
   return (
     <form onSubmit={onSubmit} className='mb-24'>
-      <h1 className='text-3xl mb-5 ml-5'>Update your activity</h1>
+      <h1 className='text-3xl mb-5 ml-5'>{t('newsfeed.updateYourActivity')}</h1>
       <textarea
         onChange={onChange}
         value={values.description}
         className='w-full bg-primary p-5 rounded-xl'
-        placeholder="What's on your mind today?"
+        placeholder={t('newPost.placeholder')}
         name='description'
         id='description'
         rows={5}
@@ -84,7 +86,7 @@ const NewPost = () => {
           >
             <IoMdImages className='text-3xl mr-5 text-yellow-200 flex-shrink-0' />
             <p className='text-xl truncate whitespace-nowrap'>
-              {imageName ? truncateString(imageName, 10) : 'Photo / Video'}
+              {imageName ? truncateString(imageName, 10) : t('newPost.pictureButton')}
             </p>
           </label>
           <input
@@ -97,7 +99,7 @@ const NewPost = () => {
           ></input>
         </div>
         <Button className='flex-1 truncate' color='secondary'>
-          {isLoading ? 'Loading...' : 'Submit'}
+          {isLoading ? t('labels.loading') : t('labels.submit')}
         </Button>
       </div>
     </form>

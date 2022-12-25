@@ -1,13 +1,14 @@
+import LikePost from 'modules/posts/LikePost';
 import { forwardRef, useCallback, useEffect, useState } from 'react';
-import IPost from '../../../interfaces/IPost';
 import { FaRegComments } from 'react-icons/fa';
 import { BASE_API_URL } from 'services/api';
-import LikePost from 'modules/posts/LikePost';
+import IPost from '../../../interfaces/IPost';
 
-import PostHeader from 'modules/posts/components/PostHeader';
+import { useTranslate } from '@tolgee/react';
 import CommentListItem from 'modules/comments/CommentListItem/CommentListItem';
 import NewComment from 'modules/comments/NewComment/NewComment';
 import usePostComments from 'modules/comments/usePostComments';
+import PostHeader from 'modules/posts/components/PostHeader';
 import EditPostDescriptionForm from '../components/EditPostDescriptionForm';
 
 interface PropTypes {
@@ -34,6 +35,8 @@ const NewsfeedPostListItem = forwardRef<HTMLLIElement, PropTypes>(({ post }, ref
     setIsEditing(false);
   }, []);
 
+  const t = useTranslate();
+
   return (
     <li ref={ref} className='p-5 bg-primary mb-10 rounded-xl'>
       <PostHeader onClickEdit={onClickEdit} post={innerPost} />
@@ -56,7 +59,7 @@ const NewsfeedPostListItem = forwardRef<HTMLLIElement, PropTypes>(({ post }, ref
         <div className='flex items-center gap-2'>
           <FaRegComments className='text-secondary text-4xl' />
           <p>{comments.length}</p>
-          <p className='hidden sm:block'>Comments</p>
+          <p className='hidden sm:block'>{t('labels.comments')}</p>
         </div>
         {/* <div className='flex items-center gap-2'>
           <button>

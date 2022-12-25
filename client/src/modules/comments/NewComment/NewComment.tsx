@@ -1,3 +1,4 @@
+import { useTranslate } from '@tolgee/react';
 import classNames from 'classnames';
 import IComment from 'interfaces/IComment';
 import { useAddComment } from 'modules/posts/apiClient';
@@ -28,6 +29,8 @@ const NewComment: React.FC<NewCommentProps> = ({
 
   const currentUserId = useSelector(getCurrentUserId);
 
+  const t = useTranslate();
+
   const onChange = (e: any) => {
     setText(e.target.value);
   };
@@ -57,7 +60,7 @@ const NewComment: React.FC<NewCommentProps> = ({
           onChange={onChange}
           className='w-full py-2 px-4 rounded-md bg-[rgba(255,255,255,0.03)]'
           type='text'
-          placeholder='Write a public comment'
+          placeholder={t('newComment.placeholder')}
         />
       </div>
     </form>

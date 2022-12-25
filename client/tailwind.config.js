@@ -7,10 +7,10 @@ module.exports = {
       colors: {
         dark: '#111111',
         primary: '#1D1C21',
-        'primary-lighter': '#928bad',
+        'primary-lighter': '#292834',
         'primary-darker': '#18171c',
         secondary: '#31C0D2',
-        tertiary: '#FF4848'
+        tertiary: '#FF4848',
       },
       flexGrow: {
         1: '1',

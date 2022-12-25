@@ -1,4 +1,5 @@
 import Tippy from '@tippyjs/react';
+import { useTranslate } from '@tolgee/react';
 import IUser from 'interfaces/IUser';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -13,6 +14,7 @@ const SearchUsers = () => {
   const { data: users = [] } = useGetUsers(search === '' ? null : search);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const t = useTranslate();
 
   const hideDropdown = useCallback(() => {
     setIsDropdownVisible(false);
@@ -59,7 +61,7 @@ const SearchUsers = () => {
             setIsDropdownVisible(true);
           }}
           className='bg-transparent text-xl w-full p-1 rounded-md appearance-none focus:ring-1 ring-secondary outline-none'
-          placeholder='Search for users..'
+          placeholder={t('header.searchForUsers')}
         />
       </Tippy>
     </form>

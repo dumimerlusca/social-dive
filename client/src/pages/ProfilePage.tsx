@@ -1,3 +1,4 @@
+import { useTranslate } from '@tolgee/react';
 import { modalNames } from 'common/constansts';
 import SendMessageButton from 'modules/chat/SendMessageButton';
 import { useUserPosts } from 'modules/posts/apiClient';
@@ -27,6 +28,8 @@ function ProfilePage() {
     () => currentUserId === user?._id,
     [currentUserId, user?._id],
   );
+
+  const t = useTranslate();
 
   return (
     <>
@@ -61,7 +64,7 @@ function ProfilePage() {
               {isLoadingPosts ? (
                 <Skeleton className='w-24 h-8' />
               ) : (
-                <p>{posts?.length ?? 0} Posts</p>
+                <p>{t('panels.profile.postsCount', { count: posts?.length ?? 0 })}</p>
               )}
               {isLoadingFriends ? (
                 <Skeleton className='w-24 h-8' />
@@ -72,7 +75,7 @@ function ProfilePage() {
                     dispatch(openModalAction(modalNames.allFriends));
                   }}
                 >
-                  {friends.length ?? 0} Friends
+                  {t('panels.profile.friendsCount', { count: friends.length ?? 0 })}
                 </button>
               )}
             </div>

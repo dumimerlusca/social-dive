@@ -1,12 +1,13 @@
+import { useTranslate } from '@tolgee/react';
+import classNames from 'classnames';
+import useClickOutside from 'common/hooks/useClickOutside';
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
-import { useForm } from 'react-hook-form';
-import classNames from 'classnames';
 import { useEffect, useRef } from 'react';
-import useClickOutside from 'common/hooks/useClickOutside';
-import { useAppDispatch, useAppSelector } from 'store/store';
-import { loginUserAction } from 'store/auth/authActions';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
+import { loginUserAction } from 'store/auth/authActions';
+import { useAppDispatch, useAppSelector } from 'store/store';
 import useLoginToDemoAccount from './useLoginToDemoAccount';
 
 export type UserOnLoginType = {
@@ -44,6 +45,8 @@ const LoginForm = () => {
     clearErrors();
   });
 
+  const t = useTranslate();
+
   return (
     <form
       ref={formRef}
@@ -52,16 +55,16 @@ const LoginForm = () => {
     >
       <div>
         <Input
-          placeholder='Email...'
+          placeholder={t('form.placeholders.email')}
           className={classNames(
             errors.email && 'border border-red-500 focus:ring-red-500 focus:ring-2',
           )}
           {...register('email', {
-            required: 'Email required',
+            required: t('form.requiredField'),
             pattern: {
               value:
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-              message: 'Please enter a valid email',
+              message: t('form.error.enterValidEmail'),
             },
           })}
         />
@@ -69,20 +72,20 @@ const LoginForm = () => {
       </div>
       <div>
         <Input
-          placeholder='Password...'
+          placeholder={t('form.placeholders.password')}
           type='password'
           className={classNames(
             errors.password && 'border border-red-500 focus:ring-red-500 focus:ring-2',
           )}
           {...register('password', {
-            required: 'Password required',
+            required: t('form.requiredField'),
             minLength: {
               value: 6,
-              message: "Password can't have less than 4 characters",
+              message: t('passwordValidation.noLessThan4Char'),
             },
             maxLength: {
               value: 16,
-              message: "Password can' have more than 16 characters",
+              message: t('passwordValidation.noMoreThan16Char'),
             },
           })}
         />
@@ -90,7 +93,7 @@ const LoginForm = () => {
       </div>
       {error && <p className='p-1 text-red-500'>{error}</p>}
       <Button type='submit' className='w-full mt-5' color='secondary'>
-        {isLoading ? 'Loading...' : 'Log In'}
+        {isLoading ? t('labels.loading') : t('labels.logIn')}
       </Button>
       <div>
         <button
@@ -98,7 +101,7 @@ const LoginForm = () => {
           onClick={loginToDemoAccount}
           className='border-b pb-1 m-auto block grow-0'
         >
-          Login using demo account
+          {t('login.withDemoAccount')}
         </button>
       </div>
     </form>

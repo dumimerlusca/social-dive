@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useGetPeopleYouMightKnow } from 'modules/users/apiClient';
-import UserListItem from 'modules/users/UserListItem/UserListItem';
+import Tippy from '@tippyjs/react';
+import { useTranslate } from '@tolgee/react';
 import Button from 'components/Button/Button';
 import IUser from 'interfaces/IUser';
-import Tippy from '@tippyjs/react';
+import { useGetPeopleYouMightKnow } from 'modules/users/apiClient';
+import UserListItem from 'modules/users/UserListItem/UserListItem';
+import { useEffect, useState } from 'react';
 import FriendListItemSkeleton from '../UserListItemSkeleton';
 
 const DEFAULT_LIMIT = 5;
@@ -28,9 +29,11 @@ const PeopleYouMightKnow = () => {
     });
   }, [newUsers]);
 
+  const t = useTranslate();
+
   return (
     <div className='bg-primary rounded-3xl p-5 flex flex-col h-full'>
-      <h1 className='text-3xl mb-3'>People you might know</h1>
+      <h1 className='text-3xl mb-3'>{t('peopleYouMightKnow.title')}</h1>
       <div className='grow overflow-auto px-2'>
         <ul className='space-y-2'>
           {isLoading && page === 1 ? (
@@ -48,7 +51,7 @@ const PeopleYouMightKnow = () => {
           )}
         </ul>
       </div>
-      <Tippy disabled={hasMore} content='No more people to show'>
+      <Tippy disabled={hasMore} content={t('peopleYouMightKnow.noMorePeople')}>
         <div>
           <Button
             className='m-auto block w-full mt-4'
@@ -58,7 +61,7 @@ const PeopleYouMightKnow = () => {
             }}
             disabled={isLoading || !hasMore}
           >
-            {isLoading ? 'Loading...' : 'Show More'}
+            {isLoading ? t('labels.loading') : t('labels.showMore')}
           </Button>
         </div>
       </Tippy>
