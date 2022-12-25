@@ -1,6 +1,7 @@
 import useLoginToDemoAccount from 'components/auth/useLoginToDemoAccount';
 import Button from 'components/Button/Button';
-import React, { useEffect } from 'react';
+import DnaAnimation from 'components/loadingSpinners/DnaAnimation/DnaAnimation';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import './HomePage.scss';
 
@@ -62,11 +63,15 @@ const HomePage = () => {
             </h4>
             <div className='flex flex-col'>
               <button
-                className='fadeIn mt-10 px-10 py-3 text-[24px] uppercase bg-tertiary rounded-lg font-bold hover:opacity-75 transition-opacity'
+                className='fadeIn w-screen max-w-lg h-[57px] flex items-center justify-center mt-10 px-10 py-3 text-[24px] uppercase bg-tertiary rounded-lg font-bold hover:opacity-75 transition-opacity'
                 style={{ animationDelay: '.2s' }}
                 onClick={loginToDemoAccount}
               >
-                {isLoading ? 'Loading...' : 'try it using a demo account'}
+                {isLoading ? (
+                  <DnaAnimation className='scale-[0.2]' />
+                ) : (
+                  <p>try it using a demo account</p>
+                )}
               </button>
               {error && <p className='text-center mt-2 text-red-600'>Something went wrong</p>}
               <p
