@@ -1,6 +1,7 @@
+import { useTranslate } from '@tolgee/react';
 import { NotificationTypesEnum } from 'components/Notification';
 import { useDeletePost } from 'modules/posts/apiClient';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
 import { showNotification } from 'store/ui/uiSlice';
@@ -42,6 +43,8 @@ const PostSettings = ({ postId, onClickEdit, closeDropdown }: PostSettingsProps)
     }, 2);
   }, [deletePost.isSucceeded, dispatch, navigate, onDeletePostsSucceeded, postId, postIdParam]);
 
+  const t = useTranslate();
+
   return (
     <div className='bg-white text-gray-900'>
       <ul className='flex flex-col text-lg font-medium'>
@@ -49,12 +52,12 @@ const PostSettings = ({ postId, onClickEdit, closeDropdown }: PostSettingsProps)
           className={liClasses}
           onClick={() => {
             closeDropdown();
-            if (window.confirm('Are you sure?')) {
+            if (window.confirm(t('confirmation.areYouSure'))) {
               deletePost.execute();
             }
           }}
         >
-          Delete
+          {t('labels.actions.delete')}
         </li>
         <li
           onClick={() => {
@@ -63,7 +66,7 @@ const PostSettings = ({ postId, onClickEdit, closeDropdown }: PostSettingsProps)
           }}
           className={liClasses}
         >
-          Edit
+          {t('labels.actions.edit')}
         </li>
       </ul>
     </div>

@@ -1,9 +1,9 @@
+import { layoutNames } from 'common/constansts';
+import Layout from 'components/layout/Layout';
 import React, { useEffect } from 'react';
 import { Navigate } from 'react-router';
-import { RootState, useAppDispatch, useAppSelector } from 'store/store';
-import { layoutNames } from 'common/constansts';
 import { loadUser } from 'store/auth/authActions';
-import Layout from 'components/layout/Layout';
+import { RootState, useAppDispatch, useAppSelector } from 'store/store';
 
 import { NotificationsContextProvider } from 'modules/notifications/context/notificationsContext';
 import LoadUserLoadingScreen from './LoadUserLoadingScreen';

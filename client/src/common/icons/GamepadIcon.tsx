@@ -1,4 +1,3 @@
-import React from 'react';
 import { IconProps } from '.';
 
 const GamepadIcon = ({ color, className }: IconProps) => {
@@ -6,7 +5,7 @@ const GamepadIcon = ({ color, className }: IconProps) => {
     <svg
       stroke={color}
       fill='white'
-      stroke-width='0'
+      strokeWidth='0'
       viewBox='0 0 24 24'
       className='w-6 h-6'
       height='1em'

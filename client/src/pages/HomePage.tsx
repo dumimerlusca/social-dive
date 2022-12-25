@@ -1,5 +1,7 @@
+import { useTranslate } from '@tolgee/react';
 import useLoginToDemoAccount from 'components/auth/useLoginToDemoAccount';
 import Button from 'components/Button/Button';
+import LanguageSelector from 'components/LanguageSelector.tsx/LanguageSelector';
 import DnaAnimation from 'components/loadingSpinners/DnaAnimation/DnaAnimation';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
@@ -35,6 +37,7 @@ const techstackItems: TechStackitemType[] = [
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const t = useTranslate();
   const { loginToDemoAccount, isLoading, isLoggedIn, error } = useLoginToDemoAccount();
 
   useEffect(() => {
@@ -45,6 +48,7 @@ const HomePage = () => {
 
   return (
     <div className='relative h-auto lg:h-screen min-h-[800px] overflow-hidden'>
+      <LanguageSelector className='fixed top-4 right-4 z-10' />
       <div
         style={{ backdropFilter: 'blur(5px)' }}
         className='backdrop-blur bg-white/[0.02] absolute w-[140vw] top-0 left-0 z-[1] rounded-full aspect-square -translate-x-1/2 pointer-events-none -translate-y-1/2'
@@ -56,29 +60,31 @@ const HomePage = () => {
               className='text-[64px] font-semibold leading-[70px] fadeIn'
               style={{ animationDelay: '.4s' }}
             >
-              Social Dive
+              {t('app.title')}
             </h1>
             <h4 className='text-[24px] font-light fadeIn' style={{ animationDelay: '.3s' }}>
-              Social media platform
+              {t('homePage.subtitle')}
             </h4>
             <div className='flex flex-col'>
               <button
-                className='fadeIn w-screen max-w-lg h-[57px] flex items-center justify-center mt-10 px-10 py-3 text-[24px] uppercase bg-tertiary rounded-lg font-bold hover:opacity-75 transition-opacity'
+                className='fadeIn w-screen max-w-lg min-h-[57px] flex items-center justify-center mt-10 px-10 py-3 text-[24px] uppercase bg-tertiary rounded-lg font-bold hover:opacity-75 transition-opacity'
                 style={{ animationDelay: '.2s' }}
                 onClick={loginToDemoAccount}
               >
                 {isLoading ? (
                   <DnaAnimation className='scale-[0.2]' />
                 ) : (
-                  <p>try it using a demo account</p>
+                  <p>{t('login.withDemoAccount')}</p>
                 )}
               </button>
-              {error && <p className='text-center mt-2 text-red-600'>Something went wrong</p>}
+              {error && (
+                <p className='text-center mt-2 text-red-600'>{t('notification.generalError')}</p>
+              )}
               <p
                 className='fadeIn text-center font-bold text-md my-3'
                 style={{ animationDelay: '.1s' }}
               >
-                OR
+                {t('generalText.or')}
               </p>
               <div className='fadeIn flex gap-5 items-center justify-center'>
                 <Button
@@ -88,7 +94,7 @@ const HomePage = () => {
                     navigate('/login');
                   }}
                 >
-                  Login
+                  {t('labels.logIn')}
                 </Button>
                 <Button
                   className='rounded-lg'
@@ -96,7 +102,7 @@ const HomePage = () => {
                     navigate('/register');
                   }}
                 >
-                  Register
+                  {t('labels.signUp')}
                 </Button>
               </div>
             </div>

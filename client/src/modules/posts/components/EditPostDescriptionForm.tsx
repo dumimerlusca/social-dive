@@ -1,6 +1,7 @@
+import { useTranslate } from '@tolgee/react';
 import Button from 'components/Button/Button';
 import IPost from 'interfaces/IPost';
-import React, { useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useQueryClient } from 'react-query';
 import { useEditPost } from '../apiClient';
@@ -32,6 +33,8 @@ const EditPostDescriptionForm = ({
     }
   }, [editPost.data, editPost.isSucceeded, onSuccess, queryClient]);
 
+  const t = useTranslate();
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <textarea {...register('description')} className='bg-dark/50 block w-full p-3 rounded-2xl' />
@@ -41,7 +44,7 @@ const EditPostDescriptionForm = ({
         className='my-3'
         color='secondary'
       >
-        Save
+        {t('labels.save')}
       </Button>
     </form>
   );

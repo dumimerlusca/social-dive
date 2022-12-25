@@ -1,8 +1,10 @@
+import { useTranslate } from '@tolgee/react';
 import Input from 'components/Input/Input';
-import React, { ChangeEvent } from 'react';
+import { ChangeEvent } from 'react';
 
 const SearchChat = ({ onChange }: { onChange: (e: ChangeEvent<HTMLInputElement>) => void }) => {
-  return <Input className='mb-5' onChange={onChange} placeholder='Search...' />;
+  const t = useTranslate();
+  return <Input className='mb-5' onChange={onChange} placeholder={t('labels.search')} />;
 };
 
 export default SearchChat;

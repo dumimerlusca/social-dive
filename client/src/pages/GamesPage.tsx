@@ -1,18 +1,20 @@
-import React from 'react';
+import { useTranslate } from '@tolgee/react';
 
 const GamesPage = () => {
+  const t = useTranslate();
+
   return (
     <div className='container'>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-20'>
         <GameContainer
           src='https://main--snake-game-sonnyk.netlify.app/'
-          description='Use your arrow keys and play!'
-          title='Snake game'
+          description={t('games.snakeGame.description')}
+          title={t('games.snakeGame.title')}
         />
         <GameContainer
           src='https://6388bb7789ad370e50828e3c--cards-matching-game.netlify.app/'
-          description='Select the number of cards and start testing your memory!'
-          title='Cards matching game'
+          description={t('games.cardsMatching.description')}
+          title={t('games.cardsMatching.title')}
         />
       </div>
     </div>

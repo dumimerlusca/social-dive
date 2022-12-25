@@ -1,3 +1,4 @@
+import { useTranslate } from '@tolgee/react';
 import classNames from 'classnames';
 import { useCallback, useRef } from 'react';
 import Skeleton from 'react-loading-skeleton';
@@ -38,12 +39,13 @@ const Newsfeed = ({ wrapperClassName }: NewsfeedProps) => {
     },
     [hasMore, isLoading, setPageNumber],
   );
+  const t = useTranslate();
 
   return (
     <div className={classNames(wrapperClassName)}>
       <NewPost />
       <div>
-        <h1 className='text-3xl mb-5 ml-5'>Newsfeed</h1>
+        <h1 className='text-3xl mb-5 ml-5'>{t('newsfeed.title')}</h1>
         <ul>
           {posts.map((post, index) => {
             if (index === posts.length - 1) {
@@ -59,7 +61,7 @@ const Newsfeed = ({ wrapperClassName }: NewsfeedProps) => {
           </div>
         )}
         {posts.length === 0 && !isLoading && (
-          <p className='text-center text-4xl mt-40'>Your newsfeed is empty!</p>
+          <p className='text-center text-4xl mt-40'>{t('newsfeed.isEmpty')}</p>
         )}
       </div>
     </div>

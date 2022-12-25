@@ -1,3 +1,4 @@
+import { useTranslate } from '@tolgee/react';
 import Button from 'components/Button/Button';
 import useNotificationsContext from './context/notificationsContext';
 import NotificationListItem from './NotificationListItem';
@@ -9,11 +10,11 @@ type NotificationsDropdownProps = {
 const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({ closeDropdown }) => {
   const { notifications, pageNumber, changePageNumber, isLoading, hasMore, markSeenSuccess } =
     useNotificationsContext();
-
+  const t = useTranslate();
   return (
     <div className='w-[300px] p-3'>
       <ul className='max-h-96 overflow-auto'>
-        {notifications.length === 0 && <p className='p-3'>You don't have any notifications</p>}
+        {notifications.length === 0 && <p className='p-3'>{t('notifications.noNotifications')}</p>}
         {notifications.map((notification) => (
           <NotificationListItem
             markSeenSuccess={markSeenSuccess}
@@ -24,12 +25,12 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({ closeDrop
         ))}
       </ul>
       <Button
-        tooltip={!hasMore ? 'No more notifications' : undefined}
+        tooltip={!hasMore ? t('notifications.noMoreNotifications') : undefined}
         disabled={isLoading || !hasMore}
         className='w-full mt-4'
         onClick={() => changePageNumber(pageNumber + 1)}
       >
-        Show More
+        {t('labels.showMore')}
       </Button>
     </div>
   );

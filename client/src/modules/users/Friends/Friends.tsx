@@ -1,6 +1,7 @@
+import { useTranslate } from '@tolgee/react';
 import { modalNames } from 'common/constansts';
 import Button from 'components/Button/Button';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentUserId } from 'store/selectors/appSelectors';
 import { openModalAction } from 'store/ui/uiSlice';
@@ -23,11 +24,13 @@ const Friends = () => {
     [friends],
   );
 
+  const t = useTranslate();
+
   return (
     <div className='p-5 bg-primary rounded-3xl flex flex-col h-full'>
-      <h3 className='text-3xl mb-5'>Friends</h3>
+      <h3 className='text-3xl mb-5'>{t('friends.title')}</h3>
       <div className='grow overflow-auto px-2'>
-        {!hasFriends && !isLoading && <h3>You don't have any friends right now</h3>}
+        {!hasFriends && !isLoading && <h3>{t('friends.noFriendsRightNow')}</h3>}
         <ul className='space-y-2'>
           {isLoading ? (
             <>
@@ -53,7 +56,7 @@ const Friends = () => {
             dispatch(openModalAction(modalNames.allFriends));
           }}
         >
-          Show All
+          {t('labels.showAll')}
         </Button>
       </div>
     </div>

@@ -106,9 +106,6 @@ const EditProfileModal = () => {
                 }}
                 type='file'
               />
-              <p className='p-3 font-light text-sm'>
-                *You will need to refresh the page in order to see the new profile photo
-              </p>
             </div>
           </div>
           <Input

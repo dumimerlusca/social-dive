@@ -1,6 +1,7 @@
+import { useTranslate } from '@tolgee/react';
 import IPost from 'interfaces/IPost';
 import IUser from 'interfaces/IUser';
-import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
+import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import usePostLikes from './usePostLikes';
 
 type LikePostProps = {
@@ -10,7 +11,7 @@ type LikePostProps = {
 
 const LikePost = ({ initialLikes, post }: LikePostProps) => {
   const { onClick, isPostLiked, likes, isLoading } = usePostLikes(initialLikes, post);
-
+  const t = useTranslate();
   return (
     <div className='flex items-center gap-2'>
       <button disabled={isLoading} onClick={onClick}>
@@ -21,7 +22,7 @@ const LikePost = ({ initialLikes, post }: LikePostProps) => {
         )}
       </button>
       <span className='font-light'>{likes.length}</span>
-      <p className='hidden sm:block'>Likes</p>
+      <p className='hidden sm:block'>{t('labels.likes')}</p>
     </div>
   );
 };
