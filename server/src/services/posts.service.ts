@@ -1,8 +1,7 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { PostType } from '../schemas/post.schema';
 import { Model, PopulateOptions } from 'mongoose';
-import CommentsService from './comments.service';
+import { PostType } from '../schemas/post.schema';
 
 export const populateOptions: PopulateOptions[] = [
   {
@@ -92,7 +91,7 @@ export class PostsService {
       });
   }
 
-  getPostById(postId: string) {
-    return this.postModel.findById(postId).populate(populateOptions).select(selectOptions);
+  getPostById(postId: string, select = selectOptions, populate = populateOptions) {
+    return this.postModel.findById(postId).populate(populate).select(select);
   }
 }
