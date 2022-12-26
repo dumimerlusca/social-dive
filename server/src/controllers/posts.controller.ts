@@ -15,20 +15,18 @@ import {
   Res,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { PostType } from '../schemas/post.schema';
-import { Model } from 'mongoose';
-import { populateOptions, PostsService, selectOptions } from '../services/posts.service';
-import { IncomingForm } from 'formidable';
 import { Request, Response } from 'express';
-import * as fs from 'fs';
-import { UserType } from '../schemas/user.schema';
-import UsersService from '../services/users.service';
+import { IncomingForm } from 'formidable';
+import { Model } from 'mongoose';
+import * as sharp from 'sharp';
 import { Public } from '../decorators/decorators';
+import { getAdvanceResults } from '../helpers';
+import { NotificationTypeEnum } from '../schemas/notificationTypes';
+import { PostType } from '../schemas/post.schema';
 import FriendsService from '../services/friends.service';
 import NotificationService from '../services/notifications.service';
-import { NotificationTypeEnum } from '../schemas/notificationTypes';
-import { getAdvanceResults } from '../helpers';
-import * as sharp from 'sharp';
+import { populateOptions, PostsService, selectOptions } from '../services/posts.service';
+import UsersService from '../services/users.service';
 
 @Controller('api/posts')
 @Injectable()
@@ -144,7 +142,7 @@ export default class PostsController {
   @Delete(':id')
   async delete(@Param('id') id: string, @Req() req: any) {
     const loggedInUser = req.user;
-    const post = await this.postsService.getPostById(id);
+    const post = await this.postsService.getPostById(id, 'user', null);
     if (post.user.toString() !== loggedInUser.id)
       throw new HttpException('UNAUTHORIZED', HttpStatus.UNAUTHORIZED);
     await post.remove();
