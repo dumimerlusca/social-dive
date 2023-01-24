@@ -1,4 +1,5 @@
-# Socialdive
-Social media full stack application. React JS + Nest JS
+# Social Dive
+Social media app clone
+Stack: React, NestJs, MongoDb, SocketIo
 
 Live app https://socialdive.vercel.app/home
