@@ -42,6 +42,9 @@ const NewsfeedPostListItem = forwardRef<HTMLLIElement, PropTypes>(({ post }, ref
       <PostHeader onClickEdit={onClickEdit} post={innerPost} />
       {isEditing ? (
         <EditPostDescriptionForm
+          onCancel={() => {
+            setIsEditing(false);
+          }}
           onSuccess={onEditSuccess}
           description={innerPost.description ?? ''}
           postId={innerPost._id}

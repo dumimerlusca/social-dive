@@ -18,7 +18,7 @@ const ChatList: React.FC<{ chats: ChatType[]; isLoading: boolean }> = ({ chats, 
   }, [chats]);
 
   return (
-    <div className='max-h-96 overflow-auto px-2'>
+    <div className='max-h-[500px] overflow-auto px-2'>
       <ul className='flex flex-col gap-3'>
         {isLoading && <Skeleton count={3} className='h-24 rounded-3xl mb-2' />}
         {chats.length === 0 && !isLoading && (

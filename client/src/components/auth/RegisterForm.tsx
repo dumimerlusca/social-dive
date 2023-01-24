@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useTranslate } from '@tolgee/react';
 import { emailRegex } from 'common/constansts';
@@ -7,6 +7,7 @@ import useClickOutside from 'common/hooks/useClickOutside';
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
 import { registerUserAction } from 'store/auth/authActions';
 import { RootState, useAppDispatch, useAppSelector } from 'store/store';
 
@@ -19,6 +20,7 @@ export type UserOnRegisterType = {
 const RegisterForm = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const { isLoading, registerSuccess, error } = useAppSelector((state: RootState) => state.auth);
 
@@ -36,6 +38,12 @@ const RegisterForm = () => {
   useClickOutside(formRef, () => {
     clearErrors();
   });
+
+  useEffect(() => {
+    if (registerSuccess) {
+      navigate('/');
+    }
+  }, [navigate, registerSuccess]);
 
   const t = useTranslate();
 

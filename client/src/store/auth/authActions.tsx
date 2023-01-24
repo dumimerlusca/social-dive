@@ -19,9 +19,11 @@ export const registerUserAction = (user: UserOnRegisterType) => async (dispatch:
     dispatch(authLoading());
     dispatch(registerReset());
 
-    await post('/auth/register', user);
-
-    dispatch(registerSucces());
+    const {
+      data: { token, user: currentUser },
+    } = await post('/auth/register', user);
+    localStorage.setItem('social-dive-token', token);
+    dispatch(registerSucces({ token, user: currentUser }));
     setTimeout(() => {
       dispatch(registerReset());
     }, 3000);

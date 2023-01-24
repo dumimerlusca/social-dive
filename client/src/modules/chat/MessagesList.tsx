@@ -45,7 +45,7 @@ const MessagesLlst = () => {
   return (
     <div
       ref={containerRef}
-      className='scroll-smooth h-screen max-h-[400px] overflow-auto py-5 px-3 flex flex-col gap-5'
+      className='scroll-smooth h-screen max-h-[500px] overflow-auto py-5 px-3 flex flex-col gap-5'
     >
       {isLoading && (
         <div className='h-full w-full flex items-center justify-center'>
