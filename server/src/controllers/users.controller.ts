@@ -21,12 +21,17 @@ import { Public } from '../decorators/decorators';
 import { AuthGuard } from '../guards/auth.guard';
 import { UserType } from '../schemas/user.schema';
 import FriendsService from '../services/friends.service';
+import { PhotosService } from '../services/photos.service';
 import UsersService from '../services/users.service';
 
 @Controller('api/users')
 @Injectable()
 export class UsersController {
-  constructor(private usersService: UsersService, private friendsService: FriendsService) {}
+  constructor(
+    private usersService: UsersService,
+    private friendsService: FriendsService,
+    private photosService: PhotosService,
+  ) {}
 
   @Get()
   @Public()
@@ -52,45 +57,54 @@ export class UsersController {
 
   @Put(':id')
   async update(@Param('id') id: string, @Body() body: Object) {
-    return await this.usersService.update(id, body);
+    return await this.usersService.findByIdAndUpdate(id, body);
   }
 
   @Put(':id/upload')
   async upload(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
     const form = new IncomingForm();
-    form.parse(req, async (error: any, field: any, files: any) => {
-      if (error) {
-        throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
-      }
+    try {
+      return await new Promise((resolve, reject) => {
+        form.parse(req, async (error: any, field: any, files: any) => {
+          if (error) {
+            return reject(new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR));
+          }
 
-      let user: UserType;
-      if (files?.photo) {
-        user = await this.usersService.update(id, {
-          photo: {
+          if (!files.photo) {
+            return reject(new HttpException('Bad request, no photo', HttpStatus.BAD_REQUEST));
+          }
+
+          const photo = await this.photosService.create({
             data: fs.readFileSync(files.photo.filepath),
             contentType: files.photo.mimetype,
-          },
-        });
-        if (!user) return res.status(HttpStatus.NOT_FOUND).send('User not found');
-      }
+          });
 
-      return res.status(200).json(user);
-    });
+          const user = await this.usersService.findByIdAndUpdate(id, { photo: photo.id });
+
+          resolve(res.status(200).json(user));
+        });
+      });
+    } catch (error: any) {
+      throw new HttpException(error.message, error.status);
+    }
   }
 
   @Get(':id/photo')
   @Public()
   async getPhoto(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
-    const user = await this.usersService.findById(id, null);
+    const user = await this.usersService.findById(id);
 
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    if (user?.photo) {
-      res.set('Content-Type', user.photo.contentType);
-      return res.send(user.photo.data);
+    if (!user.photo) {
+      return res.sendFile('defaultProfilePhoto.png', {
+        root: path.join(__dirname, '../../public'),
+      });
     }
-    res.sendFile('defaultProfilePhoto.png', {
-      root: path.join(__dirname, '../../public'),
-    });
+
+    const photo = await this.photosService.findById(user.photo.toString());
+
+    res.set('Content-Type', photo.contentType);
+    return res.send(photo.data);
   }
 
   @Get('other/peopleYouMightKnow')

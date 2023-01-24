@@ -1,52 +1,51 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, PopulateOptions } from 'mongoose';
-import { UserType } from '../schemas/user.schema';
-
-export const userSelectOptions = '-password -photo';
-export const populateOptions: PopulateOptions[] = [];
+import { FilterQuery, Model, QueryOptions, UpdateQuery } from 'mongoose';
+import { User, UserType } from '../schemas/user.schema';
 
 @Injectable()
 export default class UsersService {
   constructor(@InjectModel('User') private userModel: Model<UserType>) {}
-  async create(user: Object) {
-    return await this.userModel.create(user);
+  create(user: User) {
+    return this.userModel.create(user);
   }
 
-  findById(id: string, select = userSelectOptions, populate = populateOptions) {
-    return this.userModel.findById(id).select(select).populate(populate);
+  findById(id: string, options?: QueryOptions) {
+    return this.userModel.findById(id, undefined, options);
   }
 
-  find(fields: Object, select = userSelectOptions) {
-    return this.userModel.find(fields).select(select);
+  find(query: FilterQuery<UserType>, options?: QueryOptions) {
+    return this.userModel.find(query, undefined, options);
   }
-  findOne(fields: Object, select = userSelectOptions) {
-    return this.userModel.findOne(fields).select(select);
+
+  findOne(query: FilterQuery<UserType>, options?: QueryOptions) {
+    return this.userModel.findOne(query, undefined, options);
   }
 
   delete(id: string) {
     return this.userModel.findByIdAndDelete(id);
   }
 
-  update(id: string, body: Object) {
-    return this.userModel.findByIdAndUpdate(id, body, {
-      new: true,
-      runValidators: true,
+  findByIdAndUpdate(id: string, update: UpdateQuery<UserType>, options?: QueryOptions) {
+    return this.userModel.findByIdAndUpdate(id, update, {
+      new: options?.new ?? true,
+      runValidators: options?.runValidators ?? true,
+      ...options,
     });
   }
 
-  async validate(body: any) {
+  validate(body: any) {
     return this.userModel.validate(body);
   }
 
-  async makeUserActive(userId: string) {
-    await this.userModel.findByIdAndUpdate(userId, {
+  makeUserActive(userId: string) {
+    return this.userModel.findByIdAndUpdate(userId, {
       isActive: true,
       lastActive: new Date(Date.now()),
     });
   }
-  async makeUserInactive(userId: string) {
-    await this.userModel.findByIdAndUpdate(userId, {
+  makeUserInactive(userId: string) {
+    return this.userModel.findByIdAndUpdate(userId, {
       isActive: false,
       lastActive: new Date(Date.now()),
     });

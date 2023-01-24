@@ -1,97 +1,57 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, PopulateOptions } from 'mongoose';
-import { PostType } from '../schemas/post.schema';
+import { FilterQuery, Model, PopulateOptions, QueryOptions, UpdateQuery } from 'mongoose';
+import { Post, PostType } from '../schemas/post.schema';
 
-export const populateOptions: PopulateOptions[] = [
+export const postPopulateOptions: PopulateOptions[] = [
   {
     path: 'user',
     model: 'User',
-    select: '-photo -password',
   },
   {
     path: 'likes',
     model: 'User',
-    select: '-password -photo',
   },
 ];
-
-export const selectOptions = '-photo';
 
 @Injectable()
 export class PostsService {
   constructor(@InjectModel('Post') private postModel: Model<PostType>) {}
 
-  async create(post: any) {
-    return (await this.postModel.create(post))?.populate(populateOptions);
+  create(post: Post) {
+    return this.postModel.create(post);
   }
 
-  async findAll() {
-    return await this.postModel.find({}).populate(populateOptions).select(selectOptions);
-  }
-  async find(query: Object) {
-    return await this.postModel.find(query).populate(populateOptions).select(selectOptions);
+  find(query: FilterQuery<PostType>, options?: QueryOptions) {
+    return this.postModel.find(query, undefined, options);
   }
 
-  async findById(id: string) {
-    return await this.postModel.findById(id).populate(populateOptions);
+  findById(id: string, options?: QueryOptions) {
+    return this.postModel.findById(id, undefined, options);
   }
 
-  async findOneAndUpdate(query: Object, body: Object) {
-    return await this.postModel
-      .findOneAndUpdate(query, body, {
-        new: true,
-        runValidators: true,
-      })
-      .populate(populateOptions)
-      .select(selectOptions);
-  }
-  async findByIdAndUpdate(query: Object, body: Object) {
-    return await this.postModel
-      .findByIdAndUpdate(query, body, {
-        new: true,
-        runValidators: true,
-      })
-      .populate(populateOptions)
-      .select(selectOptions);
+  findByIdAndUpdate(id: string, update: UpdateQuery<PostType>, options?: QueryOptions) {
+    return this.postModel.findByIdAndUpdate(id, update, {
+      new: options?.new ?? true,
+      runValidators: options?.runValidators ?? true,
+      ...options,
+    });
   }
 
-  async update(query: Object, body: Object) {
-    return await this.postModel
-      .findOneAndUpdate({ query }, body, {
-        new: true,
-        runValidators: true,
-      })
-      .populate(populateOptions)
-      .select(selectOptions);
+  delete(id: string) {
+    return this.postModel.findByIdAndDelete(id);
   }
 
-  async updateById(id: string, body: Object) {
-    return await this.postModel
-      .findByIdAndUpdate(id, body, {
-        new: true,
-        runValidators: true,
-      })
-      .populate(populateOptions)
-      .select(selectOptions);
-  }
-
-  async delete(id: string) {
-    return await this.postModel.findByIdAndDelete(id);
-  }
-
-  getAllPostsOfSingleUser(userId: string) {
-    return this.postModel
+  async getAllPostsOfSingleUser(userId: string) {
+    const values = await this.postModel
       .find({ user: userId })
-      .populate(populateOptions)
+      .populate(postPopulateOptions)
       .lean()
-      .sort({ createdAt: -1 })
-      .then((values) => {
-        return values.map((value) => ({ ...value, photo: !!value.photo }));
-      });
+      .sort({ createdAt: -1 });
+    return values.map((value) => ({ ...value, photo: !!value.photo }));
   }
 
-  getPostById(postId: string, select = selectOptions, populate = populateOptions) {
-    return this.postModel.findById(postId).populate(populate).select(select);
+  getPostModel() {
+    return this.postModel;
   }
 }

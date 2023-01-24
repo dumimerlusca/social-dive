@@ -22,7 +22,7 @@ export default class AuthController {
   @Post('login')
   @Public()
   async login(@Body() body: { email: string; password: string }) {
-    const user = await this.usersService.findOne({ email: body.email }, '');
+    const user = await this.usersService.findOne({ email: body.email }).select('+password');
     if (!user) throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
 
     const isValidPassword = await bcrypt.compare(body.password, user.password);
