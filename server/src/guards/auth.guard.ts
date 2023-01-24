@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import * as jwt from 'jsonwebtoken';
-import UsersService, { populateOptions, userSelectOptions } from '../services/users.service';
+import UsersService from '../services/users.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -26,10 +26,7 @@ export class AuthGuard implements CanActivate {
       exp: number;
     };
 
-    const user = await this.usersService
-      .findById(decoded.id)
-      .populate(populateOptions)
-      .select(userSelectOptions);
+    const user = await this.usersService.findById(decoded.id);
 
     if (!user) return false;
 

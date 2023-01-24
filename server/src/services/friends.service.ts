@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { FriendRequestType } from '../schemas/friendRequest.chema';
 import { FriendshipType } from '../schemas/friendship.schema';
 import UsersService from './users.service';
-import { Model } from 'mongoose';
 
 @Injectable()
 export default class FriendsService {
@@ -26,7 +26,6 @@ export default class FriendsService {
   }
 
   async createFriendshipWithAdmin(userId: string) {
-    console.log('Create friendship with admin');
     try {
       this.friendshipModel.create({ users: [userId, process.env.ADMIN_ID] });
     } catch (error) {

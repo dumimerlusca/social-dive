@@ -3,11 +3,6 @@ import mongoose, { Document } from 'mongoose';
 
 export type UserType = User & Document;
 
-export class PhotoType {
-  data: Buffer;
-  contentType: string;
-}
-
 @Schema({ timestamps: true, validateBeforeSave: true })
 export class User {
   @Prop({ required: [true, 'Full name is required'] })
@@ -24,16 +19,12 @@ export class User {
   @Prop({
     required: [true, 'Password is required'],
     minlength: 6,
+    select: false,
   })
   password: string;
 
-  @Prop({
-    type: {
-      data: Buffer,
-      contentType: String,
-    },
-  })
-  photo: PhotoType;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Photo' })
+  photo: string;
 
   @Prop({ default: false })
   isActive: boolean;
