@@ -24,7 +24,7 @@ const Flag = ({
       <div
         className={'inline-block w-full h-full'}
         style={{
-          backgroundImage: `url(${getFlagUrl(code, size)})`,
+          backgroundImage: `url(${getFlagUrl(getCode(code), size)})`,
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
         }}
@@ -37,4 +37,10 @@ export default Flag;
 
 const getFlagUrl = (code: string, size = '4x3') => {
   return `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/4.1.4/flags/${size}/${code}.svg`;
+};
+
+const getCode = (code: string) => {
+  code = code.toLowerCase();
+  if (code === 'en') return 'us';
+  return code;
 };
