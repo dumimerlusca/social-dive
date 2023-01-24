@@ -1,5 +1,6 @@
 import Tippy from '@tippyjs/react';
 import { useCurrentLanguage, useSetLanguage, useTranslate } from '@tolgee/react';
+import classNames from 'classnames';
 import Button from 'components/Button/Button';
 import Flag from 'components/Flag/Flag';
 import { useCallback, useMemo, useState } from 'react';
@@ -26,12 +27,13 @@ const LanguageSelector = ({ className }: { className?: string }) => {
       }}
     >
       <button
-        className={className}
+        className={classNames('flex items-center gap-1', className)}
         onClick={() => {
           setIsDropdownOpen((prev) => !prev);
         }}
       >
         <Flag code={currentLanguage} className='bg-red-100' />
+        <p className='uppercase font-semibold'>{currentLanguage}</p>
       </button>
     </Tippy>
   );

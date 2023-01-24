@@ -55,18 +55,7 @@ export const loadUser = () => async (dispatch: AppDispatch) => {
     const token = localStorage.getItem('social-dive-token');
     if (!token) throw new Error('');
     dispatch(loadUserLoading());
-    const res = await post(
-      '/auth/user',
-      {},
-      {
-        onUploadProgress: (progressEvent) => {
-          console.log('PROGRESS EVENT', progressEvent);
-        },
-        onDownloadProgress: (event) => {
-          console.log('DOWNLOAD PROGRESS', event);
-        },
-      },
-    );
+    const res = await post('/auth/user', {});
     dispatch(loadUserSucces(res.data));
   } catch (error) {
     dispatch(loadUserFail(getErrorMessage(error)));
