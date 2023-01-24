@@ -58,7 +58,7 @@ const LanguageSelectorDropdownContent = ({ closeDropdown }: { closeDropdown: () 
     <div className='bg-primary-lighter rounded-xl p-2'>
       <div>
         <ul className='p-2 mb-2 space-y-2'>
-          <LanguageListItem code='us' onClick={onOptionClick} />
+          <LanguageListItem code='en' onClick={onOptionClick} />
           <LanguageListItem code='ro' onClick={onOptionClick} />
         </ul>
       </div>
