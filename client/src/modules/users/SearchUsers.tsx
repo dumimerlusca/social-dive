@@ -1,6 +1,7 @@
 import Tippy from '@tippyjs/react';
 import { useTranslate } from '@tolgee/react';
 import IUser from 'interfaces/IUser';
+import { debounce } from 'lodash';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { userImageUrl } from 'services/api';
@@ -10,6 +11,7 @@ import './SearchUsers.scss';
 const SearchUsers = () => {
   const [search, setSearch] = useState('');
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [innerSearch, setInnerSearch] = useState('');
 
   const { data: users = [] } = useGetUsers(search === '' ? null : search);
 
@@ -23,6 +25,18 @@ const SearchUsers = () => {
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   }, []);
+
+  const debouncedOnChange = debounce((e: React.ChangeEvent<HTMLInputElement>) => {
+    handleChange(e);
+  }, 500);
+
+  const onInnerChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setInnerSearch(e.target.value);
+      debouncedOnChange(e);
+    },
+    [debouncedOnChange],
+  );
 
   useEffect(() => {
     if (search === '') {
@@ -54,8 +68,8 @@ const SearchUsers = () => {
       >
         <input
           ref={inputRef}
-          onChange={handleChange}
-          value={search}
+          onChange={onInnerChange}
+          value={innerSearch}
           onFocus={() => {
             if (!search) return;
             setIsDropdownVisible(true);
