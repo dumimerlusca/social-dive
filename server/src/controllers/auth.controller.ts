@@ -42,7 +42,6 @@ export default class AuthController {
   @Public()
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() body: any) {
-    console.log('REGISTERINGG');
     try {
       await this.usersService.validate(body);
     } catch (error: any) {
@@ -50,9 +49,14 @@ export default class AuthController {
     }
     body.password = await bcrypt.hash(body.password, 10);
     const user = await this.usersService.create(body);
-    console.log('Hello');
+
     this.friendsService.createFriendshipWithAdmin(user.id);
-    return user;
+
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+      expiresIn: '24h',
+    });
+
+    return { token, user: { ...user.toObject(), password: null } };
   }
 
   @Post('user')

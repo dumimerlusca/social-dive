@@ -83,7 +83,7 @@ export default class PostsController {
               await this.postsService.create({ ...post, photo: photo._id })
             ).populate('user');
           } else {
-            createdPost = (await this.postsService.create(post)).populate('user');
+            createdPost = await (await this.postsService.create(post)).populate('user');
           }
 
           this.notificationService.sendPostNotificationToFriends(
