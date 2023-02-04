@@ -24,7 +24,11 @@ export const useLogin = () => {
     }
   }, [dispatch, login, navigate]);
 
-  useApiLoadingTime({ isLoading: login.isLoading, isSucceeded: login.isSucceeded });
+  useApiLoadingTime({
+    isLoading: login.isLoading,
+    isSucceeded: login.isSucceeded,
+    erorr: login.error,
+  });
 
   return login;
 };
