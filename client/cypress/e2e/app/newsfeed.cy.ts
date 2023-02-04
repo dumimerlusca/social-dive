@@ -1,8 +1,6 @@
 import authServiceCY from '../../services/AuthServiceCY';
 import newsfeedPageService from '../../services/NewsfeedServiceCY';
 
-console.log('Cypress token', Cypress.env('LOGIN_TOKEN'));
-
 describe('newsfeed', () => {
   beforeEach(() => {
     authServiceCY.addLoginToken();

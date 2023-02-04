@@ -5,4 +5,7 @@ dist
 build
 .vercel
 
+
 cypress.env.json
+**/cypress/videos
+**/cypress/screenshots

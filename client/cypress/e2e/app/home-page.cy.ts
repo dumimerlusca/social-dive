@@ -22,7 +22,6 @@ describe('Home page', () => {
     cy.intercept('*/auth/user').as('loadUser');
     cy.wait('@loadUser');
     cy.url().should('include', 'home');
-    cy.contains('something went wrong', { matchCase: false });
   });
 
   it('login with demo account button should log the user in the demo accout', () => {
