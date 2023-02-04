@@ -6,11 +6,13 @@ const useApiLoadingTime = ({
   isLoading,
   isSucceeded,
   message,
+  erorr,
   notificationDismissTime = 15000,
 }: {
   isLoading: boolean;
   isSucceeded: boolean;
   message?: string;
+  erorr: any;
   notificationDismissTime?: number;
 }) => {
   const timer = useRef<NodeJS.Timeout | null>(null);
@@ -35,6 +37,14 @@ const useApiLoadingTime = ({
       timer.current = null;
     }
   }, [isSucceeded]);
+
+  useEffect(() => {
+    if (erorr && timer.current) {
+      clearTimeout(timer.current);
+      timer.current = null;
+    }
+  }, [erorr]);
+
   return {};
 };
 

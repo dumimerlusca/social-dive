@@ -28,7 +28,11 @@ export const useRegister = () => {
     }
   }, [dispatch, register, navigate, showSuccessNotification]);
 
-  useApiLoadingTime({ isLoading: register.isLoading, isSucceeded: register.isSucceeded });
+  useApiLoadingTime({
+    isLoading: register.isLoading,
+    isSucceeded: register.isSucceeded,
+    erorr: register.error,
+  });
 
   return register;
 };
