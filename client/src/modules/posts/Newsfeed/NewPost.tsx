@@ -36,13 +36,13 @@ const NewPost = () => {
     onCreatePostSucceeded(newPost);
     dispatch(
       showNotification({
-        text: 'Post created successfuly!',
+        text: t('notifications.postCreatedSuccessfully'),
         type: NotificationTypesEnum.success,
         autoDismiss: 2000,
       }),
     );
     resetFormValues();
-  }, [dispatch, isSucceeded, newPost, onCreatePostSucceeded, resetFormValues]);
+  }, [dispatch, isSucceeded, newPost, onCreatePostSucceeded, resetFormValues, t]);
 
   const onSubmit = (e: any) => {
     e.preventDefault();
@@ -67,7 +67,7 @@ const NewPost = () => {
   };
 
   return (
-    <form onSubmit={onSubmit} className='mb-24'>
+    <form id='new-post-form' onSubmit={onSubmit} className='mb-24'>
       <h1 className='text-3xl mb-5 ml-5'>{t('newsfeed.updateYourActivity')}</h1>
       <textarea
         onChange={onChange}

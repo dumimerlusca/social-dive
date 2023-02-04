@@ -55,6 +55,7 @@ const LoginForm = () => {
     >
       <div>
         <Input
+          id='field-email'
           placeholder={t('form.placeholders.email')}
           className={classNames(
             errors.email && 'border border-red-500 focus:ring-red-500 focus:ring-2',
@@ -72,6 +73,7 @@ const LoginForm = () => {
       </div>
       <div>
         <Input
+          id='field-password'
           placeholder={t('form.placeholders.password')}
           type='password'
           className={classNames(

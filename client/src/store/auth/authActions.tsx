@@ -1,3 +1,4 @@
+import { localStorageItems } from 'common/constansts';
 import { UserOnLoginType } from 'components/auth/LoginForm';
 import { UserOnRegisterType } from 'components/auth/RegisterForm';
 import { post } from 'services/api';
@@ -42,7 +43,7 @@ export const loginUserAction = (user: UserOnLoginType) => async (dispatch: AppDi
     const {
       data: { token, user: currentUser },
     } = await post('/auth/login', user);
-    localStorage.setItem('social-dive-token', token);
+    localStorage.setItem(localStorageItems.token, token);
     dispatch(loginSucces({ token, user: currentUser }));
   } catch (error) {
     dispatch(authError(getErrorMessage(error)));
@@ -54,12 +55,13 @@ export const loginUserAction = (user: UserOnLoginType) => async (dispatch: AppDi
 
 export const loadUser = () => async (dispatch: AppDispatch) => {
   try {
-    const token = localStorage.getItem('social-dive-token');
+    const token = localStorage.getItem(localStorageItems.token);
     if (!token) throw new Error('');
     dispatch(loadUserLoading());
     const res = await post('/auth/user', {});
     dispatch(loadUserSucces(res.data));
   } catch (error) {
+    localStorage.removeItem(localStorageItems.token);
     dispatch(loadUserFail(getErrorMessage(error)));
     setTimeout(() => {
       dispatch(errorReset());

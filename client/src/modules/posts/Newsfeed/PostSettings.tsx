@@ -27,7 +27,7 @@ const PostSettings = ({ postId, onClickEdit, closeDropdown }: PostSettingsProps)
     if (!deletePost.isSucceeded) return;
     dispatch(
       showNotification({
-        text: 'Post deleted successfuly!',
+        text: 'Post deleted successfully!',
         type: NotificationTypesEnum.success,
         autoDismiss: 2000,
       }),
