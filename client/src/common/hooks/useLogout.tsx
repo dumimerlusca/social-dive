@@ -16,8 +16,6 @@ const useLogout = () => {
     localStorage.removeItem('social-dive-token');
     dispatch(authReset());
     socket.disconnect();
-    // eslint-disable-next-line no-restricted-globals
-    location.reload();
   };
 
   return logoutHandler;

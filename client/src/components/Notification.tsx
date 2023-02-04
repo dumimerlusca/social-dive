@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { AiOutlineCheckCircle, AiOutlineClose } from 'react-icons/ai';
+import { AiOutlineCheckCircle, AiOutlineClose, AiOutlineInfoCircle } from 'react-icons/ai';
 import { BiError } from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
 import { getNotification } from 'store/selectors/uiSelectors';
@@ -10,6 +10,7 @@ import { removeNotification } from 'store/ui/uiSlice';
 export enum NotificationTypesEnum {
   success = 'success',
   error = 'error',
+  info = 'info',
 }
 
 export type UiNotificationType = {
@@ -40,6 +41,8 @@ const Notification = () => {
 
   const icon = useMemo(() => {
     if (!notification) return;
+    if (notification.type === NotificationTypesEnum.info)
+      return <AiOutlineInfoCircle color='blue' className='w-6 h-6' />;
     if (notification.type === NotificationTypesEnum.success)
       return <AiOutlineCheckCircle color='green' className='w-6 h-6' />;
     if (notification.type === NotificationTypesEnum.error)
@@ -55,6 +58,7 @@ const Notification = () => {
           'translate-x-full': !notification,
           'bg-red-600': notification?.type === NotificationTypesEnum.error,
           'bg-green-600': notification?.type === NotificationTypesEnum.success,
+          'bg-blue-500': notification?.type === NotificationTypesEnum.info,
         },
       )}
     >
