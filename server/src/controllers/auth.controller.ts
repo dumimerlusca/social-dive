@@ -1,41 +1,24 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpException,
-  HttpStatus,
-  Injectable,
-  Post,
-  Req,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Injectable, Post, Req } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
+import { sign } from 'jsonwebtoken';
 import { MongoError } from 'mongodb';
 import { Public } from '../decorators/decorators';
+import AuthService from '../services/auth.service';
 import FriendsService from '../services/friends.service';
 import UsersService from '../services/users.service';
 
 @Controller('/api/auth')
 @Injectable()
 export default class AuthController {
-  constructor(private usersService: UsersService, private friendsService: FriendsService) {}
+  constructor(
+    private usersService: UsersService,
+    private friendsService: FriendsService,
+    private authService: AuthService,
+  ) {}
   @Post('login')
   @Public()
   async login(@Body() body: { email: string; password: string }) {
-    const user = await this.usersService.findOne({ email: body.email }).select('+password');
-    if (!user) throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
-
-    const isValidPassword = await bcrypt.compare(body.password, user.password);
-    if (!isValidPassword) throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
-
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: '24h',
-    });
-
-    return {
-      token,
-      user: { ...user.toObject(), password: null },
-    };
+    return await this.authService.login(body.email, body.password);
   }
 
   @Post('register')
@@ -49,10 +32,9 @@ export default class AuthController {
     }
     body.password = await bcrypt.hash(body.password, 10);
     const user = await this.usersService.create(body);
-
     this.friendsService.createFriendshipWithAdmin(user.id);
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+    const token = sign({ id: user.id }, process.env.JWT_SECRET, {
       expiresIn: '24h',
     });
 
@@ -63,5 +45,11 @@ export default class AuthController {
   async loadUser(@Req() req: any) {
     const user = req.user;
     return user;
+  }
+
+  @Get('login-cypress')
+  @Public() // TODO Make admin only
+  loginCypress() {
+    return this.authService.getLoginTokenForCypressAccount();
   }
 }

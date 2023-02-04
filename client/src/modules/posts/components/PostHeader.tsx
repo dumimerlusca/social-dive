@@ -51,8 +51,10 @@ const PostHeader: React.FC<PostHeaderProps> = ({
           onClickOutside={() => {
             setIsDropdownOpen(false);
           }}
+          appendTo='parent'
         >
           <button
+            data-test='newsfeed-post-settings-button'
             onClick={() => {
               setIsDropdownOpen((prev) => !prev);
             }}

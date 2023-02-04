@@ -1,3 +1,4 @@
+import { localStorageItems } from 'common/constansts';
 import { useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
 import useSocketContext from 'socket/socketContext';
@@ -13,7 +14,7 @@ const useLogout = () => {
   const logoutHandler = () => {
     queryClient.clear();
     navigate('/login');
-    localStorage.removeItem('social-dive-token');
+    localStorage.removeItem(localStorageItems.token);
     dispatch(authReset());
     socket.disconnect();
   };

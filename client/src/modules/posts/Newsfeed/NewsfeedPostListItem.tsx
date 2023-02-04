@@ -38,7 +38,11 @@ const NewsfeedPostListItem = forwardRef<HTMLLIElement, PropTypes>(({ post }, ref
   const t = useTranslate();
 
   return (
-    <li ref={ref} className='p-5 bg-primary mb-10 rounded-xl'>
+    <li
+      data-test={`newsfeed-post-${post._id}`}
+      ref={ref}
+      className='p-5 bg-primary mb-10 rounded-xl'
+    >
       <PostHeader onClickEdit={onClickEdit} post={innerPost} />
       {isEditing ? (
         <EditPostDescriptionForm
@@ -79,7 +83,10 @@ const NewsfeedPostListItem = forwardRef<HTMLLIElement, PropTypes>(({ post }, ref
           postId={innerPost._id}
           wrapperClassname='my-2'
         />
-        <ul className='flex flex-col gap-1 max-h-[300px] overflow-auto p-2'>
+        <ul
+          data-test='newsfeed-post-comments-list'
+          className='flex flex-col gap-1 max-h-[300px] overflow-auto p-2'
+        >
           {comments.map((comment) => {
             return (
               <CommentListItem

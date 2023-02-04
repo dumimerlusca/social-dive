@@ -48,7 +48,7 @@ const NewComment: React.FC<NewCommentProps> = ({
   }, [isSucceeded, newComment, onAddCommentSucceeded, resetSucceeded]);
 
   return (
-    <form onSubmit={onSubmit} className={classNames(wrapperClassname)}>
+    <form data-test='new-comment-form' onSubmit={onSubmit} className={classNames(wrapperClassname)}>
       <div className='flex gap-3 items-center'>
         <img
           className='rounded-full h-8 w-8 flex-shrink-0'
@@ -56,6 +56,7 @@ const NewComment: React.FC<NewCommentProps> = ({
           alt=''
         />
         <input
+          data-test='new-comment-input'
           value={text}
           onChange={onChange}
           className='w-full py-2 px-4 rounded-md bg-[rgba(255,255,255,0.03)]'
