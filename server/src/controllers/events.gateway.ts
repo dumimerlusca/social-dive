@@ -2,20 +2,18 @@ import { Injectable } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
-  SubscribeMessage,
-  WebSocketGateway,
-  WebSocketServer,
-  WsResponse,
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Notification, NotificationType } from '../schemas/notification.schema';
+import { Notification } from '../schemas/notification.schema';
 import { NotificationTypeEnum } from '../schemas/notificationTypes';
-import UsersService from '../services/users.service';
 import { User } from '../schemas/user.schema';
-import { date } from 'yup';
+import UsersService from '../services/users.service';
 
 @WebSocketGateway({
   cors: {
@@ -33,21 +31,20 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
     console.log('Init');
   }
 
-  handleConnection(@ConnectedSocket() client: Socket) {
+  async handleConnection(@ConnectedSocket() client: Socket) {
     console.log('Connected', client.handshake.auth.fullName, client.id);
 
     const userId = client.handshake.auth._id;
     client.join(userId);
-    // Make user active
-    this.usersService.makeUserActive(userId);
+    await this.usersService.makeUserActive(userId);
   }
 
-  handleDisconnect(client: Socket) {
+  async handleDisconnect(client: Socket) {
     console.log('Disconnect', client.handshake.auth.fullName, client.id);
 
     const userId = client.handshake.auth._id;
     // Make user inactive
-    this.usersService.makeUserInactive(userId);
+    await this.usersService.makeUserInactive(userId);
   }
 
   @SubscribeMessage('test')
