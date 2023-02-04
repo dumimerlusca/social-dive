@@ -3,7 +3,6 @@ import useLoginToDemoAccount from 'components/auth/useLoginToDemoAccount';
 import Button from 'components/Button/Button';
 import LanguageSelector from 'components/LanguageSelector.tsx/LanguageSelector';
 import DnaAnimation from 'components/loadingSpinners/DnaAnimation/DnaAnimation';
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import './HomePage.scss';
 
@@ -38,13 +37,7 @@ const techstackItems: TechStackitemType[] = [
 const HomePage = () => {
   const navigate = useNavigate();
   const t = useTranslate();
-  const { loginToDemoAccount, isLoading, isLoggedIn, error } = useLoginToDemoAccount();
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate('/');
-    }
-  }, [isLoggedIn, navigate]);
+  const { loginToDemoAccount, isLoading, error } = useLoginToDemoAccount();
 
   return (
     <div className='relative h-auto lg:h-screen min-h-[800px] overflow-hidden'>

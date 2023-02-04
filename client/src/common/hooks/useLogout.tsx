@@ -17,8 +17,6 @@ const useLogout = () => {
     localStorage.removeItem(localStorageItems.token);
     dispatch(authReset());
     socket.disconnect();
-    // eslint-disable-next-line no-restricted-globals
-    location.reload();
   };
 
   return logoutHandler;

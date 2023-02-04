@@ -1,15 +1,14 @@
 import classNames from 'classnames';
-import { useEffect, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 
 import { useTranslate } from '@tolgee/react';
 import { emailRegex } from 'common/constansts';
 import useClickOutside from 'common/hooks/useClickOutside';
+import { useRegister } from 'common/hooks/useRegister';
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router';
-import { registerUserAction } from 'store/auth/authActions';
-import { RootState, useAppDispatch, useAppSelector } from 'store/store';
+import { getErrorMessage } from 'store/auth/authActions';
 
 export type UserOnRegisterType = {
   fullName: string;
@@ -19,10 +18,8 @@ export type UserOnRegisterType = {
 
 const RegisterForm = () => {
   const formRef = useRef<HTMLFormElement>(null);
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
-  const { isLoading, registerSuccess, error } = useAppSelector((state: RootState) => state.auth);
+  const { execute, isLoading, error } = useRegister();
 
   const {
     register,
@@ -31,19 +28,16 @@ const RegisterForm = () => {
     clearErrors,
   } = useForm<UserOnRegisterType>();
 
-  const onSubmit = (data: any) => {
-    dispatch(registerUserAction(data));
-  };
+  const onSubmit = useCallback(
+    (data: UserOnRegisterType) => {
+      execute(data);
+    },
+    [execute],
+  );
 
   useClickOutside(formRef, () => {
     clearErrors();
   });
-
-  useEffect(() => {
-    if (registerSuccess) {
-      navigate('/');
-    }
-  }, [navigate, registerSuccess]);
 
   const t = useTranslate();
 
@@ -104,10 +98,7 @@ const RegisterForm = () => {
           })}
         />
       </div>
-      {registerSuccess && (
-        <p className='p-1 text-green-300'>Account created successfuly, you can log in now!</p>
-      )}
-      {error && <p className='p-1 text-red-500'>{error}</p>}
+      {error && <p className='p-1 text-red-500'>{getErrorMessage(error)}</p>}
       <Button className='w-full mt-5' color='secondary'>
         {isLoading ? t('labels.loading') : t('labels.createAccount')}
       </Button>

@@ -1,13 +1,12 @@
 import { useTranslate } from '@tolgee/react';
 import classNames from 'classnames';
 import useClickOutside from 'common/hooks/useClickOutside';
+import { useLogin } from 'common/hooks/useLogin';
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
-import { useEffect, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router';
-import { loginUserAction } from 'store/auth/authActions';
-import { useAppDispatch, useAppSelector } from 'store/store';
+import { getErrorMessage } from 'store/auth/authActions';
 import useLoginToDemoAccount from './useLoginToDemoAccount';
 
 export type UserOnLoginType = {
@@ -17,18 +16,13 @@ export type UserOnLoginType = {
 
 const LoginForm = () => {
   const formRef = useRef<HTMLFormElement>(null);
-  const { error, isLoading, isLoggedIn } = useAppSelector((state) => state.auth);
 
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-
-  const { loginToDemoAccount } = useLoginToDemoAccount();
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate('/');
-    }
-  }, [isLoggedIn, navigate]);
+  const {
+    loginToDemoAccount,
+    isLoading: isLoadingLoginDemoAccount,
+    error: loginDemoAccountError,
+  } = useLoginToDemoAccount();
+  const login = useLogin();
 
   const {
     register,
@@ -37,15 +31,27 @@ const LoginForm = () => {
     clearErrors,
   } = useForm<UserOnLoginType>();
 
-  const onSubmit = (data: any) => {
-    dispatch(loginUserAction(data));
-  };
+  const onSubmit = useCallback(
+    (data: { email: string; password: string }) => {
+      login.execute(data);
+    },
+    [login],
+  );
 
   useClickOutside(formRef, () => {
     clearErrors();
   });
 
   const t = useTranslate();
+
+  const error = useMemo(
+    () => login.error || loginDemoAccountError,
+    [login.error, loginDemoAccountError],
+  );
+  const inProgress = useMemo(
+    () => login.isLoading || isLoadingLoginDemoAccount,
+    [isLoadingLoginDemoAccount, login.isLoading],
+  );
 
   return (
     <form
@@ -93,9 +99,9 @@ const LoginForm = () => {
         />
         <p className='text-red-500 mt-3 ml-5'>{errors.password?.message} </p>
       </div>
-      {error && <p className='p-1 text-red-500'>{error}</p>}
+      {error && <p className='p-1 text-red-500'>{getErrorMessage(error)}</p>}
       <Button type='submit' className='w-full mt-5' color='secondary'>
-        {isLoading ? t('labels.loading') : t('labels.logIn')}
+        {inProgress ? t('labels.loading') : t('labels.logIn')}
       </Button>
       <div>
         <button

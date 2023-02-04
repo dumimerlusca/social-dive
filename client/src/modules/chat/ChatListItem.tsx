@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import { ChatType } from 'common/types';
 import { formatDate } from 'helpers/helpers';
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { userImageUrl } from 'services/api';
 import { setCurrentChat } from 'store/chat/chatSlice';
@@ -29,15 +28,15 @@ const ChatListItem = ({ chat, onClick }: { chat: ChatType; onClick?: () => void 
         }
       }}
       className={classNames(
-        'flex items-center gap-5 rounded-3xl px-2 lg:px-3 lg:py-2 bg-primary hover:bg-gray-700 transition-colors duration-500',
+        'flex items-center overflow-hidden gap-5 rounded-3xl px-2 lg:px-3 lg:py-2 bg-primary hover:bg-gray-700 transition-colors duration-500',
         { 'bg-gray-700': isActive },
       )}
     >
       <div className='w-16 h-16 rounded-full overflow-hidden'>
         <img className='w-full h-full object-cover' src={userImageUrl(user?._id)} alt='' />
       </div>
-      <div className='flex items-center gap-4'>
-        <div>
+      <div className='flex items-center gap-4 overflow-hidden'>
+        <div className='overflow-hidden'>
           <h3 className='text-lg lg:text-2xl font-bold'>{user?.fullName}</h3>
           <p className='truncate font-light'>{chat.lastMessage}</p>
         </div>
