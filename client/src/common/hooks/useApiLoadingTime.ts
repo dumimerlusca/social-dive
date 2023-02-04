@@ -7,7 +7,7 @@ const useApiLoadingTime = ({
   isSucceeded,
   message,
   erorr,
-  notificationDismissTime = 15000,
+  notificationDismissTime = 30000,
 }: {
   isLoading: boolean;
   isSucceeded: boolean;
