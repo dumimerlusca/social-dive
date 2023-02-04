@@ -19,9 +19,11 @@ export const registerUserAction = (user: UserOnRegisterType) => async (dispatch:
     dispatch(authLoading());
     dispatch(registerReset());
 
-    await post('/auth/register', user);
-
-    dispatch(registerSucces());
+    const {
+      data: { token, user: currentUser },
+    } = await post('/auth/register', user);
+    localStorage.setItem('social-dive-token', token);
+    dispatch(registerSucces({ token, user: currentUser }));
     setTimeout(() => {
       dispatch(registerReset());
     }, 3000);
@@ -55,18 +57,7 @@ export const loadUser = () => async (dispatch: AppDispatch) => {
     const token = localStorage.getItem('social-dive-token');
     if (!token) throw new Error('');
     dispatch(loadUserLoading());
-    const res = await post(
-      '/auth/user',
-      {},
-      {
-        onUploadProgress: (progressEvent) => {
-          console.log('PROGRESS EVENT', progressEvent);
-        },
-        onDownloadProgress: (event) => {
-          console.log('DOWNLOAD PROGRESS', event);
-        },
-      },
-    );
+    const res = await post('/auth/user', {});
     dispatch(loadUserSucces(res.data));
   } catch (error) {
     dispatch(loadUserFail(getErrorMessage(error)));

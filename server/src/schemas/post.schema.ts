@@ -1,8 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
-import { CommentSchema, CommentType } from './comment.schema';
 import { UserType } from './user.schema';
-import { PhotoType } from './user.schema';
 
 export type PostType = Post & Document;
 
@@ -11,13 +9,8 @@ export class Post {
   @Prop()
   description: string;
 
-  @Prop({
-    type: {
-      data: Buffer,
-      contentType: String,
-    },
-  })
-  photo: PhotoType;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Photo' })
+  photo: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
   user: string;

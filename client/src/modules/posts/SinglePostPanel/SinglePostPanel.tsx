@@ -56,7 +56,11 @@ const SinglePostPanel = () => {
   return (
     <div className='mt-10 flex flex-col md:flex-row  md:min-h-[700px]  gap-10 w-full justify-end'>
       <div className='max-h-[700px] overflow-hidden' style={{ flex: '2' }}>
-        <img className='w-full h-full object-contain' src={postImageUrl(postId)} alt='' />
+        <img
+          className='w-full h-full object-contain'
+          src={postImageUrl(postId)}
+          alt='This post does not have images'
+        />
       </div>
       <div className='flex max-h-[700px] flex-col bg-primary rounded-xl' style={{ flex: '1' }}>
         <div className='border-b border-secondary p-4'>
@@ -73,6 +77,9 @@ const SinglePostPanel = () => {
               onSuccess={() => {
                 setIsEditing(false);
                 queryClient.invalidateQueries(queryKeys.post(postId!));
+              }}
+              onCancel={() => {
+                setIsEditing(false);
               }}
               postId={post._id}
               description={post.description ?? ''}

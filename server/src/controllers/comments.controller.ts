@@ -10,10 +10,10 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
-import CommentsService, { populateOptions } from '../services/comments.service';
-import { PostsService } from '../services/posts.service';
-import NotificationService from '../services/notifications.service';
 import { NotificationTypeEnum } from '../schemas/notificationTypes';
+import CommentsService, { commentPopulateOptions } from '../services/comments.service';
+import NotificationService from '../services/notifications.service';
+import { postPopulateOptions, PostsService } from '../services/posts.service';
 
 @Controller('api/comments')
 export default class CommentsController {
@@ -25,23 +25,23 @@ export default class CommentsController {
 
   @Get('post/:postId')
   async getPostComments(@Param('postId') postId: string) {
-    const post = await this.postsService.getPostById(postId);
+    const post = await this.postsService.findById(postId, { populate: postPopulateOptions });
     if (!post) throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
 
-    return await this.commentsService.commentModel
-      .find({ postId: postId })
-      .sort({ createdAt: -1 })
-      .populate(populateOptions);
+    return await this.commentsService.find(
+      { postId: postId },
+      { sort: { createdAt: -1 }, populate: commentPopulateOptions },
+    );
   }
 
   @Post('post/:postId/addComment')
   async addComment(@Param('postId') postId: string, @Req() req: any, @Body() body: any) {
     const userId = req.user.id;
-    const post = await this.postsService.getPostById(postId);
+    const post = await this.postsService.findById(postId, { populate: postPopulateOptions });
 
     if (!post) throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
 
-    const comment = await this.commentsService.commentModel.create({
+    const comment = await this.commentsService.create({
       ...body,
       postId,
       user: userId,
@@ -57,21 +57,18 @@ export default class CommentsController {
       );
     }
 
-    return await comment.populate(populateOptions);
+    return await comment.populate(commentPopulateOptions);
   }
 
   @Patch(':commentId')
   async editComment(@Param('commentId') commentId: string, @Body() body: any) {
-    return await this.commentsService.commentModel.findByIdAndUpdate(commentId, body, {
-      new: true,
-      runValidators: true,
-    });
+    return await this.commentsService.findByIdAndUpdate(commentId, body);
   }
 
   @Patch(':commentId/like')
   async likeComment(@Param('commentId') commentId: string, @Req() req: any) {
     const userId = req.user.id;
-    const comment = await this.commentsService.commentModel.findById(commentId);
+    const comment = await this.commentsService.findById(commentId);
     if (comment.likes.includes(userId))
       throw new HttpException('Comment is already liked', HttpStatus.BAD_REQUEST);
 
@@ -94,7 +91,7 @@ export default class CommentsController {
   @Patch(':commentId/unlike')
   async unlikeComment(@Param('commentId') commentId: string, @Req() req: any) {
     const userId = req.user.id;
-    const comment = await this.commentsService.commentModel.findById(commentId);
+    const comment = await this.commentsService.findById(commentId);
     if (!comment.likes.includes(userId))
       throw new HttpException('Comment is not liked', HttpStatus.BAD_REQUEST);
 
@@ -104,7 +101,7 @@ export default class CommentsController {
 
   @Delete(':commentId')
   async deleteComment(@Param('commentId') commentId: string) {
-    await this.commentsService.commentModel.findByIdAndDelete(commentId);
+    await this.commentsService.findByIdAndDelete(commentId);
     return 'Comment deleted successfully';
   }
 }

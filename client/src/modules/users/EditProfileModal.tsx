@@ -1,3 +1,4 @@
+import { useTranslate } from '@tolgee/react';
 import { emailRegex, modalNames, queryKeys } from 'common/constansts';
 import useAddNotification from 'common/hooks/useAddNotification';
 import Button from 'components/Button/Button';
@@ -79,6 +80,8 @@ const EditProfileModal = () => {
     [photo, updateUser, uploadUserPhoto],
   );
 
+  const t = useTranslate();
+
   return (
     <ModalWrapper
       isModalOpen={isModalOpen}
@@ -86,7 +89,7 @@ const EditProfileModal = () => {
       closeModal={closeModal}
     >
       <div ref={modalContentRef} className='bg-dark rounded-3xl p-5  px-7 w-full max-w-[585px]'>
-        <h1 className='text-4xl font-black text-center py-4 mb-3'>Edit</h1>
+        <h1 className='text-4xl font-black text-center py-4 mb-3'>{t('labels.edit')}</h1>
         <div></div>
         <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-7'>
           <div className='flex gap-3 items-center'>
@@ -140,14 +143,14 @@ const EditProfileModal = () => {
                 dispatch(closeModalAction(modalNames.editProfile));
               }}
             >
-              Cancel
+              {t('labels.cancel')}
             </Button>
             <Button
               disabled={updateUser.isLoading}
               type='submit'
               className='flex-1 !bg-[#5258ED] text-xl !p-3'
             >
-              Submit
+              {t('labels.submit')}
             </Button>
           </div>
         </form>
