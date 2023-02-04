@@ -1,19 +1,22 @@
+import ErrorBoundary from 'components/ErrroBoundary';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import { Provider } from 'react-redux';
-import { store } from 'store/store';
-import ErrorBoundary from 'components/ErrroBoundary';
+import { SkeletonTheme } from 'react-loading-skeleton';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { SkeletonTheme } from 'react-loading-skeleton';
+import { Provider } from 'react-redux';
+import { store } from 'store/store';
+import App from './App';
 
-import './index.scss';
+import { TolgeeProvider } from '@tolgee/react';
+import 'common/styles/tippyThemes.scss';
+import LoadUserLoadingScreen from 'components/routes/LoadUserLoadingScreen';
+import 'react-loading-skeleton/dist/skeleton.css';
+import { BrowserRouter } from 'react-router-dom';
+import { SocketContextProvider } from 'socket/socketContext';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/translucent.css';
-import 'common/styles/tippyThemes.scss';
-import 'react-loading-skeleton/dist/skeleton.css';
-import { SocketContextProvider } from 'socket/socketContext';
+import './index.scss';
 
 const queryClient = new QueryClient();
 
@@ -30,7 +33,16 @@ ReactDOM.render(
               borderRadius={10}
               duration={1}
             >
-              <App />
+              <TolgeeProvider
+                apiUrl={process.env.REACT_APP_TOLGEE_API_URL}
+                apiKey={process.env.REACT_APP_TOLGEE_API_KEY}
+                fallbackLanguage='en'
+                loadingFallback={<LoadUserLoadingScreen />}
+              >
+                <BrowserRouter>
+                  <App />
+                </BrowserRouter>
+              </TolgeeProvider>
             </SkeletonTheme>
           </SocketContextProvider>
         </QueryClientProvider>

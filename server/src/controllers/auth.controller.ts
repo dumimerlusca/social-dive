@@ -14,6 +14,7 @@ import { MongoError } from 'mongodb';
 import { Public } from '../decorators/decorators';
 import FriendsService from '../services/friends.service';
 import UsersService from '../services/users.service';
+const { execSync } = require('child_process');
 
 @Controller('/api/auth')
 @Injectable()
