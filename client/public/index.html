@@ -5,10 +5,7 @@
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Social media app"
-    />
+    <meta name="description" content="Social media app" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
@@ -29,15 +26,32 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+    <!-- VISA Tracking Code for https://socialdive.vercel.app -->
+    <script>
+      (function (v, i, s, a, t) {
+        v[t] =
+          v[t] ||
+          function () {
+            (v[t].v = v[t].v || []).push(arguments);
+          };
+        if (!v._visaSettings) {
+          v._visaSettings = {};
+        }
+        v._visaSettings[a] = { v: '1.0', s: a, a: '1', t: t };
+        var b = i.getElementsByTagName('body')[0];
+        var p = i.createElement('script');
+        p.defer = 1;
+        p.async = 1;
+        p.src = s + '?s=' + a;
+        b.appendChild(p);
+      })(
+        window,
+        document,
+        '//dev-worker.va-endpoint.com/main.js',
+        '28d899ed-a5eb-11ed-b04e-eabe055348ff',
+        'va',
+      );
+    </script>
+    <!-- VISA Tracking Code for https://socialdive.vercel.app -->
   </body>
 </html>
